@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/ideal"
+	reloadable="true"
+	docBase="C:\J02_pleiades\workspace\ideal"
+	workDir="C:\J02_pleiades\workspace\ideal\work"
+	debug="5"
+	crossContext="true">
+<Resource name = "mysql" auth="Container" type="javax.sql.DataSource"
+			maxActive="100" maxIdle="30" maxWait="1000"
+			username="root" password="root" driverClassName="com.mysql.jdbc.Driver"
+			url="jdbc:mysql://localhost:3306/test" />
+</Context>
