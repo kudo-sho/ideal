@@ -31,8 +31,6 @@ if(msg != null)
 %>
 
 <!--
-<<<<<<< HEAD
-=======
 spectleから更新テスト４回目
 spectleから更新テスト４回目
 spectleから更新テスト３回目
@@ -40,7 +38,6 @@ spectleから更新テスト２回目
 envyから更新テスト
 spectleから更新テスト
 enbyから更新テスト２回目
->>>>>>> refs/remotes/origin/master
 la・Dio feniceへようこそ！<br />
 シェフが腕によりをかけてお送りする料理メニューについては、『メニュー』よりご確認ください。
 <br /><br/>
