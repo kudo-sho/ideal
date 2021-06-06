@@ -14,7 +14,7 @@ div{text-align:center;}
 <!--
 	//check関数を定義
 	function check() {
-		if (document.login.name.value == "") {
+		if (document.login.admName.value == "") {
 			window.alert("管理者氏名が未入力です");
 			return false;
 		} else if (document.login.password.value == "") {
