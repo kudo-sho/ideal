@@ -31,6 +31,8 @@ if(msg != null)
 %>
 
 <!--
+spectleから更新テスト３回目
+spectleから更新テスト２回目
 envyから更新テスト
 spectleから更新テスト
 la・Dio feniceへようこそ！<br />
