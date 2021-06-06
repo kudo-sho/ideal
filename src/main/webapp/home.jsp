@@ -48,8 +48,9 @@ la・Dio feniceへようこそ！<br />
 </div>  -->
 <hr />
 <br/>
-<!--
-<%= session.getAttribute("adminInfo") %>
+<!-- コメントを削除するとセッションが引き継がれているかを確認できます<br />
+管理者のセッション確認：<%= session.getAttribute("adminInfo") %><br />
+お客様のセッション確認：<%= session.getAttribute("usrName") %>
  -->
 		<a href="ShowMenuSvl"><li>メニュー紹介</li></a><br />
 		<a href="./userLogin.jsp"><li>ログイン</li></a><br />
