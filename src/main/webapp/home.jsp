@@ -51,7 +51,7 @@ if(adminInfo != null && usrName != null){
 管理者のセッション確認：<%= session.getAttribute("adminInfo") %><br />
 お客様のセッション確認：<%= session.getAttribute("usrName") %>
 </div>
- -->
+-->
 
 
  <div>
@@ -74,7 +74,6 @@ Restaurante IDEALLE へようこそ！<br />
 
 <hr />
 <br/>
-
 		<a href="ShowMenuSvl"><li>メニュー紹介</li></a><br />
 		<a href="./userLogin.jsp"><li>すでに会員のかたはこちら</li></a><br />
 		<a href="./userInsert.jsp"><li>会員ではない方はこちら</li></a><br />
