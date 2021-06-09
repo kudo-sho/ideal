@@ -94,7 +94,9 @@ for(int i=0;i<al2.size();i++){
 <% } %>
 </table>
 
+
 <a href="./home.jsp">戻る</a>
+
 
 </div>
 </body>

@@ -1,4 +1,4 @@
-package model;  //例外処理未作成
+package model;  // 6/9 コミットテスト
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
