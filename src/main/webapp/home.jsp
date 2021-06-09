@@ -24,6 +24,7 @@ msg = (String)request.getAttribute("msg");
 if(msg != null)
 	out.print(msg);
 
+
 //セッションの有無を判定
 Object adminInfo = session.getAttribute("adminInfo");
 Object usrName = session.getAttribute("usrName");
@@ -41,6 +42,7 @@ if(adminInfo != null && usrName != null){
 		}else if(adminInfo != null){
 			//管理者がログイン中はログインしている名前を表示
 			System.out.println("管理者ログイン中だよ");%>
+
 		<h4 align="right">お疲れ様です。 <%= session.getAttribute("adminInfo") %> 様</h4>
 				<%}
 				%>
