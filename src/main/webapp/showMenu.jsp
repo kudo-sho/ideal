@@ -94,7 +94,7 @@ for(int i=0;i<al2.size();i++){
 <% } %>
 </table>
 
-<a href="#" onclick="history.back()">戻る</a>
+<a href="#"./home.jsp">戻る</a>
 
 </div>
 </body>
