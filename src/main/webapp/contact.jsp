@@ -38,7 +38,8 @@ div{text-align:center;}
 <tr>
 <td>内容</td>
 <td>
-<textarea name="detail" rows="20" cols="53">ここに問い合わせ内容を記入してください。</textarea>
+<textarea name="detail" rows="20" cols="53"  placeholder=
+"ここに問い合わせ内容を記入してください。"></textarea>
 </td>
 </tr>
 </table>
