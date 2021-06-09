@@ -63,23 +63,27 @@
 				     <td align="left" colspan="2"><input type="text" name="usrName" size="30"
 				     					value= <%= session.getAttribute("usrName") %> /></td>
 				  </tr>
-
+					<!-- お客様情報変更画面で値のない入力フィールドでは/になってしまう原因
+					は値がなかった場合nullが返ってくるがvalueは文字列を認識していると思われる
+					ため/>の/が文字列として認識されてしまったものと思われる
+					よって、””でくくってnullだった場合は空文字が文字列であることを認識させて
+					不具合を解消した -->
 				  <tr>
 				    <th>住所</th>
 				    <td align="left" colspan="2"><input type="text" name="address" size="40"
-				    					value=<%= session.getAttribute("address") %> /></td>
+				    					value= "<%= session.getAttribute("address") %>" /></td>
 				  </tr>
 
 				  <tr>
 				    <th>電話番号</th>
 				    <td align="left" colspan="2"><input type="text" name="phone"
-				    				value=<%= session.getAttribute("phone") %> /></td>
+				    				value= "<%= session.getAttribute("phone") %>" /></td>
 				  </tr>
 
 				  <tr>
 				    <th>e-mail</th>
 				    <td align="left" colspan="2"><input type="text" name="mail" size="40"
-				    				value=<%= session.getAttribute("mail") %> /></td>
+				    				value= "<%= session.getAttribute("mail") %>" /></td>
 				  </tr>
 
 				  <tr>
