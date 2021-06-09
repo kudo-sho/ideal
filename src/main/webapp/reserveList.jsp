@@ -20,7 +20,7 @@ if(message == null) {message = "";}
 %>
 <h1><%= name %>様、ご予約一覧</h1>
 <%= message %>
-<table border="1">
+<table>
 <tr><th>NO</th><th>ご予約日時</th><th>人数</th><th>コース名</th><th>テーブル名</th>
 <th>登録日時</th><th colspan="2">&nbsp;</th></tr>
 <%
@@ -52,6 +52,7 @@ for(int i=0;i<al.size();i++){
 <form id="frm1" name="frm1" action="ReserveInsertSvl">
 <input type="submit" value="新規ご予約" />
 </form>
+<br/><br/>
 <a href="userIndex.jsp">処理メニューに戻る</a>
 </body>
 </html>
