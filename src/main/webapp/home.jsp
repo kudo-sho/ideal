@@ -81,7 +81,7 @@ Restaurante IDEALLE へようこそ！<br />
 		<a href="ShowMenuSvl"><li>メニュー紹介</li></a><br />
 		<a href="./userLogin.jsp"><li>すでに会員のかたはこちら</li></a><br />
 		<a href="./userInsert.jsp"><li>会員ではない方はこちら</li></a><br />
-		<a href=""><li>お問い合わせ（工事中）</li></a><br />
+		<a href="./contact.jsp"><li>お問い合わせ</li></a><br />
 
 		<br/><br/><br/>
 		<hr />
