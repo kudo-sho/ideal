@@ -6,6 +6,15 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>顧客脱会画面</title>
+	<script type="text/javascript">
+<!--
+	//脱会ボタンを押したときの確認フォーム
+	function confirm_delete() {
+
+			return (window.confirm('脱会を実行するともとには戻せません。削除してもよろしいですか？'));
+	}
+//-->
+</script>
 </head>
 <body>
 	<h1 align="center">お客様脱会手続き</h1></br>
@@ -19,7 +28,8 @@
 		if(msg != null) out.print(msg);
 	%>
 
-			<form id="f1" name="f1" action="UserOperationSvl" method="post">
+			<form id="f1" name="f1" action="UserOperationSvl" method="post"
+			onsubmit="return confirm_delete();">
 			<table align="center" border="1">
 				　<tr>
 				  	<th>お客様ID</th>
