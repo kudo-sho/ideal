@@ -39,9 +39,14 @@ msg = (String)request.getAttribute("msg");
 if(msg != null)
 	out.print(msg);
 
-//else
-//	out.print(" ");
-
+//ログイン中に再度ログイン画面を開くと再度ログイン処理を促されるため
+//ログイン中に再度ログイン画面を開いたら管理画面にフォアードするように改良した
+Object adminInfo = session.getAttribute("usrName");
+if(adminInfo != null){
+	System.out.print("お客様はログイン中だよ");
+	RequestDispatcher rd = request.getRequestDispatcher("/userIndex.jsp");
+	rd.forward(request, response);
+}
 
 %>
 		<hr />

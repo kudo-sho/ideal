@@ -24,22 +24,25 @@ msg = (String)request.getAttribute("msg");
 if(msg != null)
 	out.print(msg);
 
+
+//セッションの有無を判定
 Object adminInfo = session.getAttribute("adminInfo");
 Object usrName = session.getAttribute("usrName");
 if(adminInfo != null && usrName != null){
 	//管理者モード
-	System.out.print("管理者モードだよ");%>
+	System.out.println("管理者モードだよ");%>
 	<h3 align="right">管理者モードです</h3>
 	<h4 align="right">ログイン管理者：<%= session.getAttribute("adminInfo") %></h4>
 	<h4 align="right">ログインユーザー:<%= session.getAttribute("usrName") %></h4>
 	<%}else if(usrName != null){
 		//お客様がログイン中はお客様管理画面にフォアード
-		System.out.print("お客様ログイン中だよ");
+		System.out.println("お客様ログイン中だよ");
 		RequestDispatcher rd = request.getRequestDispatcher("/userIndex.jsp");
 		rd.forward(request, response);
 		}else if(adminInfo != null){
 			//管理者がログイン中はログインしている名前を表示
-			System.out.print("管理者ログイン中だよ");%>
+			System.out.println("管理者ログイン中だよ");%>
+
 		<h4 align="right">お疲れ様です。 <%= session.getAttribute("adminInfo") %> 様</h4>
 				<%}
 				%>
