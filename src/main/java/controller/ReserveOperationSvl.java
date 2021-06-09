@@ -1,7 +1,9 @@
 package controller;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -70,7 +72,7 @@ public class ReserveOperationSvl extends HttpServlet {
 		int tableId = 0;
 
 		try{
-			rsvId = Integer.parseInt(request.getParameter("rsvId"));
+		//	rsvId = Integer.parseInt(request.getParameter("rsvId"));
 			rsvYy = Integer.parseInt(request.getParameter("rsvYy"));
 			rsvMm = Integer.parseInt(request.getParameter("rsvMm"));
 			rsvDd = Integer.parseInt(request.getParameter("rsvDd"));
@@ -101,9 +103,13 @@ public class ReserveOperationSvl extends HttpServlet {
 				r.setPerson(person);
 				r.setCourseId(courseId);
 
-				Calendar date = Calendar.getInstance();
-				date.set(rsvYy, rsvMm, rsvDd, rsvHh, rsvMi);
-				String dateStr = date.toString();
+				Calendar cal = Calendar.getInstance();
+				cal.set(rsvYy, rsvMm-1, rsvDd, rsvHh, rsvMi);
+				Date date = cal.getTime();
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
+				String dateStr = dateFormat.format(date);
+				System.out.println("insertChk前:"+dateStr);
+
 				TableLoc tl = Reserve.insertChk(dateStr, person);
 				if(tl != null){
 					r.setTableId(tl.getTableId());
@@ -144,9 +150,13 @@ public class ReserveOperationSvl extends HttpServlet {
 				r.setPerson(person);
 				r.setCourseId(courseId);
 
-				Calendar date = Calendar.getInstance();
-				date.set(rsvYy, rsvMm, rsvDd, rsvHh, rsvMi);
-				String dateStr = date.toString();
+				Calendar cal = Calendar.getInstance();
+				cal.set(rsvYy, rsvMm-1, rsvDd, rsvHh, rsvMi);
+				Date date = cal.getTime();
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
+				String dateStr = dateFormat.format(date);
+				System.out.println("updateChk前:"+dateStr);
+				
 				TableLoc tl = Reserve.updateChk(rsvId, dateStr, person);
 				if(tl != null){
 					r.setTableId(tl.getTableId());

@@ -34,7 +34,7 @@ if(msg != null)
 
 %>
 
-
+<br />
 <a href="ShowMenuSvl">●メニュー紹介</a><br/><br/>
 <a href="ReserveListSvl">●ご予約</a><br/><br/>
 <a href="UserUpdateSvl">●お客様情報変更</a><br/><br/>
