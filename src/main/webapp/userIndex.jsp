@@ -39,7 +39,7 @@ if(msg != null)
 <a href="ReserveListSvl">●ご予約</a><br/><br/>
 <a href="UserUpdateSvl">●お客様情報変更</a><br/><br/>
 <a href="UserDeleteSvl">●お客様脱会手続き</a><br/><br/>
-<a href="./contact.jsp"><li>お問い合わせ</li></a><br />
+<a href="./contact.jsp">●お問い合わせ</a><br /><br/>
 <a href="UserLogoffSvl">●ログオフ</a>
 </center>
 </body>
