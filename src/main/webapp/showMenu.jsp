@@ -11,15 +11,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>メニュー紹介</title>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
 <style type="text/css">
 h1{font-size:60px;}
 div{text-align:center;}
 </style>
 </head>
 <body>
-<div>
+<div class="noborder">
 <h1>メニュー紹介</h1>
-<table width="100%" border="0">
+<table>
 <tr>
 <th>■コース料理</th>
 <th>&nbsp;</th>
@@ -50,7 +51,7 @@ for(int i=0;i<al1.size();i++){
 	<tr>
 	<td>&nbsp;</td>
 	<td align="left"><%= col01 %></td>
-	<td align="right"><%= col02 %></td>
+	<td style="text-align:right;vertical-align:center;"><%= col02 %></td>
 	</tr>
 <% } %>
 <tr>
@@ -91,13 +92,9 @@ for(int i=0;i<al2.size();i++){
 	<td style="text-align:right;vertical-align:bottom;"><%= col04 %></td>
 	</tr>
 <% } %>
-
-<tr>
-<td>&nbsp;</td>
-<td><a href="./home.jsp">戻る</a></td>
-<td>&nbsp;</td>
-</tr>
 </table>
+
+<a href="#" onclick="history.back()">戻る</a>
 
 </div>
 </body>
