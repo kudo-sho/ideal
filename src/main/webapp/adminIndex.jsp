@@ -20,6 +20,7 @@ div{text-align:center;}
 <%
 //ブランチ共有による競合テスト
 //引き渡されたメッセージを表示
+//ブランチ共有による競合テストPC2
 //引き渡されたメッセージがnullの場合は非表示
 String msg = null;
 request.setCharacterEncoding("utf-8");
