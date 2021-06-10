@@ -139,6 +139,8 @@ public class ReserveOperationSvl extends HttpServlet {
 			break;
 		case "変更処理":
 			try{
+				rsvId = Integer.parseInt(request.getParameter("rsvId"));
+
 				Reserve r = new Reserve();
 				r.setRsvId(rsvId);
 				r.setRsvYy(rsvYy);

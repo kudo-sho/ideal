@@ -64,7 +64,7 @@ public class ReserveDeleteSvl extends HttpServlet {
 		catch(Exception e){
 			IdealException ie = new IdealException(msgNo);
 			request.setAttribute("msg", ie.getMsg());
-			url = "RserveListSvl";
+			url = "ReserveListSvl";
 
 		}
 

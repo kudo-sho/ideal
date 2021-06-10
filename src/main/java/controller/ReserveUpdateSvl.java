@@ -56,7 +56,6 @@ public class ReserveUpdateSvl extends HttpServlet {
 
 		try{
 			int	rsvId = Integer.parseInt(request.getParameter("rsvId"));
-
 			//「リクエストオブジェクト"courseList"にオーダー可能なコースの一覧情報を設定する」
 			ArrayList<Course> al = new ArrayList<Course>();
 			al = Course.getOneCourseList();
@@ -71,7 +70,7 @@ public class ReserveUpdateSvl extends HttpServlet {
 		catch(Exception e){
 			IdealException ie = new IdealException(msgNo);
 			request.setAttribute("msg", ie.getMsg());
-			url = "RserveListSvl";
+			url = "ReserveListSvl";
 
 		}
 
