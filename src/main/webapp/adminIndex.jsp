@@ -18,10 +18,8 @@ div{text-align:center;}
 		<h4 align="right">お疲れ様です。<%= session.getAttribute("adminInfo") %>　様</h4>
 		<hr />
 <%
-//ブランチ共有による競合テスト
+
 //引き渡されたメッセージを表示
-//ブランチ共有による競合テストPC2
-//ブランチ共有テストPC2　take2
 //引き渡されたメッセージがnullの場合は非表示
 String msg = null;
 request.setCharacterEncoding("utf-8");
