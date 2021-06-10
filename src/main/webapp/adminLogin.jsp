@@ -32,6 +32,7 @@ div{text-align:center;}
 		<h1>管理者ログイン</h1>
 		<hr />
 <%
+//別ファイルで編集
 //引き渡されたメッセージを表示
 //引き渡されたメッセージがnullの場合は非表示
 String msg = null;
