@@ -172,7 +172,7 @@ public class Reserve {
 			ic = new InitialContext();
 			ds = (DataSource)ic.lookup("java:comp/env/mysql");
 			con = ds.getConnection();
-			sql = "SELECT * FROM reserve INNER JOIN user ON cst_id = usr_id"
+			sql = "SELECT * FROM reserve INNER JOIN user USING(usr_id )"
 					+ " INNER JOIN table_loc USING(table_id) INNER JOIN course USING(c_id)  WHERE usr_id = ?";
 			pst = con.prepareStatement(sql);
 			pst.setInt(1,usrId);
@@ -183,7 +183,7 @@ public class Reserve {
 				String rsv = rs.getString("rsv_date");
 				String app = rs.getString("app_date");
 				r.setRsvId(rs.getInt("rsv_id"));
-				r.setUsrId(rs.getInt("cst_id"));
+				r.setUsrId(rs.getInt("usr_id"));
 				r.setUsrName(rs.getString("usr_name"));
 				r.setRsvYy(Integer.parseInt(rsv.substring(0,4)));
 				r.setRsvMm(Integer.parseInt(rsv.substring(5,7)));
@@ -238,7 +238,7 @@ public class Reserve {
 			ic = new InitialContext();
 			ds = (DataSource)ic.lookup("java:comp/env/mysql");
 			con = ds.getConnection();
-			sql = "SELECT * FROM reserve INNER JOIN user ON cst_id = usr_id"
+			sql = "SELECT * FROM reserve INNER JOIN user USING(usr_id )"
 					+ " INNER JOIN table_loc USING(table_id) INNER JOIN course USING(c_id)  WHERE rsv_id = ?";
 			pst = con.prepareStatement(sql);
 			pst.setInt(1,rsvId);
@@ -248,7 +248,7 @@ public class Reserve {
 				String rsv = rs.getString("rsv_date");
 				String app = rs.getString("app_date");
 				re.setRsvId(rs.getInt("rsv_id"));
-				re.setUsrId(rs.getInt("cst_id"));
+				re.setUsrId(rs.getInt("usr_id"));
 				re.setUsrName(rs.getString("usr_name"));
 				re.setRsvYy(Integer.parseInt(rsv.substring(0,4)));
 				re.setRsvMm(Integer.parseInt(rsv.substring(5,7)));
@@ -333,7 +333,7 @@ public class Reserve {
 	//----新規予約確認処理----
 
 	public static TableLoc insertChk(String dateStr ,int personNum)throws IdealException{
-
+		System.out.println("insertCh開始"); //バグチェック用
 		InitialContext ic = null;
 		DataSource ds = null;
 		Connection con = null;
@@ -344,41 +344,56 @@ public class Reserve {
 		int cnt = 0;
 
 		try{
+			System.out.println("insertChのtryブロック開始"); //バグチェック用
 			ic = new InitialContext();
 			ds = (DataSource)ic.lookup("java:comp/env/mysql");
 			con = ds.getConnection();
 
-			// 人数と比較対象の時刻を「？」としてプリコンパイル// orで設定している部分は比較に使う時刻。受け取った時刻の前後３時間となる時刻を作成し、データベース内の予約時刻と比較する
-			//
-			sql = "SELECT * FROM reserve INNER JOIN table_loc USING(table_id) "
-					+ " WHERE max_capacity >= ?  and ( rsv_date <= ? or rsv_date >= ? )";
+		//①座席数（max_capacity）が予約人数（personNum）以上である
+		//②「予約がない」( rsv_date is null )または「予約しようとする時刻の前後3時間に予約がない」( rsv_date <= ? or rsv_date >= ? )
+		//の両方を満たすテーブルの中で、table_idが最も小さいテーブルの情報を取得
+		//※table_idが小さいものから優先的に予約を入れることで、座席の少ないテーブルから順に埋めていきます。
+
+
+			sql =  "SELECT * FROM reserve RIGHT OUTER JOIN table_loc USING(table_id) "
+					+ " WHERE table_id = (SELECT MIN(table_id) FROM reserve RIGHT OUTER JOIN table_loc USING(table_id) "
+					+ " WHERE max_capacity >= ? and (( rsv_date is null )or( rsv_date <= ? or rsv_date >= ? ))) ";
 			pst = con.prepareStatement(sql);
 
 			pst.setInt(1,personNum);
 
-			//String型のdateStrから文字列を抜き出し、Int型にして各変数に設定
-			//dateStrが 「xxxx-xx-xx xx:xx」の形式だという前提で作成しています。動かなかったらチェック
+		//String型のdateStrから文字列を抜き出し、Int型にして各変数に設定
+		//dateStrが 「xxxx-xx-xx xx:xx」の形式だという前提で作成しています。動かなかったらチェック
 			int year =Integer.parseInt(dateStr.substring(0,4));
 			int month =Integer.parseInt(dateStr.substring(5,7));
 			int day = Integer.parseInt(dateStr.substring(8,10));
 			int time = Integer.parseInt(dateStr.substring(11,13));
 			int minute = Integer.parseInt(dateStr.substring(14,16));
 
-			//時刻部分に３時間足し引きしたものをString型で作成しspl文へ入れる
+		//時刻部分に３時間足し引きしたものをString型で作成しspl文へ入れる
 
 			pst.setString(2, year + "-" + month + "-" + day + " " + (time - 3) + ":" + minute);
 			pst.setString(3, year + "-" + month + "-" + day + " " + (time + 3) + ":" + minute);
-
+			
 			rs = pst.executeQuery();
-
+			
+			System.out.println("insertChのrs取得");
+			
 			while(rs.next()){
 				tl.setTableId(rs.getInt("table_id"));
+				System.out.println("rsよりtable_id=" + rs.getInt("table_id"));
+				
 				tl.setTableName(rs.getString("table_name"));
+				System.out.println("rsよりtable_name=" + rs.getString("table_name"));
+				
 				tl.setMaxCapacity(rs.getInt("max_capacity"));
+				System.out.println("rsよりmax_capacity=" + rs.getInt("max_capacity"));
 				cnt++;
 			}
+			System.out.println("cnt =" + cnt);
 
 		}catch( SQLException | NamingException  e) {
+			System.out.println("insertChk内で例外発生");
 			int i = IdealException.ERR_NO_DB_EXCEPTION;
 			throw new IdealException(i);
 		}finally{
@@ -393,8 +408,10 @@ public class Reserve {
 		}
 
 		if(cnt<1){
+			System.out.println("nullを返している");
 			return null;
 		}else{
+			System.out.println("tl型を返す");
 			return tl;
 		}
 
@@ -418,10 +435,17 @@ public class Reserve {
 			ds = (DataSource)ic.lookup("java:comp/env/mysql");
 			con = ds.getConnection();
 
-			// orで設定している部分は比較に使う時刻。受け取った時刻の前後３時間となる時刻を作成し、データベース内の予約時刻と比較する
+		//①座席数（max_capacity）が予約人数（personNum）以上である
+		//②「予約がない」( rsv_date is null )または「予約しようとする時刻の前後3時間に予約がない」( rsv_date <= ? or rsv_date >= ? )
+		//　または「予約Idが同じ」(rsv_id = ?) のいずれかである
+		//の両方満たすテーブルの中で、table_idが最も小さいテーブルの情報を取得
+		//※table_idが小さいものから優先的に予約を入れることで、座席の少ないテーブルから順に埋めていきます。
 
-			sql = "SELECT * FROM reserve INNER JOIN table_loc USING(table_id) "
-					+ " WHERE max_capacity >= ?  and rsv_id != ? and ( rsv_date <= ? or rsv_date >= ? ) ";
+			sql = " SELECT * FROM reserve RIGHT OUTER JOIN table_loc USING(table_id)"
+					+ " WHERE table_id = (SELECT MIN(table_id) FROM reserve RIGHT OUTER JOIN table_loc USING(table_id) "
+						+ "	WHERE max_capacity >= ?"
+						+ " and (( rsv_date is null ) or( rsv_date <= ? or rsv_date >= ? ) or (rsv_id = ?)))";
+
 			pst = con.prepareStatement(sql);
 
 			pst.setInt(1,personNum);
@@ -495,7 +519,7 @@ public class Reserve {
 			ds = (DataSource)ic.lookup("java:comp/env/mysql");
 			con = ds.getConnection();
 			//pst1で登録内容を更新
-			sql = "insert into reserve (cst_id,rsv_date,person,c_id) values (?,?,?,?)";
+			sql = "insert into reserve (usr_id,rsv_date,person,c_id) values (?,?,?,?)";
 			pst1 = con.prepareStatement(sql);
 			pst1.setInt(1,re1.getUsrId());
 			//予約時刻はre1からそれぞれの情報を呼び出し、String型の文字列を構成してから渡す
@@ -518,7 +542,7 @@ public class Reserve {
 			while(rs2.next()){
 				String rsv = rs2.getString("rsv_date");
 				re2.setRsvId(rs2.getInt("rsv_id"));
-				re2.setUsrId(rs2.getInt("cst_id"));
+				re2.setUsrId(rs2.getInt("usr_id"));
 				re2.setRsvYy(Integer.parseInt(rsv.substring(0,4)));
 				re2.setRsvMm(Integer.parseInt(rsv.substring(5,7)));
 				re2.setRsvDd(Integer.parseInt(rsv.substring(8,10)));
@@ -572,7 +596,7 @@ public class Reserve {
 			ds = (DataSource)ic.lookup("java:comp/env/mysql");
 			con = ds.getConnection();
 			//pst1で登録内容を更新する。
-			sql = "UPDATE reserve SET cst_id = ?,rsv_date = ? , person = ? , c_id = ?  WHERE rsv_id = ?";
+			sql = "UPDATE reserve SET usr_id = ?,rsv_date = ? , person = ? , c_id = ?  WHERE rsv_id = ?";
 			pst1 = con.prepareStatement(sql);
 			pst1.setInt(1,re1.getUsrId());
 			//予約時刻はre1からそれぞれの情報を呼び出し、String型の文字列を構成してから渡す
@@ -591,7 +615,7 @@ public class Reserve {
 			while(rs.next()){
 				String rsv = rs.getString("rsv_date");
 				re2.setRsvId(rs.getInt("rsv_id"));
-				re2.setUsrId(rs.getInt("cst_id"));
+				re2.setUsrId(rs.getInt("usr_id"));
 				re2.setRsvYy(Integer.parseInt(rsv.substring(0,4)));
 				re2.setRsvMm(Integer.parseInt(rsv.substring(5,7)));
 				re2.setRsvDd(Integer.parseInt(rsv.substring(8,10)));
