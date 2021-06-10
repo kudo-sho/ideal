@@ -18,7 +18,7 @@ div{text-align:center;}
 		<h4 align="right">お疲れ様です。<%= session.getAttribute("adminInfo") %>　様</h4>
 		<hr />
 <%
-//ローカルから共有できたよ
+//リモートから共有できたよ。どうやらリモートの同じブランチにプッシュ・プルすればいいみたいだね！
 //引き渡されたメッセージを表示
 //引き渡されたメッセージがnullの場合は非表示
 String msg = null;
