@@ -333,7 +333,7 @@ public class Reserve {
 	//----新規予約確認処理----
 
 	public static TableLoc insertChk(String dateStr ,int personNum)throws IdealException{
-		System.out.println("insertCh開始"); //バグチェック用
+		System.out.println("insertChk開始"); //バグチェック用
 		InitialContext ic = null;
 		DataSource ds = null;
 		Connection con = null;
@@ -344,23 +344,27 @@ public class Reserve {
 		int cnt = 0;
 
 		try{
-			System.out.println("insertChのtryブロック開始"); //バグチェック用
+			System.out.println("insertChkのtryブロック開始"); //バグチェック用
 			ic = new InitialContext();
 			ds = (DataSource)ic.lookup("java:comp/env/mysql");
 			con = ds.getConnection();
 
-		//①座席数（max_capacity）が予約人数（personNum）以上である
-		//②「予約がない」( rsv_date is null )または「予約しようとする時刻の前後3時間に予約がない」( rsv_date <= ? or rsv_date >= ? )
-		//の両方を満たすテーブルの中で、table_idが最も小さいテーブルの情報を取得
-		//※table_idが小さいものから優先的に予約を入れることで、座席の少ないテーブルから順に埋めていきます。
+		//SQL文を大幅に変更しました。
+		//table_locとreserveを「table_idが一致かつ、予約しようとする時刻の前後3時間が既にある予約と被る」
+		//という条件で外部結合すると、予約がある席のrsv_dateには予約時刻が、無い席のrsv_dateにはnullが入ります。
+		//この中からmax_capacityがrsv_dateにnullが入っているものだけを取り出せば空席を取得できますので、
+		//その中で一番table_idが最小なものから必要な情報を取得します。
 
+			sql =  " SELECT table_loc.table_id,table_name,max_capacity,rsv_date FROM table_loc"
+				   +" LEFT OUTER JOIN reserve ON table_loc.table_id = reserve.table_id"
+				   +" AND (reserve.rsv_date > ? AND reserve.rsv_date < ?)"
+				   +" WHERE max_capacity >= ? AND rsv_date IS null ORDER BY max_capacity DESC";
 
-			sql =  "SELECT * FROM reserve RIGHT OUTER JOIN table_loc USING(table_id) "
-					+ " WHERE table_id = (SELECT MIN(table_id) FROM reserve RIGHT OUTER JOIN table_loc USING(table_id) "
-					+ " WHERE max_capacity >= ? and (( rsv_date is null )or( rsv_date <= ? or rsv_date >= ? ))) ";
 			pst = con.prepareStatement(sql);
 
-			pst.setInt(1,personNum);
+			System.out.println("受け取っているpersonNum =" + personNum);//バグチェック
+			System.out.println("受け取っているdatestr=" + dateStr);//バグチェック
+
 
 		//String型のdateStrから文字列を抜き出し、Int型にして各変数に設定
 		//dateStrが 「xxxx-xx-xx xx:xx」の形式だという前提で作成しています。動かなかったらチェック
@@ -372,28 +376,29 @@ public class Reserve {
 
 		//時刻部分に３時間足し引きしたものをString型で作成しspl文へ入れる
 
-			pst.setString(2, year + "-" + month + "-" + day + " " + (time - 3) + ":" + minute);
-			pst.setString(3, year + "-" + month + "-" + day + " " + (time + 3) + ":" + minute);
-			
+			pst.setString(1, year + "-" + month + "-" + day + " " + (time - 3) + ":" + minute);
+			pst.setString(2, year + "-" + month + "-" + day + " " + (time + 3) + ":" + minute);
+			pst.setInt(3,personNum);
+
 			rs = pst.executeQuery();
-			
-			System.out.println("insertChのrs取得");
-			
+
+			System.out.println("insertChのrs取得");//バグチェック
+
 			while(rs.next()){
 				tl.setTableId(rs.getInt("table_id"));
-				System.out.println("rsよりtable_id=" + rs.getInt("table_id"));
-				
+				System.out.println("rsよりtable_id=" + rs.getInt("table_id"));//バグチェック
+
 				tl.setTableName(rs.getString("table_name"));
-				System.out.println("rsよりtable_name=" + rs.getString("table_name"));
-				
+				System.out.println("rsよりtable_name=" + rs.getString("table_name"));//バグチェック
+
 				tl.setMaxCapacity(rs.getInt("max_capacity"));
-				System.out.println("rsよりmax_capacity=" + rs.getInt("max_capacity"));
+				System.out.println("rsよりmax_capacity=" + rs.getInt("max_capacity"));//バグチェック
 				cnt++;
 			}
 			System.out.println("cnt =" + cnt);
 
 		}catch( SQLException | NamingException  e) {
-			System.out.println("insertChk内で例外発生");
+			System.out.println("insertChk内で例外発生");//バグチェック
 			int i = IdealException.ERR_NO_DB_EXCEPTION;
 			throw new IdealException(i);
 		}finally{
@@ -408,10 +413,13 @@ public class Reserve {
 		}
 
 		if(cnt<1){
-			System.out.println("nullを返している");
+			System.out.println("nullを返している");//バグチェック
 			return null;
 		}else{
-			System.out.println("tl型を返す");
+			System.out.println("tlを返している");//バグチェック
+			System.out.println("tlよりTableId=" + tl.getTableId());//バグチェック
+			System.out.println("tlよりTableName=" +tl.getTableName());//バグチェック
+			System.out.println("tlよりMaxCapacity=" +tl.getMaxCapacity());//バグチェック
 			return tl;
 		}
 
@@ -420,7 +428,7 @@ public class Reserve {
 	//----変更予約確認処理----
 
 	public static TableLoc updateChk(int rsvId ,String dateStr ,int personNum)throws IdealException{
-
+		System.out.println("updateChk開始"); //バグチェック用
 		InitialContext ic = null;
 		DataSource ds = null;
 		Connection con = null;
@@ -431,6 +439,7 @@ public class Reserve {
 		int cnt = 0;
 
 		try{
+			System.out.println("updateChkのtryブロック開始"); //バグチェック用
 			ic = new InitialContext();
 			ds = (DataSource)ic.lookup("java:comp/env/mysql");
 			con = ds.getConnection();
@@ -447,6 +456,11 @@ public class Reserve {
 						+ " and (( rsv_date is null ) or( rsv_date <= ? or rsv_date >= ? ) or (rsv_id = ?)))";
 
 			pst = con.prepareStatement(sql);
+
+			System.out.println("受け取っているrsvId =" + rsvId);//バグチェック
+			System.out.println("受け取っているpersonNum =" + personNum);//バグチェック
+			System.out.println("受け取っているdatestr=" + dateStr);//バグチェック
+
 
 			pst.setInt(1,personNum);
 			pst.setInt(2,rsvId);
@@ -465,16 +479,28 @@ public class Reserve {
 			pst.setString(4, year + "-" + month + "-" + day + " " + (time + 3) + ":" + minute);
 
 			rs = pst.executeQuery();
+			System.out.println("updateChkのrs取得");//バグチェック
+
 
 			while(rs.next()){
 				tl.setTableId(rs.getInt("table_id"));
+				System.out.println("rsよりtable_id=" + rs.getInt("table_id"));//バグチェック
+
 				tl.setTableName(rs.getString("table_name"));
+				System.out.println("rsよりtable_name=" + rs.getString("table_name"));//バグチェック
+
 				tl.setMaxCapacity(rs.getInt("max_capacity"));
+				System.out.println("rsよりmax_capacity=" + rs.getInt("max_capacity"));//バグチェック
+				cnt++;
+
+
+
 				cnt++;
 			}
 
 
 		}catch( SQLException | NamingException  e) {
+			System.out.println("updateChk内で例外発生");//バグチェック
 			int i = IdealException.ERR_NO_DB_EXCEPTION;
 			throw new IdealException(i);
 		}finally{
@@ -490,8 +516,13 @@ public class Reserve {
 		}
 
 		if(cnt<1){
+			System.out.println("nullを返している");//バグチェック
 			return null;
 		}else{
+			System.out.println("tlを返している");//バグチェック
+			System.out.println("tlよりTableId=" + tl.getTableId());//バグチェック
+			System.out.println("tlよりTableName=" +tl.getTableName());//バグチェック
+			System.out.println("tlよりMaxCapacity=" +tl.getMaxCapacity());//バグチェック
 			return tl;
 		}
 
