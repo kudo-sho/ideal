@@ -50,8 +50,8 @@ public class ReserveInsertSvl extends HttpServlet {
 		int msgNo = 0;
 		String url = "home.jsp";
 
-		HttpSession usrInfo = request.getSession(false);
-		if(usrInfo == null){
+		HttpSession userInfo = request.getSession(false);
+		if(userInfo == null){
 			response.sendRedirect(url);
 		}
 
@@ -60,7 +60,7 @@ public class ReserveInsertSvl extends HttpServlet {
 		int rsvDd = 0;
 		int rsvHh = 0;
 		int rsvMi = 0;
-		int usrId = 0;
+		int usrId = (int)userInfo.getAttribute("usrId");
 		int person = 0;
 		int courseId = 0;
 

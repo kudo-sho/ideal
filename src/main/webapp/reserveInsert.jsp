@@ -6,7 +6,6 @@
 <%@ page import="model.*" %>
 <%@ page import = "javax.naming.*" %>
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -81,8 +80,7 @@
 </head>
 <body>
 <%
-HttpSession usrInfo = request.getSession(false);
-String name = (String)usrInfo.getAttribute("usrName");
+String name = (String)session.getAttribute("usrName");
 String message = (String)request.getAttribute("msg");
 if(message == null) {message = "&nbsp;";}
 %>
