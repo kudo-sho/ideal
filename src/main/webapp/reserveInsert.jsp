@@ -16,6 +16,7 @@
 <script type = "text/javascript">
 	<!--
 		function check(){
+			//window.alert("SUBMIT CHECK START!");
 			//現時刻のインスタンスを生成し、そこから年月日時分を変数に格納
 			var now = new Date();
 			var Year = now.getFullYear();
@@ -25,11 +26,11 @@
 	      	var Min = now.getMinutes();
 
 			//フォームに入力された値を取得し変数に格納
-			var RevYy = document.f1.revYy.value;
-			var RevMm = document.f1.revMm.value;
-	      	var RevDd = document.f1.revDd.value;
-	      	var RevHh = document.f1.revHh.value;
-	      	var RevMi = document.f1.revMi.value;
+			var RevYy = document.f1.rsvYy.value;
+			var RevMm = document.f1.rsvMm.value;
+	      	var RevDd = document.f1.rsvDd.value;
+	      	var RevHh = document.f1.rsvHh.value;
+	      	var RevMi = document.f1.rsvMi.value;
 
 	      //４月３１日など、ありえない日付けの入力を弾く
 			switch(RevMm){
@@ -83,7 +84,7 @@
 HttpSession usrInfo = request.getSession(false);
 String name = (String)usrInfo.getAttribute("usrName");
 String message = (String)request.getAttribute("msg");
-if(message == null) {message = "";}
+if(message == null) {message = "&nbsp;";}
 %>
 
 <h1><%= name %>様ご予約</h1>
@@ -103,20 +104,45 @@ if(message == null) {message = "";}
 			<%	Date date = new Date();
 	       		Calendar calendar = Calendar.getInstance();
 	        	calendar.setTime(date);
-	        	int Year = calendar.get(Calendar.YEAR);
-				for(int i=0;i<2;i++){
-			%>
-				<option value="<%= Year + i %>"><%= Year + i %></option>
+	        	int year = calendar.get(Calendar.YEAR);
+	        	int month = calendar.get(Calendar.MONTH)+1;
+	        	int day = calendar.get(Calendar.DATE);
+	        	int hour = 0;
+	        	int min = 0;
+	        	int usrId = 0;
+	        	int person = 0;
+	        	int courseId = 0;
+	        	if(re != null){
+		        	year = re.getRsvYy();
+		        	month = re.getRsvMm();
+		        	day = re.getRsvDd();
+		        	hour = re.getRsvHh();
+		        	min = re.getRsvMi();
+		        	usrId = re.getUsrId();
+		        	person = re.getPerson();
+		        	courseId = re.getCourseId();
+	        	}
+//	        	System.out.println("jsp:"+year+" "+month+" "+day+" "+hour+" "+min+
+//	        			" "+usrId+" "+person+" "+courseId);
+	        %>
+			<% for(int i=0;i<2;i++){
+				String sel=""; 
+				if(i==year){sel="selected";} %>
+				<option value="<%= year + i %>" <%= sel %>><%= year + i %></option>
 			<% } %>
 			</select>年
 			<select name="rsvMm">
-			<% for(int i=1;i<=12;i++){ %>
-				<option value="<%= i %>"><%= i %></option>
+			<% for(int i=1;i<=12;i++){ 
+				String sel=""; 
+				if(i==month){sel="selected";} %>
+				<option value="<%= i %>" <%= sel %>><%= i %></option>
 			<% } %>
 			</select>月
 			<select name="rsvDd">
-			<% for(int i=1;i<=31;i++){ %>
-				<option value="<%= i %>"><%= i %></option>
+			<% for(int i=1;i<=31;i++){
+				String sel=""; 
+				if(i==day){sel="selected";} %>
+				<option value="<%= i %>" <%= sel %>><%= i %></option>
 			<% } %>
 			</select>日
 			</td>
@@ -124,26 +150,32 @@ if(message == null) {message = "";}
 		<tr>
 			<th>時刻</th>
 			<td>
-				<select name="rsvHh">
-				<% for(int i=17;i<=21;i++){ %>
-					<option value="<%= i %>"><%= i %></option>
-				<% } %>
-				</select>時
-				<select name="rsvMi">
-				<% for(int i=0;i<=45;i+=15){ %>
-					<option value="<%= i %>"><%= i %></option>
-				<% } %>
-				</select>分
+			<select name="rsvHh">
+			<% for(int i=17;i<=21;i++){
+				String sel=""; 
+				if(i==hour){sel="selected";} %>
+				<option value="<%= i %>" <%= sel %>><%= i %></option>
+			<% } %>
+			</select>時
+			<select name="rsvMi">
+			<% for(int i=0;i<=45;i+=15){
+				String sel=""; 
+				if(i==min){sel="selected";} %>
+				<option value="<%= i %>" <%= sel %>><%= i %></option>
+			<% } %>
+			</select>分
 			</td>
 		</tr>
 		<tr>
 			<th>人数</th>
 			<td>
 			<select name="person">
-				<% for(int i=1;i<=6;i++){ %>
-					<option value="<%= i %>"><%= i %></option>
-				<% } %>
-				</select>人
+			<% for(int i=1;i<=6;i++){
+				String sel=""; 
+				if(i==person){sel="selected";} %>
+				<option value="<%= i %>" <%= sel %>><%= i %></option>
+			<% } %>
+			</select>人
 			</td>
 		</tr>
 		<tr>
@@ -151,15 +183,18 @@ if(message == null) {message = "";}
 			<td><select name="courseId">
 				<% for(int i=0;i<al.size();i++){
 					Course c = al.get(i);
-				%>
-					<option  value="<%= c.getCourseId()%>"><%= c.getCourseName() %> </option>
+					int cid = c.getCourseId();
+					String sel=""; 
+					if(cid==courseId){sel="selected";} %>
+					<option value="<%= cid %>" <%= sel %>><%= c.getCourseName() %> </option>
 				<% } %>
 				</select>
 			</td>
 		</tr>
 		<tr>
-			<td colspan="2">
+			<td class="cent" colspan="2">
 				<input type="submit" value="予約" />
+				<input type = "hidden"  name = "usrId" value ="<%= usrId %>"/>
 				<input type = "hidden"  name = "mode" value ="登録処理"/>
 			</td>
 		</tr>

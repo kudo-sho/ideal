@@ -76,6 +76,8 @@ public class ReserveInsertSvl extends HttpServlet {
 		}catch(Exception e){
 
 		}
+    	System.out.println("iSv:"+rsvYy+" "+rsvMm+" "+rsvDd+" "+rsvHh+" "+rsvMi+
+    			" "+usrId+" "+person+" "+courseId);
 
 		try{
 			//「リクエストオブジェクト"courseList"にオーダー可能なコースの一覧情報を設定する」

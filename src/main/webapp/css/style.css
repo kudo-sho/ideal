@@ -14,6 +14,10 @@ body {
   min-height: 100%;
   }
 
+h1 {
+	font-size: 60px;
+}
+
 img {
 	margin: 0;
 	padding: 0;
@@ -40,6 +44,10 @@ td{
 .noborder th,
 .noborder td {
 	border:0px;
+}
+
+.cent {
+	text-align:center;
 }
 
 a:focus { outline: none; }
