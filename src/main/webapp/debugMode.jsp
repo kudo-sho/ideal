@@ -100,10 +100,12 @@
 <input type="reset" value="リセット" />
 </form>
 
-設定された管理者は：<%= admin %>
+<!--  設定された管理者は：<%= admin %>
 設定されたお客様は：<%= user %>
 <br />
 セッションにある管理者は：<%= session.getAttribute("adminInfo") %>
 セッションにお客様は：<%= session.getAttribute("usrName") %>
+-->
+※機能に一部不具合あり
 </body>
 </html>
