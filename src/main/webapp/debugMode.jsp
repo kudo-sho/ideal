@@ -10,10 +10,25 @@
 </head>
 <body>
 	<%
+		session.setAttribute("adminInfo", request.getParameter("admin") );
 		String admin = request.getParameter("admin");
+
 		Integer user;
-		try {user = Integer.parseInt(request.getParameter("user"));}
+		try {
+			user = Integer.parseInt(request.getParameter("user"));
+			User userInfo= User.getUser(Integer.parseInt(request.getParameter("user")));
+			session.setAttribute("usrName", userInfo.getUsrName());
+			session.setAttribute("usrId", userInfo.getUsrId());
+			session.setAttribute("usrName", userInfo.getUsrName());
+			session.setAttribute("password", userInfo.getPassword());
+			session.setAttribute("address", userInfo.getAddress());
+			session.setAttribute("phone", userInfo.getPhone());
+			session.setAttribute("mail", userInfo.getMail());
+			session.setAttribute("exp", userInfo.getExp());
+		}
 		catch (NumberFormatException e) {user  = null;}
+
+
 	%>
 
 <h5>デバッグモード設定</h5>
@@ -76,5 +91,8 @@
 
 設定された管理者は：<%= admin %>
 設定されたお客様は：<%= user %>
+<br />
+セッションにある管理者は：<%= session.getAttribute("adminInfo") %>
+セッションにお客様は：<%= session.getAttribute("usrName") %>
 </body>
 </html>

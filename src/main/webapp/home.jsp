@@ -13,7 +13,7 @@ div{text-align:center;}
 </head>
 <body>
 
-
+<iframe src="./debugMode.jsp"></iframe>
 
 <%
 //引き渡されたメッセージを表示
