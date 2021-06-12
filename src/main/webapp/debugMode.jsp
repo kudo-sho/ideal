@@ -22,7 +22,6 @@
 		catch (NumberFormatException e) {user  = null;}
 	%>
 
-	<jsp:useBean id="menu" class="model.Menu" scope="request" />
 <h5>デバッグモード設定</h5>
 <form id="debugAdmin" name="debugAdmin" action="./debugMode.jsp" method="get">
 管理者：
@@ -32,11 +31,11 @@
 <%
 //admin.javaにgetAllAdminメソッドを作る必要がありそう
 
-							for (Object o : MenuType.getAllType()) {
-								MenuType mt = (MenuType) o;
+							for (Object o : Debug.getAdminList()) {
+								Debug deb = (Debug) o;
 								String selected = "";
 								if(admin != null){
-									if(admin.equals((Integer)mt.getTypeId())){
+									if(admin.equals((Integer)deb.getAdminId())){
 										selected ="selected= 'selected'";
 									}else{
 										selected = "";
@@ -45,8 +44,8 @@
 								System.out.println(selected);
 
 						%>
-						<option value="<%=mt.getTypeId()%>" <%= selected %>>
-							<%=mt.getTypeName()%></option>
+						<option value="<%= deb.getAdminName() %>" <%= selected %>>
+							<%= deb.getAdminName() %></option>
 						<%
 							}
 						%>
@@ -56,21 +55,22 @@
 <select name="user">
 <option value="null">null</option>
 <%
-							for (Object o : MenuType.getAllType()) {
-								MenuType mt = (MenuType) o;
+							for (Object o : Debug.getUserList()) {
+								Debug deb = (Debug) o;
 								String selected = "";
 								if(user != null){ //nullの場合はヌルポになるためnull判定
-									if(user.equals((Integer)mt.getTypeId())){
+									if(user.equals((Integer)deb.getUserId())){
 										selected ="selected= 'selected'";
 									}else{
 										selected = "";
 									}
 								}
-								System.out.println(selected);
+
+							System.out.println(selected);
 
 						%>
-						<option value="<%=mt.getTypeId()%>" <%= selected %>>
-							<%=mt.getTypeName()%></option>
+						<option value="<%= deb.getUserId()%>" <%= selected %>>
+							<%= deb.getUserName() %></option>
 						<%
 							}
 						%>
