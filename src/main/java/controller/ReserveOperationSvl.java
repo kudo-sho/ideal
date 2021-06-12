@@ -123,9 +123,9 @@ public class ReserveOperationSvl extends HttpServlet {
 					r.setCourseName(cs.getCourseName());
 
 					//System.out.println("insert前:");
-					Reserve r2 = Reserve.insert(r);
+					r = Reserve.insert(r);
 					//System.out.println("insert後:");
-					rsvId = r2.getRsvId();
+					rsvId = r.getRsvId();
 					request.setAttribute("rsvId",rsvId);
 					url = "/reserveCompletion.jsp";
 
@@ -148,6 +148,7 @@ public class ReserveOperationSvl extends HttpServlet {
 			r = new Reserve();
 			try{
 				rsvId = Integer.parseInt(request.getParameter("rsvId"));
+				tableId = Integer.parseInt(request.getParameter("tableId"));
 
 				r.setRsvId(rsvId);
 				r.setRsvYy(rsvYy);
@@ -164,23 +165,23 @@ public class ReserveOperationSvl extends HttpServlet {
 				Date date = cal.getTime();
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
 				String dateStr = dateFormat.format(date);
-				System.out.println("updateChk前:"+dateStr+","+person);
+				System.out.println("updateChk前:"+rsvId+","+dateStr+","+person);
 				
 				TableLoc tl = Reserve.updateChk(rsvId, dateStr, person);
 				if(tl != null){
 					r.setTableId(tl.getTableId());
 					r.setTableName(tl.getTableName());
+					System.out.println("updateChk後:"+tl.getTableId()+","+tl.getTableName());
 
 					Course cs = Course.getCourse(courseId);
 					r.setCourseName(cs.getCourseName());
 
-//					Reserve r2 = Reserve.update(r);
-//					request.setAttribute("reserve",r2);
 					r = Reserve.update(r);
+					request.setAttribute("msg", "予約を変更しました");
 					url = "ReserveListSvl";
 
 				}else{
-					request.setAttribute("reserve",r);
+					//request.setAttribute("reserve",r);
 					msgNo = IdealException.ERR_NO_NOT_VACANCY;
 					throw new IdealException(msgNo);
 
@@ -197,8 +198,10 @@ public class ReserveOperationSvl extends HttpServlet {
 		case "削除処理":
 			r = new Reserve();
 			try{
+				rsvId = Integer.parseInt(request.getParameter("rsvId"));
 				r.setRsvId(rsvId);
 				Reserve.delete(r);
+				request.setAttribute("msg", "予約を取り消ししました");
 				url = "ReserveListSvl";
 
 			}catch(Exception e){

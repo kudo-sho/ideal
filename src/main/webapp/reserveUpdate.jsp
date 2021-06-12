@@ -26,11 +26,11 @@
 	      	var Min = now.getMinutes();
 
 			//フォームに入力された値を取得し変数に格納
-			var RevYy = document.f1.revYy.value;
-			var RevMm = document.f1.revMm.value;
-	      	var RevDd = document.f1.revDd.value;
-	      	var RevHh = document.f1.revHh.value;
-	      	var RevMi = document.f1.revMi.value;
+			var RevYy = document.f1.rsvYy.value;
+			var RevMm = document.f1.rsvMm.value;
+	      	var RevDd = document.f1.rsvDd.value;
+	      	var RevHh = document.f1.rsvHh.value;
+	      	var RevMi = document.f1.rsvMi.value;
 
 	      //４月３１日など、ありえない日付けの入力を弾く
 			switch(RevMm){
@@ -84,7 +84,7 @@
 HttpSession usrInfo = request.getSession(false);
 String name = (String)usrInfo.getAttribute("usrName");
 String message = (String)request.getAttribute("msg");
-if(message == null) {message = "";}
+if(message == null) {message = "&nbsp;";}
 %>
 
 <h1><%= name %>様ご予約変更</h1>
@@ -180,8 +180,8 @@ ArrayList<Course> al = (ArrayList<Course>)request.getAttribute("courseList");
 			<th>コース</th>
 			<td>
 				<select name="courseId">
-				<% for(int i=0;i<al.size();i++){
-					Course c = al.get(i);
+				<% for(int i=1;i<=al.size();i++){
+					Course c = al.get(i-1);
 					if( c.getCourseId()== i){
 				%>
 					<option value="<%= c.getCourseId()%>" selected><%= c.getCourseName() %></option>
@@ -193,8 +193,11 @@ ArrayList<Course> al = (ArrayList<Course>)request.getAttribute("courseList");
 			</td>
 		</tr>
 		<tr>
-			<td colspan="2">
+			<td colspan="2" class="cent">
 			<input type="submit" value="変更" />
+			<input type = "hidden" name = "rsvId" value ="<%= re.getRsvId() %>"/>
+			<input type = "hidden" name = "usrId" value ="<%= re.getUsrId() %>"/>
+			<input type = "hidden" name = "tableId" value ="<%= re.getTableId() %>"/>
 			<input type = "hidden" name = "mode" value ="変更処理"/>
 			</td>
 		</tr>
