@@ -17,6 +17,10 @@ div{text-align:center;}
 			alert("顧客様IDを入力してください。");
 			document.frm1.usrId.focus();
 			return false;
+		}else if(! document.frm1.usrId.value.match(/^[0-9]+$/g)){
+			alert("顧客様IDは半角数字を入力してください。");
+			document.frm1.usrId.focus();
+			return false;
 		}else if(document.frm1.password.value == ""){
 			alert("パスワードを入力してください。");
 			document.frm1.password.focus();
