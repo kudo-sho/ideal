@@ -9,14 +9,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-<%
-//String admin = request.getParameter("admin");
-//String user = request.getParameter("user");
-%>
 	<%
-		Integer admin;
-		try {admin = Integer.parseInt(request.getParameter("admin"));}
-		catch (NumberFormatException e) {admin  = null;}
+		String admin = request.getParameter("admin");
 		Integer user;
 		try {user = Integer.parseInt(request.getParameter("user"));}
 		catch (NumberFormatException e) {user  = null;}
@@ -29,13 +23,11 @@
 <option value="null">null</option>
 
 <%
-//admin.javaにgetAllAdminメソッドを作る必要がありそう
-
 							for (Object o : Debug.getAdminList()) {
 								Debug deb = (Debug) o;
 								String selected = "";
 								if(admin != null){
-									if(admin.equals((Integer)deb.getAdminId())){
+									if(admin.equals(deb.getAdminName())){
 										selected ="selected= 'selected'";
 									}else{
 										selected = "";
