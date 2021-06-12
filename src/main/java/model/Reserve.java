@@ -173,7 +173,8 @@ public class Reserve {
 			ds = (DataSource)ic.lookup("java:comp/env/mysql");
 			con = ds.getConnection();
 			sql = "SELECT * FROM reserve INNER JOIN user USING(usr_id )"
-					+ " INNER JOIN table_loc USING(table_id) INNER JOIN course USING(c_id)  WHERE usr_id = ?";
+					+ " INNER JOIN table_loc USING(table_id) INNER JOIN course USING(c_id)  WHERE usr_id = ? "
+					+ " ORDER BY rsv_date";
 			pst = con.prepareStatement(sql);
 			pst.setInt(1,usrId);
 			rs = pst.executeQuery();
