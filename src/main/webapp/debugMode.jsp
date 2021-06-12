@@ -10,8 +10,21 @@
 </head>
 <body>
 	<%
-		session.setAttribute("adminInfo", request.getParameter("admin") );
-		String admin = request.getParameter("admin");
+		//管理者セッションの判定
+		String admin;
+		String ses = (String)session.getAttribute("adminInfo");
+		String par = request.getParameter("admin");
+		//セッションがnullまたはパラメータとセッションが一致していない場合は上書き
+		if(ses == null || !(ses.equals(par))){
+			System.out.println("フェーズ");
+			session.setAttribute("adminInfo", request.getParameter("admin") );
+			admin = (String)session.getAttribute("adminInfo");
+		}else{//パラメータとセッション一致しているときはselected判定に値を渡す
+			System.out.println("notフェーズ");
+			admin = (String)session.getAttribute("adminInfo");
+			System.out.println(admin);
+
+		}
 
 		Integer user;
 		try {
@@ -27,15 +40,13 @@
 			session.setAttribute("exp", userInfo.getExp());
 		}
 		catch (NumberFormatException e) {user  = null;}
-
-
 	%>
 
-<h5>デバッグモード設定</h5>
+デバッグモード設定
 <form id="debugAdmin" name="debugAdmin" action="./debugMode.jsp" method="get">
 管理者：
 <select name="admin">
-<option value="null">null</option>
+<option value="">null</option>
 
 <%
 							for (Object o : Debug.getAdminList()) {
@@ -60,7 +71,7 @@
 <br />
 お客様：
 <select name="user">
-<option value="null">null</option>
+<option value="">null</option>
 <%
 							for (Object o : Debug.getUserList()) {
 								Debug deb = (Debug) o;

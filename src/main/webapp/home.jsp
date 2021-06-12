@@ -39,12 +39,15 @@ if(adminInfo != null && usrName != null){
 		System.out.println("お客様ログイン中だよ");
 		RequestDispatcher rd = request.getRequestDispatcher("/userIndex.jsp");
 		rd.forward(request, response);
-		}else if(adminInfo != null){
+		}else if(adminInfo == ""){
 			//管理者がログイン中はログインしている名前を表示
-			System.out.println("管理者ログイン中だよ");%>
+			System.out.println("管理者空文字");
+				}else if(adminInfo != null){
+					//管理者がログイン中はログインしている名前を表示
+					System.out.println("管理者ログイン中だよ");%>
 
-		<h4 align="right">お疲れ様です。 <%= session.getAttribute("adminInfo") %> 様</h4>
-				<%}
+				<h4 align="right">お疲れ様です。 <%= session.getAttribute("adminInfo") %> 様</h4>
+						<%}
 				%>
 
 
