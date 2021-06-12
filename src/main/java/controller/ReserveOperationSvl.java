@@ -111,17 +111,20 @@ public class ReserveOperationSvl extends HttpServlet {
 				Date date = cal.getTime();
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
 				String dateStr = dateFormat.format(date);
-				System.out.println("insertChk前:"+dateStr+","+person);
+				//System.out.println("insertChk前:"+dateStr+","+person);
 
 				TableLoc tl = Reserve.insertChk(dateStr, person);
 				if(tl != null){
 					r.setTableId(tl.getTableId());
 					r.setTableName(tl.getTableName());
+					//System.out.println("insertChk後:"+tl.getTableId()+","+tl.getTableName());
 
 					Course cs = Course.getCourse(courseId);
 					r.setCourseName(cs.getCourseName());
 
+					//System.out.println("insert前:");
 					Reserve r2 = Reserve.insert(r);
+					//System.out.println("insert後:");
 					rsvId = r2.getRsvId();
 					request.setAttribute("rsvId",rsvId);
 					url = "/reserveCompletion.jsp";
@@ -161,7 +164,7 @@ public class ReserveOperationSvl extends HttpServlet {
 				Date date = cal.getTime();
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
 				String dateStr = dateFormat.format(date);
-				System.out.println("updateChk前:"+dateStr);
+				System.out.println("updateChk前:"+dateStr+","+person);
 				
 				TableLoc tl = Reserve.updateChk(rsvId, dateStr, person);
 				if(tl != null){
@@ -171,8 +174,9 @@ public class ReserveOperationSvl extends HttpServlet {
 					Course cs = Course.getCourse(courseId);
 					r.setCourseName(cs.getCourseName());
 
-					Reserve r2 = Reserve.update(r);
-					request.setAttribute("reserve",r2);
+//					Reserve r2 = Reserve.update(r);
+//					request.setAttribute("reserve",r2);
+					r = Reserve.update(r);
 					url = "ReserveListSvl";
 
 				}else{
@@ -185,6 +189,7 @@ public class ReserveOperationSvl extends HttpServlet {
 			}catch(Exception e){
 				IdealException ie = new IdealException(msgNo);
 				request.setAttribute("msg", ie.getMsg());
+				request.setAttribute("reserve",r);
 				url = "ReserveUpdateSvl";
 
 			}

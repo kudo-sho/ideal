@@ -49,8 +49,8 @@ public class ReserveUpdateSvl extends HttpServlet {
 		int msgNo = 0;
 		String url = "home.jsp";
 
-		HttpSession usrInfo = request.getSession(false);
-		if(usrInfo == null){
+		HttpSession userInfo = request.getSession(false);
+		if(userInfo == null){
 			response.sendRedirect(url);
 		}
 
@@ -62,7 +62,10 @@ public class ReserveUpdateSvl extends HttpServlet {
 			request.setAttribute("courseList",al);
 
 			Reserve r = new Reserve();
-			r = Reserve.getReserve(rsvId);
+			r = (Reserve)request.getAttribute("reserve");
+			if(r==null) {
+				r = Reserve.getReserve(rsvId);
+			}
 			request.setAttribute("reserve",r);
 			url = "/reserveUpdate.jsp";
 
