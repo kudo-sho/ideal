@@ -445,16 +445,17 @@ public class Reserve {
 			ds = (DataSource)ic.lookup("java:comp/env/mysql");
 			con = ds.getConnection();
 
-		//①座席数（max_capacity）が予約人数（personNum）以上である
-		//②「予約がない」( rsv_date is null )または「予約しようとする時刻の前後3時間に予約がない」( rsv_date <= ? or rsv_date >= ? )
-		//　または「予約Idが同じ」(rsv_id = ?) のいずれかである
-		//の両方満たすテーブルの中で、table_idが最も小さいテーブルの情報を取得
-		//※table_idが小さいものから優先的に予約を入れることで、座席の少ないテーブルから順に埋めていきます。
+			//SQL文を大幅に変更しました。
+			//table_locとreserveを「table_idが一致かつ、予約しようとする時刻の前後3時間が既にある予約と被る」
+			//という条件で外部結合すると、予約がある席のrsv_dateには予約時刻が、無い席のrsv_dateにはnullが入ります。
+			//この中からmax_capacityがrsv_dateにnullが入っているものだけを取り出せば空席を取得できますので、
+			//その中で一番table_idが最小なものから必要な情報を取得します。
 
-			sql = " SELECT * FROM reserve RIGHT OUTER JOIN table_loc USING(table_id)"
-					+ " WHERE table_id = (SELECT MIN(table_id) FROM reserve RIGHT OUTER JOIN table_loc USING(table_id) "
-						+ "	WHERE max_capacity >= ?"
-						+ " and (( rsv_date is null ) or( rsv_date <= ? or rsv_date >= ? ) or (rsv_id = ?)))";
+			sql =  " SELECT table_loc.table_id,table_name,max_capacity,rsv_date FROM table_loc"
+				   +" LEFT OUTER JOIN reserve ON table_loc.table_id = reserve.table_id"
+				   +" AND (reserve.rsv_date > ? AND reserve.rsv_date < ?)"
+				   +" WHERE max_capacity >= ?  AND ( rsv_date IS null or rsv_id = ? ) ORDER BY max_capacity ";
+;
 
 			pst = con.prepareStatement(sql);
 
@@ -463,8 +464,8 @@ public class Reserve {
 			System.out.println("受け取っているdatestr=" + dateStr);//バグチェック
 
 
-			pst.setInt(1,personNum);
-			pst.setInt(2,rsvId);
+			pst.setInt(3,personNum);
+			pst.setInt(4,rsvId);
 
 			//String型のdateStrから文字列を抜き出し、Int型にして各変数に設定
 			//dateStrが 「xxxx-xx-xx xx:xx」の形式だという前提で作成しています。動かなかったらチェック
@@ -476,8 +477,8 @@ public class Reserve {
 
 			//時刻部分に３時間足し引きしたものをString型で作成しsql文へ入れる
 
-			pst.setString(3, year + "-" + month + "-" + day + " " + (time - 3) + ":" + minute);
-			pst.setString(4, year + "-" + month + "-" + day + " " + (time + 3) + ":" + minute);
+			pst.setString(1, year + "-" + month + "-" + day + " " + (time - 3) + ":" + minute);
+			pst.setString(2, year + "-" + month + "-" + day + " " + (time + 3) + ":" + minute);
 
 			rs = pst.executeQuery();
 			System.out.println("updateChkのrs取得");//バグチェック
@@ -715,6 +716,7 @@ public class Reserve {
 			sql = " DELETE  FROM reserve WHERE rsv_id = ? ";
 			pst = con.prepareStatement(sql);
 			pst.setInt(1,re.getRsvId());
+			pst.executeUpdate();
 
 		}catch( SQLException | NamingException  e) {
 			int i = IdealException.ERR_NO_DB_EXCEPTION;
