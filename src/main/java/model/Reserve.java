@@ -484,7 +484,7 @@ public class Reserve {
 			System.out.println("updateChkのrs取得");//バグチェック
 
 
-			while(rs.next()){
+			if(rs.next()){
 				tl.setTableId(rs.getInt("table_id"));
 				System.out.println("rsよりtable_id=" + rs.getInt("table_id"));//バグチェック
 
