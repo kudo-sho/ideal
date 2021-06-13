@@ -15,13 +15,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>予約取消画面</title>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
 </head>
 <body>
 <%
 HttpSession usrInfo = request.getSession(false);
 String name = (String)usrInfo.getAttribute("usrName");
 String message = (String)request.getAttribute("msg");
-if(message == null) {message = "";}
+if(message == null) {message = "&nbsp;";}
 %>
 
 <h1><%= name %>様ご予約取消</h1>
@@ -55,8 +56,9 @@ if(message == null) {message = "";}
 			<td><%= re.getCourseName() %></td>
 		</tr>
 		<tr>
-			<td colspan="2">
+			<td colspan="2" class="cent">
 			<input type="submit" value="取消" />
+			<input type = "hidden" name = "rsvId" value ="<%= re.getRsvId() %>"/>
 			<input type = "hidden" name = "mode" value ="削除処理"/>
 			</td>
 		</tr>

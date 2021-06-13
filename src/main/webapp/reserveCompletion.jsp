@@ -10,14 +10,17 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>予約完了画面</title>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
 </head>
 <body>
 
 <%
-	Reserve re = (Reserve)request.getAttribute("rsvId") ; 
+	int rsvId = (int)request.getAttribute("rsvId");
+	Reserve re = Reserve.getReserve(rsvId);
+	String name = (String)session.getAttribute("usrName");
 %>
 
-<h1><%= session.getAttribute("name") %>様、ご予約が完了いたしました。</h1>
+<h1><%= name %>様、ご予約が完了いたしました。</h1>
 
 <h2><%= re.getRsvYy() %>年<%= re.getRsvMm() %>月<%= re.getRsvDd() %>日  <%= re.getRsvHh() %>時<%= re.getRsvMi() %>分より</h2>
 <h2><%= re.getCourseName() %>　<%= re.getPerson() %>名様</h2>
