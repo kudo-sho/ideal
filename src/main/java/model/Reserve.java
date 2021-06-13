@@ -174,7 +174,7 @@ public class Reserve {
 			con = ds.getConnection();
 			sql = "SELECT * FROM reserve INNER JOIN user USING(usr_id )"
 					+ " INNER JOIN table_loc USING(table_id) INNER JOIN course USING(c_id)  WHERE usr_id = ? "
-					+ " ORDER BY rsv_date";
+					+ " ORDER BY rsv_date " ;
 			pst = con.prepareStatement(sql);
 			pst.setInt(1,usrId);
 			rs = pst.executeQuery();
@@ -639,21 +639,27 @@ public class Reserve {
 			ds = (DataSource)ic.lookup("java:comp/env/mysql");
 			con = ds.getConnection();
 			//pst1で登録内容を更新する。
-			sql = "UPDATE reserve SET usr_id = ?,rsv_date = ? , person = ? , c_id = ?  WHERE rsv_id = ?";
+			sql = "UPDATE reserve SET usr_id = ?,rsv_date = ? , person = ? , c_id = ? , table_id = ? WHERE rsv_id = ? ";
 			pst1 = con.prepareStatement(sql);
 			pst1.setInt(1,re1.getUsrId());
 			//予約時刻はre1からそれぞれの情報を呼び出し、String型の文字列を構成してから渡す
 			pst1.setString(2, re1.getRsvYy() + "-" + re1.getRsvMm() + "-" + re1.getRsvDd() + " " + re1.getRsvHh() + ":" + re1.getRsvMi());
 			pst1.setInt(3,re1.getPerson());
 			pst1.setInt(4,re1.getCourseId());
-			pst1.setInt(5,re1.getRsvId());
+			pst1.setInt(5,re1.getTableId());
+			pst1.setInt(6,re1.getRsvId());
 			pst1.executeUpdate();
+			
+			System.out.println("updateメソッド:テーブルの値を更新");
 
 			//pst2で変更後の内容を問合せ
 			sql = " SELECT * FROM reserve WHERE rsv_id = ? ";
 			pst2 = con.prepareStatement(sql);
 			pst2.setInt(1,re1.getRsvId());
 			rs = pst2.executeQuery();
+			
+			System.out.println("updateメソッド:更新後の結果セット取得");
+
 
 			while(rs.next()){
 				String rsv = rs.getString("rsv_date");
@@ -665,11 +671,12 @@ public class Reserve {
 				re2.setRsvHh(Integer.parseInt(rsv.substring(11,13)));
 				re2.setRsvMi(Integer.parseInt(rsv.substring(14,16)));
 				re2.setPerson(rs.getInt("person"));
+				re2.setTableId(rs.getInt("table_id"));
 				re2.setCourseId(rs.getInt("c_id"));
-
 			}
 
 		}catch( SQLException | NamingException  e) {
+			System.out.println("updateメソッド内で例外発生");
 			int i = IdealException.ERR_NO_DB_EXCEPTION;
 			throw new IdealException(i);
 
@@ -684,6 +691,7 @@ public class Reserve {
 
 			}
 		}
+		System.out.println("updateメソッド終了");
 		return re2;
 
 	}
