@@ -143,7 +143,7 @@ public class Menu {
 				if(con != null) con.close();
 			}
 			catch(Exception e){
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 		}
 		return menu;
@@ -247,7 +247,7 @@ public class Menu {
 				}
 				menu.setOrderFlg(rs.getInt("orderFlg"));
 				menu.setPrice(rs.getInt("price"));
-				//					menu.setTypeId(rs.getInt("t_id"));
+				menu.setTypeId(rs.getInt("t_id"));
 				menu.setTypeName(rs.getString("t_name"));
 				alm.add(menu);
 			}
