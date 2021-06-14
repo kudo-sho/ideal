@@ -1,4 +1,4 @@
-package model;  // 6/9 コミットテスト
+package model;  // 6/14　予約登録、変更、削除の不具合修正済み
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -650,7 +650,7 @@ public class Reserve {
 			pst1.setInt(5,re1.getTableId());
 			pst1.setInt(6,re1.getRsvId());
 			pst1.executeUpdate();
-			
+
 			System.out.println("updateメソッド:テーブルの値を更新");
 
 			//pst2で変更後の内容を問合せ
@@ -658,7 +658,7 @@ public class Reserve {
 			pst2 = con.prepareStatement(sql);
 			pst2.setInt(1,re1.getRsvId());
 			rs = pst2.executeQuery();
-			
+
 			System.out.println("updateメソッド:更新後の結果セット取得");
 
 
