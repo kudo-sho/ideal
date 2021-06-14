@@ -1,4 +1,4 @@
-package model;  // 6/14　予約登録、変更、削除の不具合修正済み
+package model;  // 6/14 予約登録、変更、削除の不具合修正済み 再プッシュ
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
