@@ -57,23 +57,40 @@ public class MenuMaintenanceSvl extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8");
 		RequestDispatcher rd = null;
 		int typeId = 100;
+		if(request.getAttribute("typeID") != null) {
+		typeId = Integer.parseInt(request.getAttribute("typeID").toString());
+		request.setAttribute("typeID",typeId);
+		}
+
+
+//		request.setAttribute("msg", request.getAttribute("msg"));
+//		System.out.println(request.getAttribute("msg"));
+
 
 		try{
 			//セッション情報がnullならホームページへ
 			HttpSession session = request.getSession(true);
 			if(session.getAttribute("adminInfo") == null){
-				rd = request.getRequestDispatcher("/home.jsp");
-				rd.forward(request, response);
-			}
+//				rd = request.getRequestDispatcher("/home.jsp");
+//				rd.forward(request, response);
+//				↓こっちの方が良さそう？
+				response.sendRedirect("/ideal/home.jsp");
+				return;
+				}
 
-			if(request.getParameter("typeID") == null){
-				request.setAttribute("typeID", 100);
-			}else{
-
-				typeId = Integer.parseInt(request.getParameter("typeID"));
-				request.setAttribute("typeID", typeId);
-				//↑これとか使わないかも
-			}
+//			if(request.getParameter("typeID") == null){
+//				if(request.getParameter("DtypeID") == null) {
+//					request.setAttribute("typeID", 100);
+//				}else {
+//				typeId = Integer.parseInt(request.getParameter("DtypeID"));
+//				request.setAttribute("typeID", typeId);
+//				}
+//			}else{
+////
+////				typeId = Integer.parseInt(request.getParameter("typeID"));
+////				request.setAttribute("typeID", typeId);
+//				//↑これとか使わないかも
+//			}
 
 			ArrayList<MenuType> almt = MenuType.getAllType();
 			request.setAttribute("mType",almt);
@@ -83,6 +100,8 @@ public class MenuMaintenanceSvl extends HttpServlet {
 
 			//ここまで問題なければメニューメンテ画面に戻って再表示
 			rd = request.getRequestDispatcher("/menuMaintenance.jsp");
+			rd.forward(request, response);
+			return;
 
 
 			//独自例外が発生したらメッセージ取得＆管理者処理画面に遷移
@@ -93,9 +112,9 @@ public class MenuMaintenanceSvl extends HttpServlet {
 			request.setAttribute("msg", ie.getMsg());
 //			System.out.println(msg);
 			rd = request.getRequestDispatcher("/adminIndex.jsp");
-
-		}finally{
+//			e.printStackTrace();
 			rd.forward(request, response);
+
 		}
 
 	}
