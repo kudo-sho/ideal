@@ -19,7 +19,7 @@ public class IdealException extends Exception {
 	public static int ERR_NO_ADMIN_EXCEPTION = 3;
 	public static int ERR_NO_NOT_VACANCY = 4;
 	public static int ERR_NO_NOT_RESERV_DELETE = 5;
-	public static int ERR_NO_NOT_MENU_DELETE = 0;
+	public static int ERR_NO_NOT_MENU_DELETE = 6;
 
 	//コンストラクター
 	public IdealException(int errCd){

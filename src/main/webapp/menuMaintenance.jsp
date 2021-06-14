@@ -87,7 +87,7 @@ th.th1 {
 		</div>
 		<br />
 		<div align="left">
-			<font color="red" size="3">
+			<font color="red" size="5">
 
 <%
 //引き渡されたメッセージを表示
@@ -107,11 +107,16 @@ if(msg != null)
 		<%
 		String thstyle = "1";
 		int typeID;
+		MenuType mt;
 		String typeName = "一覧";
 		try{
 		typeID = Integer.parseInt(request.getParameter("typeID"));
 		}catch(Exception e){
+			if(request.getParameter("DtypeID") == null){
 			typeID = 100;
+			}else{
+			typeID = Integer.parseInt(request.getParameter("DtypeID"));
+			}
 		}
 		%>
 
@@ -125,7 +130,7 @@ if(msg != null)
 
 				ArrayList<MenuType> almt = MenuType.getAllType();
 				for (int x = 0; x < almt.size(); x++) {
-					MenuType mt = almt.get(x);
+					mt = almt.get(x);
 					//if (mt.getTypeId() == Integer.parseInt(request.getAttribute("typeID"))) { //ここの条件式変えて、一致する時のみ緑色にする
 					if (mt.getTypeId() == typeID) { //ここの条件式変えて、一致する時のみ緑色にする
 						//if (x == 1) {
@@ -167,7 +172,7 @@ if(msg != null)
 		<div style="width: 85%; height: 600px;">
 			<table id="main" border="1" width="85%" cellspacing="0">
 				<tr class="tr4">
-				<td colspan="7">＜＜＜<font color="red">
+				<td colspan="7">＜＜＜<font size="5" color="green">
 
 				<%
 				if(alm.size()==0){
@@ -203,9 +208,9 @@ if(msg != null)
 				<tr class="tr<%=trstyle%>">
 					<td><%= menu.getMenuId() %></td>
 					<td class="left"><%= menu.getMenuName() %></td>
-					<td class="right"><%=nfc.format(menu.getPrice())%></td>
+					<td class="right"><%= nfc.format(menu.getPrice()) %></td>
 					<td class="left"><%= menu.getDetail() %></td>
-					<td><%=orderFlg[menu.getOrderFlg()]%></td>
+					<td><%= orderFlg[menu.getOrderFlg()] %></td>
 					<form id="fchange" action="MenuUpdateSvl" method="post">
 						<td align="center"><input type="submit" value="変更" /></td>
 						<input type="hidden" name="typeID" value="<%= menu.getTypeId() %>" />
