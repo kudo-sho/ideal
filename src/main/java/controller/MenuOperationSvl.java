@@ -65,10 +65,10 @@ public class MenuOperationSvl extends HttpServlet {
 		detail = request.getParameter("detail");
 //		typeName = request.getParameter("typeName");
 		try{
-			menuID = Integer.parseInt(request.getParameter("menuID"));
+			menuID = Integer.parseInt(request.getParameter("menuId"));
 			orderFlg = Integer.parseInt(request.getParameter("orderFlg"));
 			price = Integer.parseInt(request.getParameter("price"));
-			typeID = Integer.parseInt(request.getParameter("typeID"));
+			typeID = Integer.parseInt(request.getParameter("typeId"));
 		}catch(NumberFormatException e){
 			orderFlg = 0;
 			price = 0;
@@ -119,7 +119,7 @@ public class MenuOperationSvl extends HttpServlet {
 			//メニュー情報更新
 			typeID = Menu.updateMenu(menu,mode);
 
-			request.setAttribute("typeID", typeID);
+//			request.setAttribute("typeID", typeID);
 
 			//ここまで問題なければメニューメンテ画面（Svl）に戻って再表示
 			rd = request.getRequestDispatcher("MenuMaintenanceSvl");
