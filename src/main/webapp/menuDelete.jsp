@@ -6,7 +6,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>メニュー情報削除(工事中)</title>
+<title>メニュー情報削除</title>
 <style>
 <!--
 	h1{text-align:center; background:#007B66; color:#ECFFF3;}
