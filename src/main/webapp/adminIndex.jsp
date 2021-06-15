@@ -35,7 +35,6 @@ if(msg != null)
 			RequestDispatcher rd = request.getRequestDispatcher("/adminLogin.jsp");
 			rd.forward(request, response);
 		}
-
 %>
 
 <!--
