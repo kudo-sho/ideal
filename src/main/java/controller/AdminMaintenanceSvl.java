@@ -70,9 +70,10 @@ public class AdminMaintenanceSvl extends HttpServlet {
 			request.setAttribute("msg", ie.getMsg());
 //			System.out.println(msg);
 			rd = request.getRequestDispatcher("/adminIndex.jsp");
-			rd.forward(request, response);
+
 
 		}
+		rd.forward(request, response);
 	}
 
 }

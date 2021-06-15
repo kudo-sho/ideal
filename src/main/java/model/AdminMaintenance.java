@@ -66,6 +66,7 @@ public class AdminMaintenance {
 				am = new AdminMaintenance();
 				am.setAdminId(cnt);
 				am.setAdminName(rs.getString("adm_Name"));
+				am.setAdminExp(rs.getString("exp"));
 				alam.add(am);
 			}
 
