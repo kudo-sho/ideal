@@ -182,7 +182,7 @@ ArrayList<Course> al = (ArrayList<Course>)request.getAttribute("courseList");
 				<select name="courseId">
 				<% for(int i=1;i<=al.size();i++){
 					Course c = al.get(i-1);
-					if( c.getCourseId()== i){
+					if( re.getCourseId()== i){
 				%>
 					<option value="<%= c.getCourseId()%>" selected><%= c.getCourseName() %></option>
 				<% }else{ %>
