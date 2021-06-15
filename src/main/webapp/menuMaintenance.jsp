@@ -24,7 +24,7 @@ body {
 }
 
 table#menu {
-	width: 150px;
+	width: 160px;
 }
 
 table#main {
@@ -35,17 +35,61 @@ td {
 	text-align: center;
 }
 
-td.right {
-	text-align: right;
-}
-
-td.center {
+td.id {
+	width: 25px;
 	text-align: center;
 }
 
-td.left {
+td.menuname {
+	width: 250px;
 	text-align: left;
 }
+
+td.price {
+	width: 60px;
+	text-align: right;
+}
+
+td.detail {
+	width: 500px;
+	text-align: left;
+}
+
+td.orderflg {
+	width: 65px;
+	text-align: center;
+}
+
+td.botan {
+	width: 40px;
+	text-align: center;
+}
+
+
+th.id {
+	width: 25px;
+}
+
+th.menuname {
+	width: 250px;
+}
+
+th.price {
+	width: 60px;
+}
+
+th.detail {
+	width: 500px;
+}
+
+th.orderflg {
+	width: 65px;
+}
+
+th.botan {
+	width: 80px;
+}
+
 
 tr.tr1 {
 	background-color: aquamarine;
@@ -68,10 +112,12 @@ th {
 }
 
 th.th0 {
+	width: 30px;
 	background-color: green;
 }
 
 th.th1 {
+	width: 30px;
 	background-color: lime;
 }
 -->
@@ -106,18 +152,20 @@ if(msg != null)
 
 		<%
 		String thstyle = "1";
-		int typeID;
-		MenuType mt;
-		String typeName = "一覧";
-		try{
-		typeID = Integer.parseInt(request.getParameter("typeID"));
-		}catch(Exception e){
-			if(request.getParameter("DtypeID") == null){
-			typeID = 100;
-			}else{
-			typeID = Integer.parseInt(request.getParameter("DtypeID"));
-			}
-		}
+				int typeID;
+				MenuType mt;
+				String typeName = "一覧";
+				try {
+					typeID = Integer.parseInt(request.getParameter("typeID"));
+				} catch (Exception e) {
+						typeID = 100;
+					if (request.getParameter("CtypeID") == null && request.getParameter("DtypeID") == null) {
+					} else if (request.getParameter("CtypeID") != null) {
+						typeID = Integer.parseInt(request.getParameter("CtypeID"));
+					} else if (request.getParameter("DtypeID") != null) {
+						typeID = Integer.parseInt(request.getParameter("DtypeID"));
+					}
+				}
 		%>
 
 		<!-- サイドメニュー -->
@@ -183,14 +231,14 @@ if(msg != null)
 				 %> </font>＞＞＞</td>
 				</tr>
 				<tr class="tr3">
-					<td>ID</td>
-					<td>メニュー</td>
-					<td>価格</td>
-					<td>コメント</td>
-					<td>オーダー</td>
-					<td colspan="2">
+					<th class="id">ID</th>
+					<th class="menuname">メニュー</th>
+					<th class="price">価格</th>
+					<th class="detail">コメント</th>
+					<th class="orderflg">オーダー</th>
+					<th class="botan" colspan="2">
 						&nbsp;
-					</td>
+					</th>
 				</tr>
 				<%
 
@@ -206,20 +254,20 @@ if(msg != null)
 					}
 				%>
 				<tr class="tr<%=trstyle%>">
-					<td><%= menu.getMenuId() %></td>
-					<td class="left"><%= menu.getMenuName() %></td>
-					<td class="right"><%= nfc.format(menu.getPrice()) %></td>
-					<td class="left"><%= menu.getDetail() %></td>
-					<td><%= orderFlg[menu.getOrderFlg()] %></td>
+					<td class="id"><%= menu.getMenuId() %></td>
+					<td class="menuname"><%= menu.getMenuName() %></td>
+					<td class="price"><%= nfc.format(menu.getPrice()) %></td>
+					<td class="detail"><%= menu.getDetail() %></td>
+					<td class="orderflg"><%= orderFlg[menu.getOrderFlg()] %></td>
 					<form id="fchange" action="MenuUpdateSvl" method="post">
-						<td align="center"><input type="submit" value="変更" /></td>
-						<input type="hidden" name="typeID" value="<%= menu.getTypeId() %>" />
-						<input type="hidden" name="menuID" value="<%= menu.getMenuId() %>" />
+						<td class="botan"><input type="submit" value="変更" /></td>
+						<input type="hidden" name="CtypeID" value="<%= menu.getTypeId() %>" />
+						<input type="hidden" name="CmenuID" value="<%= menu.getMenuId() %>" />
 					</form>
 					<form id="fdelete" action="MenuDeleteSvl" method="post">
-						<td align="center"><input type="submit" value="削除" /></td>
-						<input type="hidden" name="typeID" value="<%= menu.getTypeId() %>" />
-						<input type="hidden" name="menuID" value="<%= menu.getMenuId() %>" />
+						<td class="botan"><input type="submit" value="削除" /></td>
+						<input type="hidden" name="DtypeID" value="<%= menu.getTypeId() %>" />
+						<input type="hidden" name="DmenuID" value="<%= menu.getMenuId() %>" />
 					</form>
 				</tr>
 

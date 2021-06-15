@@ -62,9 +62,9 @@ public class MenuDeleteSvl extends HttpServlet {
 				return;
 			}
 
-			typeID = Integer.parseInt(request.getParameter("typeID"));
+			typeID = Integer.parseInt(request.getParameter("DtypeID"));
 //			request.setAttribute("typeID", typeID);
-			menuID = Integer.parseInt(request.getParameter("menuID"));
+			menuID = Integer.parseInt(request.getParameter("DmenuID"));
 //			request.setAttribute("menuID", menuID);
 			//↑これとか使わないかも
 
