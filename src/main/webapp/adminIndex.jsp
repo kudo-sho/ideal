@@ -27,8 +27,14 @@ msg = (String)request.getAttribute("msg");
 if(msg != null)
 	out.print(msg);
 
-//else
-//	out.print(" ");
+//管理者セッションを確認
+		Object usrName = session.getAttribute("adminInfo");
+		if(usrName == null){
+			//管理者がログインしていない時は管理者ログインにフォアード
+			System.out.println("管理者ログインしてないのでログインしてね");
+			RequestDispatcher rd = request.getRequestDispatcher("/adminLogin.jsp");
+			rd.forward(request, response);
+		}
 
 %>
 
