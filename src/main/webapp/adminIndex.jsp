@@ -43,7 +43,7 @@ if(msg != null)
 		<l>
 			<a href = ""><li>予約状況確認（工事中）</li></a><br/>
 			<a href = "MenuMaintenanceSvl"><li>メニューメンテナンス</li></a><br />
-			<a href = ""><li>管理者情報メンテナンス（工事中）</li></a><br />
+			<a href = "AdminMaintenanceSvl"><li>管理者情報メンテナンス（工事中）</li></a><br />
 			<a href = "AdminLogoffSvl"><li>ログアウト</li></a><br />
 
 		</l>
