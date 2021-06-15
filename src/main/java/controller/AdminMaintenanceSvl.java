@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.AdminMaintenance;
 import model.IdealException;
-import model.MenuType;
 
 /**
  * Servlet implementation class AdminMaintenanceSvl
@@ -56,7 +56,7 @@ public class AdminMaintenanceSvl extends HttpServlet {
 
 
 			//adminリストを取得してセッションにセットする
-			ArrayList<adminMaintenance> alam = MenuType.getAllType();
+			ArrayList<AdminMaintenance> alam = AdminMaintenance.getAdminList();
 			request.setAttribute("admList",alam);
 
 			//ここまで問題なければadminMaintenance画面に戻って再表示
