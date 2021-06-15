@@ -41,9 +41,10 @@ if(msg != null)
 		<td width="33%"></td>
 		<td width= "33%">
 		<l>
+			<a href = ""><li>予約状況確認（工事中）</li></a><br/>
 			<a href = "MenuMaintenanceSvl"><li>メニューメンテナンス</li></a><br />
-			<a href = ""><li>管理者情報変更（工事中）</li></a>
-			<a href = "AdminLogoffSvl"><li>ログアウト</li></a>
+			<a href = ""><li>管理者情報メンテナンス（工事中）</li></a><br />
+			<a href = "AdminLogoffSvl"><li>ログアウト</li></a><br />
 
 		</l>
 		</td>
