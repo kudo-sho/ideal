@@ -14,6 +14,7 @@
 <style type="text/css">
 h1{font-size:60px;}
 td{text-align:center;}
+.nb td{border-width:0px 1px;}
 </style>
 </head>
 <body>
@@ -37,17 +38,20 @@ for(int i=0;i<al.size();i++){
 	Date date = cal.getTime();
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	String dateStr = dateFormat.format(date);
-	if(dateStr != k_dateStr){
+	String nbclass = "";
+	if(!dateStr.equals(k_dateStr)){
 		k_dateStr = dateStr;
+		nbclass = "style='border-width:1px 1px 0px;'";
 	}else{
 		dateStr = "&nbsp;";
+		nbclass = "style='border-width:0px 1px;'";
 	}
-
+	String mm = String.format("%02d",r.getRsvMi());
 %>
 	<tr>
-	<td><%= dateStr %></td>
+	<td <%= nbclass %>><%= dateStr %></td>
 	<td><%= r.getTableName() %></td>
-	<td><%= r.getRsvHh() %>:<%= r.getRsvMi() %> 〜 <%= r.getRsvHh()+3 %>:<%= r.getRsvMi() %></td>
+	<td><%= r.getRsvHh() %>:<%= mm %> 〜 <%= r.getRsvHh()+3 %>:<%= mm %></td>
 	<td><%= r.getUsrName() %> 様（<%= r.getUsrId() %>）</td>
 	<td><%= r.getPerson() %></td>
 	<td><%= r.getCourseName() %></td>
@@ -56,7 +60,7 @@ for(int i=0;i<al.size();i++){
 	</tr>
 <% } %>
 </table>
-<br/><br/>
 <a href="adminIndex.jsp">管理者メニューに戻る</a>
+<br/><br/>
 </body>
 </html>
