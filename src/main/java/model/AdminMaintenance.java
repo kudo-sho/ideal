@@ -14,6 +14,7 @@ public class AdminMaintenance {
 	//フィールド
 	private int adminId;
 	private String adminName;
+	private String password;
 	private String adminExp;
 
 	//getter
@@ -22,6 +23,9 @@ public class AdminMaintenance {
 	}
 	public String getAdminName() {
 		return adminName;
+	}
+	public String getPassword() {
+		return password;
 	}
 	public String getAdminExp() {
 		return adminExp;
@@ -33,6 +37,9 @@ public class AdminMaintenance {
 	}
 	public void setAdminName(String adminName) {
 		this.adminName = adminName;
+	}
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	public void setAdminExp(String adminExp) {
 		this.adminExp = adminExp;
@@ -89,6 +96,55 @@ public class AdminMaintenance {
 			}
 		}
 		return alam;
+
+	}
+
+	//管理者新規登録
+	public static AdminMaintenance insert(AdminMaintenance am) throws NamingException, IdealException{
+
+		InitialContext ic = null;
+		DataSource ds =null;
+		Connection con = null;
+		String sql = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		try{
+
+			//DBに接続する
+			ic = new InitialContext();
+			ds = (DataSource)ic.lookup("java:comp/env/mysql");
+			con = ds.getConnection();
+
+			//ユーザー情報を登録する
+			sql = "INSERT INTO admin(adm_name, password, exp) VALUES(?,?,?)";
+			pst = con.prepareStatement(sql);
+			pst.setString(1,am.getAdminName());
+			pst.setString(2,am.getPassword());
+			pst.setString(3,am.getAdminExp());
+			pst.executeUpdate();
+
+//			//顧客IDを取得する
+//			sql = "select last_insert_id() as userInfo";
+//			pst = con.prepareStatement(sql);
+//			rs = pst.executeQuery();
+//			rs.next();
+//
+//			//顧客IDをセットする
+//			user.setUsrId(rs.getInt("userInfo"));
+
+		}catch(SQLException e){
+			int i = IdealException.ERR_NO_DB_EXCEPTION;
+			throw new IdealException(i);
+		}finally{
+			try {
+				pst.close();
+				con.close();
+				ic.close();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return am;
 
 	}
 
