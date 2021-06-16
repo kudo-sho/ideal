@@ -55,14 +55,17 @@ public class MenuDeleteSvl extends HttpServlet {
 			//セッション情報がnullならホームページへ
 			HttpSession session = request.getSession(true);
 			if(session.getAttribute("adminInfo") == null){
-				rd = request.getRequestDispatcher("/home.jsp");
-				rd.forward(request, response);
+//				rd = request.getRequestDispatcher("/home.jsp");
+//				rd.forward(request, response);
+//				↓こっちの方が良さそう？
+				response.sendRedirect("/ideal/home.jsp");
+				return;
 			}
 
-			typeID = Integer.parseInt(request.getParameter("typeID"));
-			request.setAttribute("typeID", typeID);
-			menuID = Integer.parseInt(request.getParameter("menuID"));
-			request.setAttribute("menuID", menuID);
+			typeID = Integer.parseInt(request.getParameter("DtypeID"));
+//			request.setAttribute("typeID", typeID);
+			menuID = Integer.parseInt(request.getParameter("DmenuID"));
+//			request.setAttribute("menuID", menuID);
 			//↑これとか使わないかも
 
 
@@ -81,12 +84,14 @@ public class MenuDeleteSvl extends HttpServlet {
 
 					rd = request.getRequestDispatcher("MenuMaintenanceSvl");
 					rd.forward(request, response);
+					return;
 				}
 				menu = Menu.getOneMenu(menuID, typeID);
 				request.setAttribute("oneMenu",menu);
 
 
 				rd = request.getRequestDispatcher("/menuDelete.jsp");
+				rd.forward(request, response);
 //				rd = request.getRequestDispatcher("MenuMaintenanceSvl");
 
 			}
@@ -95,13 +100,12 @@ public class MenuDeleteSvl extends HttpServlet {
 			//			}catch(IdealException |ServletException | IOException e) {
 		}catch(Exception e) {
 			//			}catch(Exception e) {
-			IdealException ie = new IdealException(IdealException.ERR_NO_NOT_MENU_DELETE);
+			IdealException ie = new IdealException(IdealException.ERR_NO_EXCEPTION);
 			request.setAttribute("msg", ie.getMsg());
 			//			System.out.println(msg);
 			rd = request.getRequestDispatcher("MenuMaintenanceSvl");
-
-		}finally{
 			rd.forward(request, response);
+
 		}
 
 	}

@@ -65,10 +65,10 @@ public class MenuOperationSvl extends HttpServlet {
 		detail = request.getParameter("detail");
 //		typeName = request.getParameter("typeName");
 		try{
-			menuID = Integer.parseInt(request.getParameter("menuID"));
+			menuID = Integer.parseInt(request.getParameter("menuId"));
 			orderFlg = Integer.parseInt(request.getParameter("orderFlg"));
 			price = Integer.parseInt(request.getParameter("price"));
-			typeID = Integer.parseInt(request.getParameter("typeID"));
+			typeID = Integer.parseInt(request.getParameter("typeId"));
 		}catch(NumberFormatException e){
 			orderFlg = 0;
 			price = 0;
@@ -79,20 +79,23 @@ public class MenuOperationSvl extends HttpServlet {
 			//セッション情報がnullならホームページへ
 						HttpSession session = request.getSession(true);
 						if(session.getAttribute("adminInfo") == null){
-							rd = request.getRequestDispatcher("/home.jsp");
-							rd.forward(request, response);
+//							rd = request.getRequestDispatcher("/home.jsp");
+//							rd.forward(request, response);
+//							↓こっちの方が良さそう？
+							response.sendRedirect("/ideal/home.jsp");
+							return;
 						}
 
 			mode = Integer.parseInt(request.getParameter("mode"));
 
 			//おそらく↓だけど、もしかしたら処理によってm_idとかでDBから情報引っ張ってくる・・・？
 			//削除時
-			if(mode == 13){
+			if(mode == MenuOperationSvl.DELETE){
 				menu = Menu.getOneMenu(menuID, typeID);
 
 
 				//変更時
-			}else if(mode == 12){
+			}else if(mode == MenuOperationSvl.UPDATE){
 				menu = new Menu();
 				menu.setMenuId(menuID);
 				menu.setMenuName(menuName);
@@ -103,7 +106,7 @@ public class MenuOperationSvl extends HttpServlet {
 
 
 			//登録時
-		}else if(mode == 11){
+		}else if(mode == MenuOperationSvl.INSERT){
 			menu = new Menu();
 			menu.setMenuName(menuName);
 			menu.setDetail(detail);
@@ -116,7 +119,7 @@ public class MenuOperationSvl extends HttpServlet {
 			//メニュー情報更新
 			typeID = Menu.updateMenu(menu,mode);
 
-			request.setAttribute("typeID", typeID);
+//			request.setAttribute("typeID", typeID);
 
 			//ここまで問題なければメニューメンテ画面（Svl）に戻って再表示
 			rd = request.getRequestDispatcher("MenuMaintenanceSvl");
