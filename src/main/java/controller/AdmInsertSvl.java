@@ -56,7 +56,7 @@ public class AdmInsertSvl extends HttpServlet {
 		am.setAdminExp(exp);
 
 		try {
-			//insertメソッドからの戻り値をセッションに載せてフォアード
+			//insertメソッドからの戻り値をリクエストに載せてフォアード
 			am = AdminMaintenance.insert(am);
 			request.setAttribute("insertAdmName", am.getAdminName());
 			request.setAttribute("insertAdmPassword", am.getPassword());
