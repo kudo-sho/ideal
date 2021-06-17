@@ -55,7 +55,7 @@ public class AdminMaintenanceSvl extends HttpServlet {
 			}
 
 
-			//adminリストを取得してセッションにセットする
+			//adminリストを取得してリクエストにセットする
 			ArrayList<AdminMaintenance> alam = AdminMaintenance.getAdminList();
 			request.setAttribute("admList",alam);
 

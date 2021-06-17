@@ -95,5 +95,54 @@ public class Admin {
 	}
 
 	//
+	//管理者情報を取得（変更や削除に使用）
+	public static Admin getAdmin(int admId)throws IdealException  {
+//		System.out.println("beans起動");
+		int id = admId;
+		Admin a = null;
 
+		Connection con = null;
+		Statement st = null;
+		ResultSet rs = null;
+
+		try {
+			a = new Admin();
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "root");
+			st = con.createStatement();
+			String sql = "SELECT * FROM admin"
+					+ " WHERE usr_id = '"+ id +"'";
+//			System.out.println(sql);
+			rs = st.executeQuery(sql);
+			System.out.println(rs);
+
+			while(rs.next()){
+				a.setAdmId(rs.getInt("adm_id"));
+				a.setAdmName(rs.getString("adm_name"));
+				a.setPassword(rs.getString("password"));
+				a.setExp(rs.getString("exp"));
+			}
+			System.out.println("Userインスタンスに値セット完了");
+//			System.out.println("名前は"+a.getadmId());
+			if(id == 0){
+				a = null;
+
+
+			}
+		}catch(SQLException | ClassNotFoundException e) {
+			int i = IdealException.ERR_NO_DB_EXCEPTION;
+			throw new IdealException(i);
+
+		}finally {
+			try {
+				if(con != null) con.close();
+				if(st != null) st.close();
+				if(rs != null) rs.close();
+			}catch(Exception e) {
+
+			}
+		}
+		return a;
+
+	}
 }
