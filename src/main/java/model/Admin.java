@@ -8,11 +8,15 @@ import java.sql.Statement;
 
 public class Admin {
 	//フィールド
+	private int admId;
 	private String admName;
 	private String password;
 	private String exp;
 
 	//getter
+	public int getAdmId() {
+		return admId;
+	}
 	public String getAdmName() {
 		return admName;
 	}
@@ -24,6 +28,9 @@ public class Admin {
 	}
 
 	//setter
+	public void setAdmId(int admId) {
+		this.admId = admId;
+	}
 	public void setAdmName(String admName) {
 		this.admName = admName;
 	}
@@ -35,13 +42,15 @@ public class Admin {
 	}
 
 
+
+	//メソッド
+	//ログイン処理
 	public Admin login(String admName, String password) throws IdealException  {
 //		System.out.println("beans起動");
 		String name = admName;
 		String pass = password;
 		Admin a = null;
 //		System.out.println("引数は"+ name +"と"+pass);
-
 
 		Connection con = null;
 		Statement st = null;
@@ -57,26 +66,19 @@ public class Admin {
 							+ " AND password = '"+ pass +"'";
 //			System.out.println(sql);
 			rs = st.executeQuery(sql);
-//			System.out.println(rs);
 
+			//問い合わせた管理者情報をadminオブジェクトにセット
 			while(rs.next()){
+				a.setAdmId(rs.getInt("adm_id"));
 				a.setAdmName(rs.getString("adm_name"));
 				a.setPassword(rs.getString("password"));
 				a.setExp(rs.getString("exp"));
 			}
-//			System.out.println("名前は"+a.getAdmName());
+//			System.out.println("名前は"+a.getAdmName());//名前のセット確認(デバッグ用)
+			//該当レコードがなかった場合はadminにnullをセット
 			if(a.getAdmName() == null){
 				a = null;
-
-
 			}
-//			else{
-//				System.out.println("認証しました。");
-//			}
-
-
-
-
 		}catch(SQLException | ClassNotFoundException e) {
 			int i = IdealException.ERR_NO_DB_EXCEPTION;
 			throw new IdealException(i);
@@ -87,12 +89,11 @@ public class Admin {
 				if(st != null) st.close();
 				if(rs != null) rs.close();
 			}catch(Exception e) {
-
 			}
 		}
 		return a;
-
-
 	}
+
+	//
 
 }
