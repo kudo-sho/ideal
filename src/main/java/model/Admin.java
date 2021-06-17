@@ -117,10 +117,9 @@ public class Admin {
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "root");
 			st = con.createStatement();
 			String sql = "SELECT * FROM admin"
-					+ " WHERE usr_id = '"+ id +"'";
+					+ " WHERE adm_id = "+ id ;
 //			System.out.println(sql);
 			rs = st.executeQuery(sql);
-			System.out.println(rs);
 
 			//問い合わせた管理者情報をadminオブジェクトにセット
 			while(rs.next()){

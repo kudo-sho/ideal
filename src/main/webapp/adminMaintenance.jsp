@@ -46,8 +46,9 @@ if(msg != null)
 	for(Admin am : Admin.getAdminList()){%>
 	<tr>
 	<td><%= am.getAdmId() %></td><td><%= am.getAdmName() %></td><td><%= am.getExp() %></td>
-	<td><form id="admUpdate" name="admUpdate" action="" method="post">
+	<td><form id="admUpdate" name="admUpdate" action="AdminUpdateSvl" method="post">
 	<input type="submit" value="変更" />
+	<input type="hidden" name="admId" value="<%= am.getAdmId() %>" />
 	</form></td>
 	<td><form id="admDelete" name="admDelete" action="" method="post">
 	<input type="submit" value="削除" />
