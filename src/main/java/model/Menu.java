@@ -341,6 +341,7 @@ public class Menu {
 			}
 
 			//おそらくTypeIDを返す？
+
 			return m.getTypeId();
 		}
 
