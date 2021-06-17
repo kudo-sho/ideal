@@ -44,7 +44,7 @@
 	&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
 
 		<div align="center">
-			<a href="adminIndex.jsp">
+			<a href="adminMaintenance.jsp">
 				<u>戻る</u>
 			</a>
 		</div>
