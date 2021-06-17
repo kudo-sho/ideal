@@ -10,6 +10,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>予約情報一覧</title>
 <link rel="stylesheet" type="text/css" href="css/style.css" />
+<style type="text/css">
+h1{font-size:60px;}
+td{text-align:center;}
+</style>
 </head>
 <body>
 <%
@@ -20,7 +24,7 @@ if(message == null) {message = "";}
 %>
 <h1><%= name %>様、ご予約一覧</h1>
 <%= message %>
-<table border="1">
+<table>
 <tr><th>NO</th><th>ご予約日時</th><th>人数</th><th>コース名</th><th>テーブル名</th>
 <th>登録日時</th><th colspan="2">&nbsp;</th></tr>
 <%
@@ -34,15 +38,16 @@ for(int i=0;i<al.size();i++){
 	<td><%= r.getPerson() %></td>
 	<td><%= r.getCourseName() %></td>
 	<td><%= r.getTableName() %></td>
+	<td><%= r.getAppYy() %>年<%= r.getAppMm() %>月<%= r.getAppDd() %>日　<%= r.getAppHh() %>時<%= r.getAppMi() %>分</td>
 	<td>
 		<form name="update" action="ReserveUpdateSvl" method="post">
-		<input type="hidden" name="no" value="<%= r.getRsvId() %>" />
+		<input type="hidden" name="rsvId" value="<%= r.getRsvId() %>" />
 		<input type="submit" value="変更" />
 		</form>
 	</td>
 	<td>
 		<form name="dele" action="ReserveDeleteSvl" method="post">
-		<input type="hidden" name="no" value="<%= r.getRsvId() %>" />
+		<input type="hidden" name="rsvId" value="<%= r.getRsvId() %>" />
 		<input type="submit" value="取消" />
 		</form>
 	</td>
@@ -52,6 +57,7 @@ for(int i=0;i<al.size();i++){
 <form id="frm1" name="frm1" action="ReserveInsertSvl">
 <input type="submit" value="新規ご予約" />
 </form>
+<br/><br/>
 <a href="userIndex.jsp">処理メニューに戻る</a>
 </body>
 </html>

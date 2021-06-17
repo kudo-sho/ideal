@@ -1,7 +1,9 @@
 package controller;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -70,7 +72,7 @@ public class ReserveOperationSvl extends HttpServlet {
 		int tableId = 0;
 
 		try{
-			rsvId = Integer.parseInt(request.getParameter("rsvId"));
+		//	rsvId = Integer.parseInt(request.getParameter("rsvId"));
 			rsvYy = Integer.parseInt(request.getParameter("rsvYy"));
 			rsvMm = Integer.parseInt(request.getParameter("rsvMm"));
 			rsvDd = Integer.parseInt(request.getParameter("rsvDd"));
@@ -79,46 +81,56 @@ public class ReserveOperationSvl extends HttpServlet {
 			usrId = Integer.parseInt(request.getParameter("usrId"));
 			person = Integer.parseInt(request.getParameter("person"));
 			courseId = Integer.parseInt(request.getParameter("courseId"));
-			tableId = Integer.parseInt(request.getParameter("tableId"));
+		//	tableId = Integer.parseInt(request.getParameter("tableId"));
 		}catch(Exception e){
 
 		}
+	   	System.out.println("oSv:"+rsvYy+" "+rsvMm+" "+rsvDd+" "+rsvHh+" "+rsvMi+
+	   			" "+usrId+" "+person+" "+courseId);
 
 		String url = "ReserveListSvl";
 		int msgNo = 0;
+		Reserve r = null;
 
 		switch(mode) {
 		case "登録処理":
-			try{
-				Reserve r = new Reserve();
-				//r.setRsvId(rsvId);
-				r.setRsvYy(rsvYy);
-				r.setRsvMm(rsvMm);
-				r.setRsvDd(rsvDd);
-				r.setRsvHh(rsvHh);
-				r.setRsvMi(rsvMi);
-				r.setUsrId(usrId);
-				r.setPerson(person);
-				r.setCourseId(courseId);
+			r = new Reserve();
+			//r.setRsvId(rsvId);
+			r.setRsvYy(rsvYy);
+			r.setRsvMm(rsvMm);
+			r.setRsvDd(rsvDd);
+			r.setRsvHh(rsvHh);
+			r.setRsvMi(rsvMi);
+			r.setUsrId(usrId);
+			r.setPerson(person);
+			r.setCourseId(courseId);
 
-				Calendar date = Calendar.getInstance();
-				date.set(rsvYy, rsvMm, rsvDd, rsvHh, rsvMi);
-				String dateStr = date.toString();
+			try{
+				Calendar cal = Calendar.getInstance();
+				cal.set(rsvYy, rsvMm-1, rsvDd, rsvHh, rsvMi);
+				Date date = cal.getTime();
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
+				String dateStr = dateFormat.format(date);
+				//System.out.println("insertChk前:"+dateStr+","+person);
+
 				TableLoc tl = Reserve.insertChk(dateStr, person);
 				if(tl != null){
 					r.setTableId(tl.getTableId());
 					r.setTableName(tl.getTableName());
+					//System.out.println("insertChk後:"+tl.getTableId()+","+tl.getTableName());
 
 					Course cs = Course.getCourse(courseId);
 					r.setCourseName(cs.getCourseName());
 
-					Reserve r2 = Reserve.insert(r);
-					rsvId = r2.getRsvId();
+					//System.out.println("insert前:");
+					r = Reserve.insert(r);
+					//System.out.println("insert後:");
+					rsvId = r.getRsvId();
 					request.setAttribute("rsvId",rsvId);
 					url = "/reserveCompletion.jsp";
 
 				}else{
-					request.setAttribute("reserve",r);
+					//request.setAttribute("reserve",r);
 					msgNo = IdealException.ERR_NO_NOT_VACANCY;
 					throw new IdealException(msgNo);
 
@@ -126,14 +138,18 @@ public class ReserveOperationSvl extends HttpServlet {
 
 			}catch(Exception e){
 				IdealException ie = new IdealException(msgNo);
+				request.setAttribute("reserve",r);
 				request.setAttribute("msg", ie.getMsg());
 				url = "ReserveInsertSvl";
 
 			}
 			break;
 		case "変更処理":
+			r = new Reserve();
 			try{
-				Reserve r = new Reserve();
+				rsvId = Integer.parseInt(request.getParameter("rsvId"));
+				tableId = Integer.parseInt(request.getParameter("tableId"));
+
 				r.setRsvId(rsvId);
 				r.setRsvYy(rsvYy);
 				r.setRsvMm(rsvMm);
@@ -144,23 +160,28 @@ public class ReserveOperationSvl extends HttpServlet {
 				r.setPerson(person);
 				r.setCourseId(courseId);
 
-				Calendar date = Calendar.getInstance();
-				date.set(rsvYy, rsvMm, rsvDd, rsvHh, rsvMi);
-				String dateStr = date.toString();
+				Calendar cal = Calendar.getInstance();
+				cal.set(rsvYy, rsvMm-1, rsvDd, rsvHh, rsvMi);
+				Date date = cal.getTime();
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
+				String dateStr = dateFormat.format(date);
+				System.out.println("updateChk前:"+rsvId+","+dateStr+","+person);
+				
 				TableLoc tl = Reserve.updateChk(rsvId, dateStr, person);
 				if(tl != null){
 					r.setTableId(tl.getTableId());
 					r.setTableName(tl.getTableName());
+					System.out.println("updateChk後:"+tl.getTableId()+","+tl.getTableName());
 
 					Course cs = Course.getCourse(courseId);
 					r.setCourseName(cs.getCourseName());
 
-					Reserve r2 = Reserve.update(r);
-					request.setAttribute("reserve",r2);
+					r = Reserve.update(r);
+					request.setAttribute("msg", "予約を変更しました");
 					url = "ReserveListSvl";
 
 				}else{
-					request.setAttribute("reserve",r);
+					//request.setAttribute("reserve",r);
 					msgNo = IdealException.ERR_NO_NOT_VACANCY;
 					throw new IdealException(msgNo);
 
@@ -169,15 +190,18 @@ public class ReserveOperationSvl extends HttpServlet {
 			}catch(Exception e){
 				IdealException ie = new IdealException(msgNo);
 				request.setAttribute("msg", ie.getMsg());
+				request.setAttribute("reserve",r);
 				url = "ReserveUpdateSvl";
 
 			}
 			break;
 		case "削除処理":
+			r = new Reserve();
 			try{
-				Reserve r = new Reserve();
+				rsvId = Integer.parseInt(request.getParameter("rsvId"));
 				r.setRsvId(rsvId);
 				Reserve.delete(r);
+				request.setAttribute("msg", "予約を取り消ししました");
 				url = "ReserveListSvl";
 
 			}catch(Exception e){

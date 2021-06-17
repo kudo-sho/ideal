@@ -49,21 +49,23 @@ public class ReserveUpdateSvl extends HttpServlet {
 		int msgNo = 0;
 		String url = "home.jsp";
 
-		HttpSession usrInfo = request.getSession(false);
-		if(usrInfo == null){
+		HttpSession userInfo = request.getSession(false);
+		if(userInfo == null){
 			response.sendRedirect(url);
 		}
 
 		try{
 			int	rsvId = Integer.parseInt(request.getParameter("rsvId"));
-
 			//「リクエストオブジェクト"courseList"にオーダー可能なコースの一覧情報を設定する」
 			ArrayList<Course> al = new ArrayList<Course>();
 			al = Course.getOneCourseList();
 			request.setAttribute("courseList",al);
 
 			Reserve r = new Reserve();
-			r = Reserve.getReserve(rsvId);
+			r = (Reserve)request.getAttribute("reserve");
+			if(r==null) {
+				r = Reserve.getReserve(rsvId);
+			}
 			request.setAttribute("reserve",r);
 			url = "/reserveUpdate.jsp";
 
@@ -71,7 +73,7 @@ public class ReserveUpdateSvl extends HttpServlet {
 		catch(Exception e){
 			IdealException ie = new IdealException(msgNo);
 			request.setAttribute("msg", ie.getMsg());
-			url = "RserveListSvl";
+			url = "ReserveListSvl";
 
 		}
 

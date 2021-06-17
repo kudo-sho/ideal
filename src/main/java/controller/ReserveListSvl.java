@@ -42,25 +42,32 @@ public class ReserveListSvl extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html;charset=UTF-8");
 
+		// メッセージ番号と引継ぎ先URLの初期値をセット
 		int msgNo = 0;
 		String url = "home.jsp";
 
+		// セション情報を取得し、なければhomeに戻る
 		HttpSession usrInfo = request.getSession(false);
 		if(usrInfo == null){
 			response.sendRedirect(url);
 		}
 
 		try{
+			// セション情報からusrIdを取得
 			int usrId = (int)usrInfo.getAttribute("usrId");
+			// usrIdをキーにreserveテーブルから予約情報を取得し、ArrayListに格納
 			ArrayList<Reserve> al = new ArrayList<Reserve>();
 			al = Reserve.getReserveList(usrId);
+			// 予約情報が格納されたArrayListをリクエストパラメーターに格納しjspへ引継ぎ
 			request.setAttribute("reserveList",al);
 			url = "/reserveList.jsp";
 
 		}
 		catch(Exception e){
+			// 例外発生時にメッセージ番号からメッセージ文を取得し、顧客メニューに戻る
 			IdealException ie = new IdealException(msgNo);
 			request.setAttribute("msg", ie.getMsg());
 			url = "/userIndex.jsp";

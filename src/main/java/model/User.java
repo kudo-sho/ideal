@@ -294,9 +294,10 @@ public class User {
 		InitialContext ic = null;
 		DataSource ds =null;
 		Connection con = null;
+		ResultSet rs = null;
 		String sql = null;
-		PreparedStatement pst1 = null;
-		PreparedStatement pst2 = null;
+		PreparedStatement pst = null;
+
 
 		try{
 			//DBに接続する
@@ -309,19 +310,40 @@ public class User {
 			System.out.println("SQL②実行前:" + usrId);
 			//顧客テーブルを削除する
 			sql = "DELETE FROM user WHERE usr_id = " + usrId;
-			pst1 = con.prepareStatement(sql);
-			pst1.executeUpdate();
+			pst = con.prepareStatement(sql);
+			pst.executeUpdate();
+			System.out.println("顧客テーブル削除しました");
 
-			//予約テーブルを削除する
-			sql = "DELETE FROM reserve WHERE usr_id = " + usrId;
-			pst2 = con.prepareStatement(sql);
-			pst2.executeUpdate();
+			/*予約情報がない場合がある
+			 * 予約情報がない状態でsql発行するとヌルポになるため
+			 * select文で存在を確認
+			 * 存在があったときにdeleteする*/
+			sql = "select * from reserve where usr_id = " + usrId;
+			System.out.println(sql);
+			pst = con.prepareStatement(sql);
+			System.out.println(pst);
+			rs = pst.executeQuery();
+			System.out.println(rs);
+			if(rs.next()) {
+				//予約テーブルを削除する
+				System.out.println("予約もあるから削除するよ");
+				sql = "DELETE FROM reserve WHERE usr_id = " + usrId;
+				pst = con.prepareStatement(sql);
+				pst.executeUpdate();
+				System.out.println("予約テーブル削除しました");
+			}else
+				System.out.println("予約ないよ");
+
+
+
+
 
 			con.commit();
 
 
 		}catch(SQLException e){
 			try {
+				System.out.println("DBエラーが発生したのでロールバックします");
 				con.rollback();
 			} catch (SQLException e1) {
 				e1.printStackTrace();
@@ -330,10 +352,10 @@ public class User {
 			throw new IdealException(i);
 		}finally{
 			try {
-				pst1.close();
-				pst2.close();
+				pst.close();
 				con.close();
 				ic.close();
+				rs.close();
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}

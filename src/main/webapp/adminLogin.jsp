@@ -44,7 +44,7 @@ if(msg != null)
 //ログイン中に再度ログイン画面を開いたら管理画面にフォアードするように改良した
 Object adminInfo = session.getAttribute("adminInfo");
 if(adminInfo != null){
-	System.out.print("ログイン中だよ");
+	System.out.print("管理者ログイン中だよ");
 	RequestDispatcher rd = request.getRequestDispatcher("/adminIndex.jsp");
 	rd.forward(request, response);
 }

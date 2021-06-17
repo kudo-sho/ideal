@@ -55,6 +55,15 @@
 		request.setCharacterEncoding("utf-8");
 		msg = (String)request.getAttribute("msg");
 		if(msg != null) out.print(msg);
+		//お客様セッションを確認
+		Object usrName = session.getAttribute("usrName");
+		if(usrName != null){
+			//お客様がログイン中はお客様管理画面にフォアード
+			System.out.println("お客様ログイン中だよ");
+			RequestDispatcher rd = request.getRequestDispatcher("/userIndex.jsp");
+			rd.forward(request, response);
+		}
+
 	%>
 
 		<form id="f1" name="f1" action="UserOperationSvl" method="post" onsubmit="return check();">

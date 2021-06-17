@@ -29,16 +29,23 @@ msg = (String)request.getAttribute("msg");
 if(msg != null)
 	out.print(msg);
 
-//else
-//	out.print(" ");
+//お客様セッションを確認
+		Object usrName = session.getAttribute("usrName");
+		if(usrName == null){
+			//お客様がログインしていない時はお客様ログインにフォアード
+			System.out.println("お客様ログイン中だよ");
+			RequestDispatcher rd = request.getRequestDispatcher("/userLogin.jsp");
+			rd.forward(request, response);
+		}
 
 %>
 
-
+<br />
 <a href="ShowMenuSvl">●メニュー紹介</a><br/><br/>
 <a href="ReserveListSvl">●ご予約</a><br/><br/>
 <a href="UserUpdateSvl">●お客様情報変更</a><br/><br/>
 <a href="UserDeleteSvl">●お客様脱会手続き</a><br/><br/>
+<a href="./contact.jsp">●お問い合わせ</a><br /><br/>
 <a href="UserLogoffSvl">●ログオフ</a>
 </center>
 </body>

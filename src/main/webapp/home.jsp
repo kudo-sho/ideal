@@ -12,10 +12,8 @@ div{text-align:center;}
 </style>
 </head>
 <body>
-<div>
-<h1>■ Restaurante IDEALLE ■</h1></div>
-<br/>
-<div>
+
+<iframe src="./debugMode.jsp"></iframe>
 
 <%
 //引き渡されたメッセージを表示
@@ -27,13 +25,47 @@ if(msg != null)
 	out.print(msg);
 
 
+//セッションの有無を判定
+Object adminInfo = session.getAttribute("adminInfo");
+Object usrName = session.getAttribute("usrName");
+if(adminInfo != null && usrName != null){
+	//管理者モード
+	System.out.println("管理者モードだよ");%>
+	<h3 align="right">管理者モードです</h3>
+	<h4 align="right">ログイン管理者：<%= session.getAttribute("adminInfo") %></h4>
+	<h4 align="right">ログインユーザー:<%= session.getAttribute("usrName") %></h4>
+	<%}else if(usrName != null){
+		//お客様がログイン中はお客様管理画面にフォアード
+		System.out.println("お客様ログイン中だよ");
+		RequestDispatcher rd = request.getRequestDispatcher("/userIndex.jsp");
+		rd.forward(request, response);
+		}else if(adminInfo == ""){
+			//管理者がログイン中はログインしている名前を表示
+			System.out.println("管理者空文字");
+				}else if(adminInfo != null){
+					//管理者がログイン中はログインしている名前を表示
+					System.out.println("管理者ログイン中だよ");%>
 
-%>
+				<h4 align="right">お疲れ様です。 <%= session.getAttribute("adminInfo") %> 様</h4>
+						<%}
+				%>
+
+
 
 <!--
-workspaseブランチで変更してみました。
-la・Dio feniceへようこそ！<br />
-シェフが腕によりをかけてお送りする料理メニューについては、『メニュー』よりご確認ください。
+<div text-align="left">
+コメントを削除するとセッションが引き継がれているかを確認できます<br />
+管理者のセッション確認：<%= session.getAttribute("adminInfo") %><br />
+お客様のセッション確認：<%= session.getAttribute("usrName") %>
+</div>
+-->
+
+
+ <div>
+<h1>■ Restaurante IDEALLE ■</h1>
+
+Restaurante IDEALLE へようこそ！<br />
+シェフが腕によりをかけてお送りする料理メニューについては、『メニュー紹介』よりご確認ください。
 <br /><br/>
 当店ご利用の際は事前予約が必要となっております。
 <br />
@@ -45,17 +77,14 @@ la・Dio feniceへようこそ！<br />
 <br /><br />
 お問い合わせにつきましては『お問い合わせ』よりご連絡ください。
 <br /><br />
-<h5>※サイト管理者はページ下部の『管理者はこちら』よりログインしてください。</h5>
-</div>  -->
+<h5>※サイト管理者はページ下部の『管理者ログイン』よりログインしてください。</h5>
+
 <hr />
 <br/>
-<!-- コメントを削除するとセッションが引き継がれているかを確認できます<br />
-管理者のセッション確認：<%= session.getAttribute("adminInfo") %><br />
-お客様のセッション確認：<%= session.getAttribute("usrName") %>
- -->
 		<a href="ShowMenuSvl"><li>メニュー紹介</li></a><br />
-		<a href="./userLogin.jsp"><li>ログイン</li></a><br />
-		<a href="./userInsert.jsp"><li>お客様新規登録</li></a><br />
+		<a href="./userLogin.jsp"><li>すでに会員のかたはこちら</li></a><br />
+		<a href="./userInsert.jsp"><li>会員ではない方はこちら</li></a><br />
+		<a href="./contact.jsp"><li>お問い合わせ</li></a><br />
 
 		<br/><br/><br/>
 		<hr />

@@ -44,7 +44,7 @@ public class UserUpdateSvl extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
 
-		System.out.println("Deleteサーブレット開始");
+		System.out.println("userUpdateサーブレット開始");
 
 		//リクエストパラメータ"mode"を受け取る
 		String mode = request.getParameter("mode");
@@ -58,7 +58,7 @@ public class UserUpdateSvl extends HttpServlet {
 			request.getRequestDispatcher("home.jsp").forward(request, response);
 		}
 
-		System.out.println("Deleteサーブレット途中");
+		System.out.println("userUpdateサーブレット途中");
 		//リクエストオブジェクト(user)に、セッション情報(userInfo)のusrIdに対応する顧客情報を設定する
 		try{
 			System.out.println("try開始");
@@ -69,7 +69,7 @@ public class UserUpdateSvl extends HttpServlet {
 			System.out.println("ユーザー取得メソッド終了");
 			//System.out.println(userInfo.getAttribute("usrId"));
 			//System.out.println(userInfo.getAttribute("usrName"));
-			System.out.println(userInfo.getAttribute("address"));
+			System.out.println("addressは"+userInfo.getAttribute("address"));
 			//ビーンズでセッターに各々設定したであろうuserオブジェクトをリクエストに設定する(？)
 			request.setAttribute("user", user);
 

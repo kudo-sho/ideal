@@ -18,6 +18,7 @@ div{text-align:center;}
 		<h4 align="right">お疲れ様です。<%= session.getAttribute("adminInfo") %>　様</h4>
 		<hr />
 <%
+
 //引き渡されたメッセージを表示
 //引き渡されたメッセージがnullの場合は非表示
 String msg = null;
@@ -26,9 +27,14 @@ msg = (String)request.getAttribute("msg");
 if(msg != null)
 	out.print(msg);
 
-//else
-//	out.print(" ");
-
+//管理者セッションを確認
+		Object usrName = session.getAttribute("adminInfo");
+		if(usrName == null){
+			//管理者がログインしていない時は管理者ログインにフォアード
+			System.out.println("管理者ログインしてないのでログインしてね");
+			RequestDispatcher rd = request.getRequestDispatcher("/adminLogin.jsp");
+			rd.forward(request, response);
+		}
 %>
 
 <!--
@@ -40,8 +46,11 @@ if(msg != null)
 		<td width="33%"></td>
 		<td width= "33%">
 		<l>
+			<a href = "AdminReserveListSvl"><li>予約状況確認（工事中）</li></a><br/>
 			<a href = "MenuMaintenanceSvl"><li>メニューメンテナンス</li></a><br />
-			<a href = "AdminLogoffSvl"><li>ログアウト</li></a>
+			<a href = "AdminMaintenanceSvl"><li>管理者情報メンテナンス（工事中）</li></a><br />
+			<a href = "AdminLogoffSvl"><li>ログアウト</li></a><br />
+
 		</l>
 		</td>
 		<td width= "33%"></td>

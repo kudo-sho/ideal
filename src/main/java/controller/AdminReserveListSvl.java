@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,16 +15,16 @@ import model.IdealException;
 import model.Reserve;
 
 /**
- * Servlet implementation class ReserveDeleteSvl
+ * Servlet implementation class AdminReserveListSvl
  */
-@WebServlet("/ReserveDeleteSvl")
-public class ReserveDeleteSvl extends HttpServlet {
+@WebServlet("/AdminReserveListSvl")
+public class AdminReserveListSvl extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ReserveDeleteSvl() {
+    public AdminReserveListSvl() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -44,34 +45,38 @@ public class ReserveDeleteSvl extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html;charset=UTF-8");
 
+		// メッセージ番号と引継ぎ先URLの初期値をセット
 		int msgNo = 0;
 		String url = "home.jsp";
 
-		HttpSession usrInfo = request.getSession(false);
-		if(usrInfo == null){
-			response.sendRedirect(url);
-		}
-
 		try{
-			int	rsvId = Integer.parseInt(request.getParameter("rsvId"));
-
-			Reserve r = new Reserve();
-			r = Reserve.getReserve(rsvId);
-			request.setAttribute("reserve",r);
-			url = "/reserveDelete.jsp";
+			// セション情報を取得し、なければhomeに戻る
+			HttpSession session = request.getSession(true);
+			if(session.getAttribute("adminInfo") == null){
+				response.sendRedirect(url);
+				return;
+			}
+			
+			// reserveテーブルから予約情報を取得し、ArrayListに格納
+			msgNo = IdealException.ERR_NO_DB_EXCEPTION;
+			ArrayList<Reserve> al = new ArrayList<Reserve>();
+			al = Reserve.getReserveListAll();
+			// 予約情報が格納されたArrayListをリクエストパラメーターに格納しjspへ引継ぎ
+			request.setAttribute("reserveList",al);
+			url = "/adminReserveList.jsp";
 
 		}
 		catch(Exception e){
+			// 例外発生時にメッセージ番号からメッセージ文を取得し、管理者メニューに戻る
 			IdealException ie = new IdealException(msgNo);
 			request.setAttribute("msg", ie.getMsg());
-			url = "ReserveListSvl";
+			url = "/adminIndex.jsp";
 
 		}
 
 		RequestDispatcher rd = request.getRequestDispatcher(url);
 		rd.forward(request,response);
 		return;
-
 
 	}
 
