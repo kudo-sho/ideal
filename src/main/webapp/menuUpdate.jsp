@@ -2,7 +2,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*,java.util.*,controller.*,model.*"%>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -10,23 +9,29 @@
 <title>メニュー情報変更</title>
 <style>
 <!--
+*{padding:5px;}
+
 h1 {
 	text-align: center;
 	background: #007B66;
 	color: #ECFFF3;
 }
 
-table {width ="600px;height ="400px;
-
+table {
+	width: 600px;
+	height: 300px;
+	border-collapse: collapse;
 }
 
 th {
+	width:20%;
 	text-align: center;
 	background: #A4FFDB;
 	color: #007B66;
 }
 
 td {
+	width:80%;
 	background: #E3FFE3;
 }
 
@@ -84,11 +89,11 @@ p {
 	<jsp:useBean id="oneMenu" class="model.Menu" scope="request" />
 	<jsp:useBean id="mType" class="java.util.ArrayList" scope="request" />
 
-	<table border="1" , align="center">
+	<table border="1" align="center">
 		<h1>メニュー情報変更</h1>
 		<caption>
 			<tr align="left">
-				<font color="red">
+				<font color="red" size="5">
 		<%
 		String msg = null;
 		request.setCharacterEncoding("utf-8");
@@ -109,12 +114,12 @@ p {
 				<td><input type="text" name="menuName" size="50" value="<jsp:getProperty name ="oneMenu" property="menuName" />"/></td>
 			</tr>
 			<tr>
-				<th>価格※</th>
-				<td><input type="text" name="price" size="30"
+				<th>価格 ※</th>
+				<td><input type="text" name="price" size="20"
 					value='<jsp:getProperty name ="oneMenu" property="price" />' /></td>
 			</tr>
 			<tr>
-				<th>オーダー可※</th>
+				<th>オーダー可 ※</th>
 				<%
 				String[] order = { "不可", "可" };
 				%>
@@ -160,7 +165,7 @@ p {
 			</tr>
 			<tr>
 				<th>コメント</th>
-				<td><textarea name="detail" cols="80" rows="10">
+				<td><textarea name="detail" cols="55" rows="5">
 <%=(oneMenu.getDetail())%></textarea></td>
 			</tr>
 			<input type="hidden" name="mode"
@@ -170,7 +175,7 @@ p {
 				<input type="hidden" name="CtypeID" value="<%= typeID %>" />
 			<tr>
 				<td align="right" colspan="3"><font color="red">※は必修入力です。</font>
-					<input type="submit" value="変更" /></td>
+					<input type="submit" value="   変更   " /></td>
 			</tr>
 		</form>
 		&emsp;
