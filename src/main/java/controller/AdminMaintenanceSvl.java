@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import model.AdminMaintenance;
+import model.Admin;
 import model.IdealException;
 
 /**
@@ -56,10 +56,10 @@ public class AdminMaintenanceSvl extends HttpServlet {
 
 
 			//adminリストを取得してリクエストにセットする
-			ArrayList<AdminMaintenance> alam = AdminMaintenance.getAdminList();
+			ArrayList<Admin> alam = Admin.getAdminList();
 			request.setAttribute("admList",alam);
 
-			//ここまで問題なければadminMaintenance画面に戻って再表示
+			//ここまで問題なければadminMaintenance画面に戻って表示
 			rd = request.getRequestDispatcher("/adminMaintenance.jsp");
 
 

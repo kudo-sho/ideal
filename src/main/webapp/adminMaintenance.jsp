@@ -1,4 +1,4 @@
-<%@page import="model.AdminMaintenance"%>
+<%@page import="model.Admin"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -43,9 +43,9 @@ if(msg != null)
 <td>管理者名</td><td>詳細</td><td colspan="2">処理選択</td>
 </tr>
 	<%
-	for(AdminMaintenance am : AdminMaintenance.getAdminList()){%>
+	for(Admin am : Admin.getAdminList()){%>
 	<tr>
-	<td><%= am.getAdminName() %></td><td><%= am.getAdminExp() %></td>
+	<td><%= am.getAdmName() %></td><td><%= am.getExp() %></td>
 	<td><form id="admUpdate" name="admUpdate" action="" method="post">
 	<input type="submit" value="変更" />
 	</form></td>

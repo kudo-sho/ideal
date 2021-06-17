@@ -2,7 +2,6 @@ package controller;
 
 import java.io.IOException;
 
-import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.AdminMaintenance;
+import model.Admin;
 import model.IdealException;
 
 /**
@@ -44,31 +43,29 @@ public class AdmInsertSvl extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; utf-8");
 
-		//パラメータを受け取る
+		//入力されたパラメータを受け取る
 		String admName = request.getParameter("admName");
 		String password = request.getParameter("password");
 		String exp = request.getParameter("exp");
 
 		//パラメータをセットしてinsertメソッドに渡す
-		AdminMaintenance am = new AdminMaintenance();
-		am.setAdminName(admName);
-		am.setPassword(password);
-		am.setAdminExp(exp);
+		Admin adm = new Admin();
+		adm.setAdmName(admName);
+		adm.setPassword(password);
+		adm.setExp(exp);
 
 		try {
 			//insertメソッドからの戻り値をリクエストに載せてフォアード
-			am = AdminMaintenance.insert(am);
-			request.setAttribute("insertAdmName", am.getAdminName());
-			request.setAttribute("insertAdmPassword", am.getPassword());
-			request.setAttribute("insertAdmExp", am.getAdminExp());
+			adm = Admin.insert(adm);
+			request.setAttribute("insertAdmInfo", adm);
 			RequestDispatcher rd = request.getRequestDispatcher("/adminInsertCompletion.jsp");
 			rd.forward(request, response);
 
-		}catch(IdealException | NamingException  e) {
+		}catch(IdealException e) {
 			String msg = ((IdealException) e).getMsg();
 //			System.out.println(msg);
 			request.setAttribute("msg", msg);
-			RequestDispatcher rd = request.getRequestDispatcher("/adminInset.jsp");
+			RequestDispatcher rd = request.getRequestDispatcher("/admInsert.jsp");
 			rd.forward(request, response);
 
 
