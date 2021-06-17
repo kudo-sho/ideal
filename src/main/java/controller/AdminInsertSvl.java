@@ -13,16 +13,16 @@ import model.Admin;
 import model.IdealException;
 
 /**
- * Servlet implementation class AdmInsertSvl
+ * Servlet implementation class AdminInsertSvl
  */
-@WebServlet("/AdmInsertSvl")
-public class AdmInsertSvl extends HttpServlet {
+@WebServlet("/AdminInsertSvl")
+public class AdminInsertSvl extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AdmInsertSvl() {
+    public AdminInsertSvl() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -65,7 +65,7 @@ public class AdmInsertSvl extends HttpServlet {
 			String msg = ((IdealException) e).getMsg();
 //			System.out.println(msg);
 			request.setAttribute("msg", msg);
-			RequestDispatcher rd = request.getRequestDispatcher("/admInsert.jsp");
+			RequestDispatcher rd = request.getRequestDispatcher("/adminInsert.jsp");
 			rd.forward(request, response);
 
 

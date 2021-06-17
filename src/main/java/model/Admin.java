@@ -129,7 +129,7 @@ public class Admin {
 				a.setPassword(rs.getString("password"));
 				a.setExp(rs.getString("exp"));
 			}
-			System.out.println("Userインスタンスに値セット完了");
+			System.out.println("Adminインスタンスに値セット完了");
 //			System.out.println("名前は"+a.getadmId());
 			//該当レコードがなかった場合はadminにnullをセット
 			if(id == 0){
@@ -138,14 +138,12 @@ public class Admin {
 		}catch(SQLException | ClassNotFoundException e) {
 			int i = IdealException.ERR_NO_DB_EXCEPTION;
 			throw new IdealException(i);
-
 		}finally {
 			try {
 				if(con != null) con.close();
 				if(st != null) st.close();
 				if(rs != null) rs.close();
 			}catch(Exception e) {
-
 			}
 		}
 		return a;

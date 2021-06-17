@@ -35,7 +35,7 @@ if(msg != null)
 		}
 %>
 <hr />
-<form id="admInsert" name="admInsert" action="AdmInsertSvl" method="post">
+<form id="admInsert" name="admInsert" action="AdminInsertSvl" method="post">
 <table border="1">
 <tr>
 <td>氏名</td><td><input type="text" name="admName" /></td>

@@ -57,7 +57,7 @@ if(msg != null)
 	<% }  %>
 </table>
 
-<form id="admInsert" name="admInsert" action="./admInsert.jsp" method="post">
+<form id="admInsert" name="admInsert" action="./adminInsert.jsp" method="post">
 <input type="submit" value="新規登録" />
 </form>
 
