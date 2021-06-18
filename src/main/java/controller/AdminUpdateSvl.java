@@ -2,28 +2,28 @@ package controller;
 
 import java.io.IOException;
 
-import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import model.AdminMaintenance;
+import model.Admin;
 import model.IdealException;
 
 /**
- * Servlet implementation class AdmInsertSvl
+ * Servlet implementation class AdminUpdateSvl
  */
-@WebServlet("/AdmInsertSvl")
-public class AdmInsertSvl extends HttpServlet {
+@WebServlet("/AdminUpdateSvl")
+public class AdminUpdateSvl extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AdmInsertSvl() {
+    public AdminUpdateSvl() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -44,40 +44,27 @@ public class AdmInsertSvl extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; utf-8");
 
-		//パラメータを受け取る
-		String admName = request.getParameter("admName");
-		String password = request.getParameter("password");
-		String exp = request.getParameter("exp");
+		//選択されたamdIdのパラメータを受け取りint型にしてセット
+		int admId = Integer.parseInt(request.getParameter("admId"));
 
-		//パラメータをセットしてinsertメソッドに渡す
-		AdminMaintenance am = new AdminMaintenance();
-		am.setAdminName(admName);
-		am.setPassword(password);
-		am.setAdminExp(exp);
-
+		HttpSession adminInfo = request.getSession(true);
 		try {
-			//insertメソッドからの戻り値をリクエストに載せてフォアード
-			am = AdminMaintenance.insert(am);
-			request.setAttribute("insertAdmName", am.getAdminName());
-			request.setAttribute("insertAdmPassword", am.getPassword());
-			request.setAttribute("insertAdmExp", am.getAdminExp());
-			RequestDispatcher rd = request.getRequestDispatcher("/adminInsertCompletion.jsp");
+			//getAdminメソッドからの戻り値をリクエストに載せてフォアード
+			Admin adm = Admin.getAdmin(admId);
+			adminInfo.setAttribute("admId", adm.getAdmId());
+			adminInfo.setAttribute("admName", adm.getAdmName());
+			adminInfo.setAttribute("password", adm.getPassword());
+			adminInfo.setAttribute("admExp", adm.getExp());
+			RequestDispatcher rd = request.getRequestDispatcher("/adminUpdate.jsp");
 			rd.forward(request, response);
 
-		}catch(IdealException | NamingException  e) {
+		}catch(IdealException e) {
 			String msg = ((IdealException) e).getMsg();
 //			System.out.println(msg);
 			request.setAttribute("msg", msg);
-			RequestDispatcher rd = request.getRequestDispatcher("/adminInset.jsp");
+			RequestDispatcher rd = request.getRequestDispatcher("/adminMaintenance.jsp");
 			rd.forward(request, response);
-
-
 		}
-
-
-
-
-
 	}
 
 }
