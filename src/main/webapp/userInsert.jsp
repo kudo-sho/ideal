@@ -11,10 +11,16 @@
      <!--
 		function check(){
 
-    		if(document.f1.usrName.value == ""){
-    			window.alert("名前が未入力です。");
+    		if(document.f1.usrName1.value == ""){
+    			window.alert("姓が未入力です。");
     			return false;
     		}
+    		
+    		if(document.f1.usrName2.value == ""){
+    			window.alert("名が未入力です。");
+    			return false;
+    		}
+    		
 
     		//電話番号チェックの正規表現を見直し、ハイフンなし、ハイフン入り両方に対応させました。
     		//固定電話は2桁-4桁-4桁、3桁-3桁-4桁、4桁-2桁-4桁、5桁-1桁-4桁の4種のみ想定
@@ -61,7 +67,17 @@
     			window.alert("パスワードが未入力です。");
 				return false;
     		}
+    		
+    		//苗字と名前の結合処理　半角スペースを挟むと上手くいかなかったので全角にしてあります
+    		
+    		f1.usrName.value = document.f1.usrName1.value + "　" + document.f1.usrName2.value ;
+    		
     	}
+     
+     	
+     
+	
+
 	//-->
   </script>
 </head>
@@ -91,9 +107,11 @@
 			<table align="center" border="1">
 				  <tr>
 				     <th>お名前※</th>
-				     <td align="left" colspan="2"><input type="text" name="usrName" size="30"/></td>
+				     <td align="left" colspan="1">姓<input type="text" name="usrName1" size="15"/></td>
+				     <td align="left" colspan="1">名<input type="text" name="usrName2" size="15"/></td>
+				     
 				  </tr>
-
+					
 				  <tr>
 				    <th>住所</th>
 				    <td align="left" colspan="2"><input type="text" name="address" size="40"/></td>
@@ -115,12 +133,14 @@
 				  </tr>
 
 				  <tr>
-				    <td align="right" colspan="3"> <font color="red">※は必修入力です。</font>
+				    <td align="right" colspan="3"> <font color="red">※は必須入力です。</font>
 					　　<input type="submit" value="登録" />
 				    </td>
 				  </tr>
 			</table>
-			<input type="hidden" name="mode" value="登録処理"/>
+			
+			<input type="hidden" name="usrName" />
+			<input type="hidden" name="mode" value="登録処理" />
 		</form>
 
 		&emsp;
