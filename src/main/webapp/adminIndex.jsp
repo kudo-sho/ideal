@@ -27,9 +27,14 @@ msg = (String)request.getAttribute("msg");
 if(msg != null)
 	out.print(msg);
 
-//else
-//	out.print(" ");
-
+//管理者セッションを確認
+		Object usrName = session.getAttribute("adminInfo");
+		if(usrName == null){
+			//管理者がログインしていない時は管理者ログインにフォアード
+			System.out.println("管理者ログインしてないのでログインしてね");
+			RequestDispatcher rd = request.getRequestDispatcher("/adminLogin.jsp");
+			rd.forward(request, response);
+		}
 %>
 
 <!--
@@ -41,9 +46,10 @@ if(msg != null)
 		<td width="33%"></td>
 		<td width= "33%">
 		<l>
+			<a href = "AdminReserveListSvl"><li>予約状況確認</li></a><br/>
 			<a href = "MenuMaintenanceSvl"><li>メニューメンテナンス</li></a><br />
-			<a href = ""><li>管理者情報変更（工事中）</li></a>
-			<a href = "AdminLogoffSvl"><li>ログアウト</li></a>
+			<a href = "AdminMaintenanceSvl"><li>管理者情報メンテナンス</li></a><br />
+			<a href = "AdminLogoffSvl"><li>ログアウト</li></a><br />
 
 		</l>
 		</td>

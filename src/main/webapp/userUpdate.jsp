@@ -10,30 +10,62 @@
      <!--
 		function check(){
 
-    		if(document.f1.usrName.value == ""){
-    			window.alert("名前が未入力です。");
-    			return false;
-    		}
+	    	 if(document.f1.usrName1.value == ""){
+	 			window.alert("姓が未入力です。");
+	 			return false;
+	 		}
+	 		
+	 		if(document.f1.usrName2.value == ""){
+	 			window.alert("名が未入力です。");
+	 			return false;
+	 		}
 
+    		//電話番号チェックの正規表現を見直し、ハイフンなし、ハイフン入り両方に対応させました。
+    		//固定電話は2桁-4桁-4桁、3桁-3桁-4桁、4桁-2桁-4桁、5桁-1桁-4桁の4種のみ想定
+    		//携帯電話は3桁-4桁-4桁のみ想定
+    		//先頭が０以外の場合は弾きます
+    		
     		var phone = document.f1.phone.value;
     		if(phone != ""){
-				if(phone.match(/^\d{10}$/) != null){
+				if(phone.match(/^0\d{9}$/) != null){
+				
+				}else if(phone.match(/^0\d{1}-\d{4}-\d{4}$/) != null){
+				
+				}else if(phone.match(/^0\d{2}-\d{3}-\d{4}$/) != null){
+				
+				}else if(phone.match(/^0\d{3}-\d{2}-\d{4}$/) != null){
+					
+				}else if(phone.match(/^0\d{4}-\d{1}-\d{4}$/) != null){
 
-				}else if(phone.match(/^\d{11}$/) != null){
-
-				}else{
+				}else if(phone.match(/^0\d{10}$/) != null){
+				
+				}else if(phone.match(/^0\d{2}-\d{4}-\d{4}$/) != null){
+					
+    			}else{
 					window.alert("電話番号を正しく入力してください。");
 					return false;
 				}
    			}
 
-			var mail = document.f1.mail.value;
+    		//メールアドレスチェックの正規表現を見直し、「_」、「.」、「-」が弾かれる不具合を解消しました
+    		//※先頭と@の直前は上記の文字を使用できません.
+    		//＠以降は「(文字列).(文字列)」となるようにしました。
+
+    		var mail = document.f1.mail.value;
 			if(mail != ""){
-				if(mail.match(/^\w+?@\w+?$/) == null){
+				if(mail.match(/^[a-zA-Z0-9]{1}[a-zA-Z0-9_.-]+[a-zA-Z0-9]{1}@[a-zA-Z0-9.]+\.[a-zA-Z0-9]+$/) != null){
+
+				}else{
 					window.alert("メールアドレスを正しく入力してください。");
 					return false;
-				}
+				}	
 			}
+			
+			//苗字と名前の結合処理、半角スペースを挟むと上手くいかなかったので全角にしてあります
+			
+			f1.usrName.value = document.f1.usrName1.value + "　" + document.f1.usrName2.value ;
+			
+			
     	}
 	//-->
   </script>
@@ -60,8 +92,16 @@
 
 				  <tr>
 				     <th>お名前</th>
-				     <td align="left" colspan="2"><input type="text" name="usrName" size="30"
-				     					value= <%= session.getAttribute("usrName") %> /></td>
+				    <% String usrName = (String) session.getAttribute("usrName"); 
+				       String [] list = usrName.split("　");
+				       String usrName1 = list[0];
+				       String usrName2 = list[1];
+				    %>
+				     <td align="left" colspan="2"><input type="text" name="usrName1" size="15"
+				     					value= <%= usrName1 %> />
+				     					<input type="text" name="usrName2" size="15"
+				     					value= <%= usrName2 %> />
+				     					</td>
 				  </tr>
 					<!-- お客様情報変更画面で値のない入力フィールドでは/になってしまう原因
 					は値がなかった場合nullが返ってくるがvalueは文字列を認識していると思われる
@@ -99,7 +139,8 @@
 				    </td>
 				  </tr>
 			</table>
-
+			
+			<input type="hidden" name="usrName" />
 			<input type="hidden" name="mode" value="変更処理"/>
 			<input type="hidden" name="usrId" value=<%= session.getAttribute("id") %> />
 		</form>

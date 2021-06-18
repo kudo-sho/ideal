@@ -1,4 +1,4 @@
-package model;  // 6/14 予約登録、変更、削除の不具合修正済み 再プッシュ
+package model;  // 6/16 メソッド追加
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -173,8 +173,8 @@ public class Reserve {
 			ds = (DataSource)ic.lookup("java:comp/env/mysql");
 			con = ds.getConnection();
 			sql = "SELECT * FROM reserve INNER JOIN user USING(usr_id )"
-					+ " INNER JOIN table_loc USING(table_id) INNER JOIN course USING(c_id)  WHERE usr_id = ? "
-					+ " ORDER BY rsv_date " ;
+					+ " INNER JOIN table_loc USING(table_id) INNER JOIN course USING(c_id)"
+					+ " WHERE usr_id = ?  and rsv_date >= CURRENT_DATE()  ORDER BY rsv_date " ;
 			pst = con.prepareStatement(sql);
 			pst.setInt(1,usrId);
 			rs = pst.executeQuery();
@@ -223,7 +223,78 @@ public class Reserve {
 
 	}
 
+	//6.16メソッド追加　予約情報全部取得処理
+	
+		public static ArrayList<Reserve> getReserveListAll()throws IdealException{
+			InitialContext ic = null;
+			DataSource ds = null;
+			Connection con = null;
+			PreparedStatement pst = null;
+			ResultSet rs = null;
+			String sql = null;
+			ArrayList<Reserve> al = new ArrayList<Reserve>();
 
+			try{
+				ic = new InitialContext();
+				ds = (DataSource)ic.lookup("java:comp/env/mysql");
+				con = ds.getConnection();
+				
+				//今日以降の予約を取得し、予約日順＞テーブル順＞時刻順(予約日時順)で並べ替える
+				
+				sql = " SELECT usr_id,rsv_id,rsv_date,app_date,person,table_id,"
+					+ " c_id,usr_name,table_name,c_name,DATE(rsv_date)"
+					+ " FROM reserve INNER JOIN user USING(usr_id ) "
+					+ " INNER JOIN table_loc USING(table_id) INNER JOIN course USING(c_id) "
+					+ " WHERE rsv_date >= CURRENT_DATE()"
+					+ " ORDER BY DATE(rsv_date), table_id, rsv_date " ;
+				pst = con.prepareStatement(sql);
+				rs = pst.executeQuery();
+
+				while(rs.next()){
+					Reserve r = new Reserve();
+					String rsv = rs.getString("rsv_date");
+					String app = rs.getString("app_date");
+					r.setRsvId(rs.getInt("rsv_id"));	
+					r.setUsrId(rs.getInt("usr_id"));					
+					r.setUsrName(rs.getString("usr_name"));			
+					r.setRsvYy(Integer.parseInt(rsv.substring(0,4)));	
+					r.setRsvMm(Integer.parseInt(rsv.substring(5,7)));	
+					r.setRsvDd(Integer.parseInt(rsv.substring(8,10)));
+					r.setRsvHh(Integer.parseInt(rsv.substring(11,13)));
+					r.setRsvMi(Integer.parseInt(rsv.substring(14,16)));
+					r.setPerson(rs.getInt("person"));				
+					r.setTableId(rs.getInt("table_id"));			
+					r.setTableName(rs.getString("table_name"));		
+					r.setCourseId(rs.getInt("c_id"));			
+					r.setCourseName(rs.getString("c_name"));	
+					r.setAppDate(rs.getString("app_date"));
+					r.setAppYy(Integer.parseInt(app.substring(0,4)));
+					r.setAppMm(Integer.parseInt(app.substring(5,7)));
+					r.setAppDd(Integer.parseInt(app.substring(8,10)));
+					r.setAppHh(Integer.parseInt(app.substring(11,13)));
+					r.setAppMi(Integer.parseInt(app.substring(14,16)));
+					al.add(r);
+
+				}
+
+			}catch( SQLException | NamingException  e) {
+				int i = IdealException.ERR_NO_DB_EXCEPTION;
+				throw new IdealException(i);
+			}finally{
+				try{
+					if (rs != null) rs.close();
+					if (pst != null) pst.close();
+					if (con != null) con.close();
+				}catch(Exception e){
+
+				}
+			}
+
+			return al;
+
+		}
+	
+	//6.16追加ここまで
 	//----予約情報取得処理----
 
 	public static Reserve getReserve(int rsvId)throws IdealException{
@@ -494,10 +565,6 @@ public class Reserve {
 				tl.setMaxCapacity(rs.getInt("max_capacity"));
 				System.out.println("rsよりmax_capacity=" + rs.getInt("max_capacity"));//バグチェック
 				cnt++;
-
-
-
-				cnt++;
 			}
 
 
@@ -732,4 +799,7 @@ public class Reserve {
 			}
 		}
 	}
+	
+	
+	
 }
