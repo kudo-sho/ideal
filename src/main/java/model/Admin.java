@@ -284,4 +284,42 @@ public class Admin {
 		return adm;
 	}
 
+	//管理者情報削除
+	public static void delete(int admId) throws  IdealException{
+		//DBに接続準備
+		InitialContext ic = null;
+		DataSource ds =null;
+		Connection con = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		String sql = null;
+
+		try{
+			//DBに接続する
+			ic = new InitialContext();
+			ds = (DataSource)ic.lookup("java:comp/env/mysql");
+			con = ds.getConnection();
+
+			//引数のadmIdに一致するレコードをadminテーブルから削除
+			sql = "DELETE FROM admin WHERE adm_id = "+ admId;
+			System.out.println(sql);
+			pst = con.prepareStatement(sql);
+			pst.executeUpdate();
+
+
+		}catch(SQLException | NamingException e){
+			System.out.println("DBエラー");
+			int i = IdealException.ERR_NO_DB_EXCEPTION;
+			throw new IdealException(i);
+		}finally{
+			try {//close処理
+				if (rs != null) rs.close();
+				if (pst != null) pst.close();
+				if (con != null) con.close();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+
 }

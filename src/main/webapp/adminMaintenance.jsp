@@ -50,8 +50,9 @@ if(msg != null)
 	<input type="submit" value="変更" />
 	<input type="hidden" name="admId" value="<%= am.getAdmId() %>" />
 	</form></td>
-	<td><form id="admDelete" name="admDelete" action="" method="post">
+	<td><form id="admDelete" name="admDelete" action="AdminDeleteSvl" method="post">
 	<input type="submit" value="削除" />
+	<input type="hidden" name="admId" value="<%= am.getAdmId() %>" />
 	</form>
 	</td>
 	</tr>
