@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.Admin;
 import model.IdealException;
@@ -46,10 +47,14 @@ public class AdminUpdateSvl extends HttpServlet {
 		//選択されたamdIdのパラメータを受け取りint型にしてセット
 		int admId = Integer.parseInt(request.getParameter("admId"));
 
+		HttpSession adminInfo = request.getSession(true);
 		try {
 			//getAdminメソッドからの戻り値をリクエストに載せてフォアード
 			Admin adm = Admin.getAdmin(admId);
-			request.setAttribute("updateAdmInfo", adm);
+			adminInfo.setAttribute("admId", adm.getAdmId());
+			adminInfo.setAttribute("admName", adm.getAdmName());
+			adminInfo.setAttribute("password", adm.getPassword());
+			adminInfo.setAttribute("admExp", adm.getExp());
 			RequestDispatcher rd = request.getRequestDispatcher("/adminUpdate.jsp");
 			rd.forward(request, response);
 

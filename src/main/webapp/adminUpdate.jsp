@@ -56,7 +56,7 @@ table {
 		<hr>
 		<%
 		//リクエストセッションにあるUpdateAdmInfoを取得
-		Admin adm = (Admin) request.getAttribute("updateAdmInfo");
+
 		//引き渡されたメッセージを表示
 		//引き渡されたメッセージがnullの場合は非表示
 		String msg = null;
@@ -76,18 +76,22 @@ table {
 		%>
 		<hr />
 
-		<form id="admUpdate" name="admUpdete" action="AdminOperationSvl"
+		<form id="admUpdate" name="admUpdate" action="AdminOperationSvl"
 			method="post" onsubmit="return check();">
 			<table border="1">
 				<tr>
+					<td>管理者ID</td>
+					<td><%= session.getAttribute("admId") %></td>
+				</tr>
+				<tr>
 					<td>氏名(※)</td>
 					<td><input type="text" name="admName"
-						value="<%=adm.getAdmName()%>" /></td>
+						value="<%= session.getAttribute("admName") %>" /></td>
 				</tr>
 				<tr>
 					<td>パスワード(※)</td>
 					<td><input type="password" name="password"
-						value="<%= adm.getPassword() %>" /></td>
+						value="<%= session.getAttribute("password") %>" /></td>
 				</tr>
 				<tr>
 					<td>パスワード再入力(※)</td>
@@ -96,14 +100,15 @@ table {
 				<tr>
 					<td>役職等詳細</td>
 					<td><input type="text" name="exp"
-						value="<%= adm.getExp() %>" /></td>
+						value="<%= session.getAttribute("admExp") %>" /></td>
 				</tr>
 				<tr>
-					<td colspan="2"><input type="submit" value="登録" /> <input
+					<td colspan="2"><input type="submit" value="変更" /> <input
 						type="reset" value="リセット" /></td>
 				</tr>
 			</table>
-			<input type="hidden" name="mode" value="登録処理" />
+			<input type="hidden" name="admId" value="<%= session.getAttribute("admId") %>" />
+			<input type="hidden" name="mode" value="変更処理" />
 		</form>
 		<br>
 		<br>

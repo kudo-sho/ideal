@@ -240,4 +240,48 @@ public class Admin {
 		return adm;
 	}
 
+	//管理者情報変更
+	public static Admin update(Admin adm) throws  IdealException{
+		//DBに接続準備
+		InitialContext ic = null;
+		DataSource ds =null;
+		Connection con = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		String sql = null;
+
+		try{
+			//DBに接続する
+			ic = new InitialContext();
+			ds = (DataSource)ic.lookup("java:comp/env/mysql");
+			con = ds.getConnection();
+
+			//管理者情報をadminテーブルにupdate
+			sql = "UPDATE admin SET adm_name = ? ,password = ?, exp = ?"
+					+ " WHERE adm_id = '"+ adm.getAdmId() +"'";
+			System.out.println(sql);
+			pst = con.prepareStatement(sql);
+			pst.setString(1,adm.getAdmName());
+			pst.setString(2,adm.getPassword());
+			pst.setString(3,adm.getExp());
+			pst.executeUpdate();
+
+			//update完了できたらそのまま処理終了後入力されたadmをそのまま返す
+
+		}catch(SQLException | NamingException e){
+			System.out.println("DBエラー");
+			int i = IdealException.ERR_NO_DB_EXCEPTION;
+			throw new IdealException(i);
+		}finally{
+			try {//close処理
+				if (rs != null) rs.close();
+				if (pst != null) pst.close();
+				if (con != null) con.close();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return adm;
+	}
+
 }

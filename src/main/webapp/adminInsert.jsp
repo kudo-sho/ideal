@@ -58,7 +58,7 @@ if(msg != null)
 		}
 %>
 <hr />
-<form id="admInsert" name="admInsert" action="AdminInsertSvl" method="post"
+<form id="admInsert" name="admInsert" action="AdminOperationSvl" method="post"
 	onsubmit="return check();">
 <table border="1">
 <tr>
