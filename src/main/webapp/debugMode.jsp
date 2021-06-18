@@ -49,11 +49,10 @@
 <option value="">null</option>
 
 <%
-							for (Object o : Debug.getAdminList()) {
-								Debug deb = (Debug) o;
+							for (Debug deb : Debug.getAdminList()) {
 								String selected = "";
 								if(admin != null){
-									if(admin.equals(deb.getAdminName())){
+									if(admin.equals(deb.getAdmName())){
 										selected ="selected= 'selected'";
 									}else{
 										selected = "";
@@ -62,8 +61,8 @@
 								System.out.println(selected);
 
 						%>
-						<option value="<%= deb.getAdminName() %>" <%= selected %>>
-							<%= deb.getAdminName() %></option>
+						<option value="<%= deb.getAdmName() %>" <%= selected %>>
+							<%= deb.getAdmName() %></option>
 						<%
 							}
 						%>
@@ -73,11 +72,10 @@
 <select name="user">
 <option value="">null</option>
 <%
-							for (Object o : Debug.getUserList()) {
-								Debug deb = (Debug) o;
+							for (Debug deb : Debug.getUserList()) {
 								String selected = "";
 								if(user != null){ //nullの場合はヌルポになるためnull判定
-									if(user.equals((Integer)deb.getUserId())){
+									if(user.equals((Integer)deb.getUsrId())){
 										selected ="selected= 'selected'";
 									}else{
 										selected = "";
@@ -87,8 +85,8 @@
 							System.out.println(selected);
 
 						%>
-						<option value="<%= deb.getUserId()%>" <%= selected %>>
-							<%= deb.getUserName() %></option>
+						<option value="<%= deb.getUsrId()%>" <%= selected %>>
+							<%= deb.getUsrName() %></option>
 						<%
 							}
 						%>
