@@ -55,6 +55,9 @@ public class ReserveUpdateSvl extends HttpServlet {
 		}
 
 		try{
+			// セション情報が取得できるかチェック
+			int usrId = (int)userInfo.getAttribute("usrId");
+			// リクエストパラメータから予約番号を取得
 			int	rsvId = Integer.parseInt(request.getParameter("rsvId"));
 			//「リクエストオブジェクト"courseList"にオーダー可能なコースの一覧情報を設定する」
 			ArrayList<Course> al = new ArrayList<Course>();
