@@ -9,10 +9,11 @@
 <title>メニュー情報削除</title>
 <style>
 <!--
+	*{padding:5px;}
 	h1{text-align:center; background:#007B66; color:#ECFFF3;}
-	table{width="600px; height="400px;}
-	th{text-align:center; background:#A4FFDB; color:#007B66;}
-	td{background:#E3FFE3;}
+	table{width:600px; height:300px; border-collapse:collapse}
+	th{text-align:center; width:20%; background:#A4FFDB; color:#007B66;}
+	td{background:#E3FFE3; width:80%;}
 	th#bottom{text-align:right;}
 	p{text-align:center; font-size:18pt;}
 	-->
@@ -40,6 +41,10 @@ request.setCharacterEncoding("UTF-8");
 	<br/>
 
 
+<%
+%>
+
+
 	<form id="frmdel" name="frmdel" action="MenuOperationSvl" method="post">
 	<tr>
 	<th>メニュー名</th>
@@ -47,7 +52,7 @@ request.setCharacterEncoding("UTF-8");
 	</tr>
 	<tr>
 	<th>価格</th>
-	<td><jsp:getProperty name="oneMenu" property="price" /></td>
+	<td>￥<jsp:getProperty name="oneMenu" property="price" /></td>
 	</tr>
 	<tr>
 	<th>オーダー</th>
@@ -69,15 +74,14 @@ request.setCharacterEncoding("UTF-8");
 	</td>
 	</tr>
 	<tr>
-		<td align="right" colspan="3"> <font color="red">※は必修入力です。</font>
+		<td align="right" colspan="3">
 		<input type="hidden" name="mode" value="13" />
 		<input type="hidden" name="menuId" value="<jsp:getProperty name="oneMenu" property="menuId" />" />
 		<input type="hidden" name="typeId" value="<jsp:getProperty name="oneMenu" property="typeId" />" />
 		<input type="hidden" name="DtypeID" value="<jsp:getProperty name="oneMenu" property="typeId" />" />
-		<input type="submit" value="削除" />
+		<input type="submit" value="   削除   " />
 	</tr>
 	</form>
-	&emsp;
 </table>
 <p><a href="MenuMaintenanceSvl">メニューメンテナンスに戻る</a> </p>
 </body>
