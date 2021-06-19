@@ -41,7 +41,7 @@ if(adminInfo != null && usrName != null){
 		rd.forward(request, response);
 		}else if(adminInfo == ""){
 			//管理者がログイン中はログインしている名前を表示
-			System.out.println("管理者空文字");
+			System.out.println("管理者空文字がログイン中");
 				}else if(adminInfo != null){
 					//管理者がログイン中はログインしている名前を表示
 					System.out.println("管理者ログイン中だよ");%>

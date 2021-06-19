@@ -11,24 +11,94 @@
 <body>
 	<%
 		//管理者セッションの判定
-		String admin;
+		String admin=null;
 		String ses = (String)session.getAttribute("adminInfo");
 		String par = request.getParameter("admin");
-		//セッションがnullまたはパラメータとセッションが一致していない場合は上書き
-		if(ses == null || !(ses.equals(par))){
-			System.out.println("フェーズ");
-			session.setAttribute("adminInfo", request.getParameter("admin") );
-			admin = (String)session.getAttribute("adminInfo");
-		}else{//パラメータとセッション一致しているときはselected判定に値を渡す
-			System.out.println("notフェーズ");
-			admin = (String)session.getAttribute("adminInfo");
-			System.out.println(admin);
+		System.out.println("セッションは"+ses);
+		System.out.println("パラメータは"+par);
+
+		if(ses == null){//セッションがnull
+			System.out.println("sesはnull");
+			if(par != null){//パラメータはnullじゃない
+				System.out.println("parはnullじゃない");
+				session.setAttribute("adminInfo", request.getParameter("admin") );
+				admin = (String)session.getAttribute("adminInfo");
+			}//parもnullなら何もしない
+
+		}else{//セッションはnullじゃない
+			if(par == null){//パラメータはnull
+				admin = ses;
+				System.out.println(admin);
+			}else{//パラメータはnullじゃない
+				System.out.println("parはnullじゃない");
+				if(par.equals("")){//parは空文字
+					System.out.println("parは空文字");
+					session.removeAttribute("adminInfo");
+					admin = "null";
+				}else{//parは空文字じゃない
+					if(ses.equals(par)){//parとsesは一致
+						System.out.println("parとsesは一致");
+						admin = ses;
+						System.out.println(admin);
+					}else{
+						System.out.println("parとsesは一致しないから上書き");
+						session.setAttribute("adminInfo", request.getParameter("admin") );
+						admin = (String)session.getAttribute("adminInfo");
+					}
+				}
+			}
 
 		}
 
+		//ユーザーセッションの判定
+		//ユーザーセッションはusrId(int)で判定する
+		String user=null;
+		String usrSes = (String)session.getAttribute("usrName");
+		String usrPar = request.getParameter("user");
+		System.out.println("セッションは"+usrSes);
+		System.out.println("パラメータは"+usrPar);
+
+		if(usrSes == null){//セッションがnull
+			System.out.println("usrSesはnull");
+			if(usrPar != null){//パラメータはnullじゃない
+				System.out.println("usrParはnullじゃない");
+				session.setAttribute("usrName", request.getParameter("user") );
+				user = (String)session.getAttribute("usrName");
+			}//parもnullなら何もしない
+
+		}else{//セッションはnullじゃない
+			if(usrPar == null){//パラメータはnull
+				user = usrSes;
+				System.out.println(user);
+			}else{//パラメータはnullじゃない
+				System.out.println("usrParはnullじゃない");
+				if(usrPar.equals("")){
+					System.out.println("usrParは空文字");
+					session.removeAttribute("usrName");
+					user = "null";
+				}else{
+					if(usrSes.equals(usrPar)){
+						System.out.println("usrParとusrSesは一致");
+						user = usrSes;
+						System.out.println(user);
+					}else{
+						System.out.println("usrParとusrSesは一致しないから上書き");
+						session.setAttribute("usrName", request.getParameter("usrName") );
+						user = (String)session.getAttribute("usrName");
+					}
+				}
+			}
+
+		}
+
+
+
+
+/*
 		Integer user;
 		try {
-			user = Integer.parseInt(request.getParameter("user"));
+			user = Integer.parseInt(request.getParameter("user"));//パラメータにあるuserIdを取得
+			//パラメータにあるuserIdをもとにuser情報を取得
 			User userInfo= User.getUser(Integer.parseInt(request.getParameter("user")));
 			session.setAttribute("usrName", userInfo.getUsrName());
 			session.setAttribute("usrId", userInfo.getUsrId());
@@ -40,6 +110,7 @@
 			session.setAttribute("exp", userInfo.getExp());
 		}
 		catch (NumberFormatException e) {user  = null;}
+		*/
 	%>
 
 デバッグモード設定
@@ -98,7 +169,7 @@
 <input type="reset" value="リセット" />
 </form>
 
-<!--  設定された管理者は：<%= admin %>
+  設定された管理者は：<%= admin %>
 設定されたお客様は：<%= user %>
 <br />
 セッションにある管理者は：<%= session.getAttribute("adminInfo") %>
