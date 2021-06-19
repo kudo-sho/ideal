@@ -54,8 +54,9 @@ public class MenuUpdateSvl extends HttpServlet {
 		int menuID = 0;
 		int mType = 0;
 //		int msg;
-		ArrayList<ArrayList<Menu>> al = null;
+		ArrayList<ArrayList<Menu>> al = new ArrayList<ArrayList<Menu>>();
 		ArrayList<Course> alc = null;
+		Course course = null;
 
 		try {
 		/* セッション情報(adminInfo)がnullの時、ホームページ(home.jsp)へ遷移する処理 */
@@ -82,14 +83,17 @@ public class MenuUpdateSvl extends HttpServlet {
 			 * その後の遷移先urlに新規コース登録画面(courseUpdate.jsp)をセットする。
 			 */
 			if (typeID == 100) {
-
 				for(int x = 0; x < CourseOperationSvl.COURSE_MENU_TYPE_ID.length; x++) {
 				al.add(Menu.getMenu(CourseOperationSvl.COURSE_MENU_TYPE_ID[x]));
 				}
 				alc = Course.getOneCourse(menuID);
 
+				//仕様書通りだと、コースに何もメニューが登録されてない時コース名やらも持ってこれないので↓追加
+				course = Course.getCourse(menuID);
+
 				request.setAttribute("typeMenuList", al);
 				request.setAttribute("oneCourse", alc);
+				request.setAttribute("course",course);
 				rd = request.getRequestDispatcher("/courseUpdate.jsp");
 				rd.forward(request, response);
 				return;
