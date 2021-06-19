@@ -48,30 +48,47 @@ p {
 
 <script type="text/javascript">
 <!--
-	function check(obj) {
-		var msg = "";
-		if (obj.courseName.value.length < 1) {
-			msg += "メニュー名を入力してください。\n";
-		}
-		if (obj.courseName.value.length < 1) {
-			msg += "コース名を入力してください。\n";
-			return false;
-		}
-		if (obj.price.value.length < 1) {
-			msg += "価格を入力してください。\n";
-			return false;
-		}
-		if (!obj.price.value.match(/^[0-9]+$/g)) {
-			msg += "価格を数値で入力してください。\n";
-			return false;
-		}
+function check(obj) {
+	var msg = "";
+	if (obj.courseName.value.length < 1) {
+		msg += "メニュー名を入力してください。\n";
 	}
+	if (obj.price.value.length < 1) {
+		msg += "価格を入力してください。\n";
+	}else if (!obj.price.value.match(/^[0-9]+$/g)) {
+		msg += "価格を数値(半角)で入力してください。\n";
+	}
+
+	var i;
+	for (i = 0; i < obj.orderFlg.length; i++) {
+		if (obj.orderFlg[i].checked)
+			break;
+	}
+	if (i >= obj.orderFlg.length) {
+		msg += "オーダーの可否をチェックしてください。\n";
+	}
+
+	if(msg != ""){
+		window.alert(msg);
+		return false;
+	}
+	return true;
+}
 //-->
 </script>
 </head>
 <body>
+
 	<%
-		int typeID;
+	int typeID;
+	Course c = null;
+	Course course = null;
+
+	//各メニューネームを入れる
+	String[] tmn = {"","","","","",""};
+	int[] tid = {200,210,220,300,310,400};
+
+
 		try {
 			typeID = Integer.parseInt(request.getParameter("CtypeID"));
 		} catch (NumberFormatException e) {
@@ -79,11 +96,21 @@ p {
 		}
 
 		ArrayList<ArrayList<Menu>> al = (ArrayList<ArrayList<Menu>>)request.getAttribute("typeMenuList");
-		ArrayList<Course> alc = (ArrayList<Course>)request.getAttribute("oneCourse");
+		ArrayList<Course> oneCourse = (ArrayList<Course>)request.getAttribute("oneCourse");
+		//仕様書通りだと、コースに何もメニューが登録されてない時コース名やらも持ってこれないので↓追加
+		course = (Course)request.getAttribute("course");
 
-		for (Object o : alc) {
-			ArrayList<Course> alc1 = (ArrayList<Course>) o;
+		if(oneCourse.size() != 0){
+			for(int x = 0 ;x < oneCourse.size(); x++){
+				c = oneCourse.get(x);
+				for(int y = 0;y < tmn.length; y++){
+				if(c.getTypeId() == tid[y]){
+					tmn[y] = c.getMenuName();
+				}
+				}
 			}
+		}
+
 
 	%>
 
@@ -108,156 +135,101 @@ p {
 
 		<form action="CourseOperationSvl" method="post"
 			onsubmit="return check(this);">
+
+			<%
+			//各項目がnullの時、空白を表示
+			if (course.getCourseName() == null) {
+				course.setCourseName("");
+			}
+			if (course.getDetail() == null) {
+				course.setDetail("");
+			}
+			%>
+
 			<tr>
-				<th>コース名 ※</th>
-				<td><input type="text" name="menuName" size="50" /><%= alc.getCourseName %></td>
+				<th>コース名<font color="red">※</font></th>
+				<td><input type="text" name="courseName" size="50" value="<%= course.getCourseName() %>" /></td>
 			</tr>
 			<tr>
-				<th>価格 ※</th>
-				<td><input type="text" name="price" size="20" />??????????</td>
+				<th>価格<font color="red">※</font></th>
+				<td><input type="text" name="price" size="20" value="<%= course.getPrice() %>"/></td>
 			</tr>
 			<tr>
-				<th>オーダー ※</th>
-				<td><input	type="radio" name="orderFlg" value="0" />不可
-				<input type="radio" name="orderFlg" value="1" />可
+				<th>オーダー<font color="red">※</font></th>
+				<td>
+	<%
+	String[] order = { "不可", "可" };
+	for (int i = 0; i < order.length; i++) {
+	String checked = "";
+	if(order[i].equals("不可") && course.getOrderFlg() != 1){
+		checked = "checked";
+	}
+	if(order[i].equals("可") && course.getOrderFlg() == 1){
+		checked = "checked";
+	}
+	%>
+				<input	type="radio" name="orderFlg" value="<%= i %>" <%= checked %> /><%= order[i] %> &nbsp;
+				<%
+	}
+				%>
 				</td>
 			<tr>
 				<th>コメント</th>
-				<td><textarea name="detail" cols="55" rows="5" value="??????????"></textarea></td>
+				<td><textarea name="detail" cols="55" rows="5"><%= course.getDetail() %></textarea></td>
 			</tr>
 			</tr>
+
+			<%
+			String[] type = { "appetizerID", "soupID", "pastaID",
+					"meatID", "fishID", "dessertID" };
+			String[] typeName = { "前菜", "スープ", "パスタ",
+					"肉料理", "魚料理", "デザート" };
+			int x = 0;
+
+			for (ArrayList<Menu> alm : al) {
+				int y = 0;
+
+				for (Menu m : alm) {
+					String selected = "";
+					if (tmn[x].equals(m.getMenuName())) {
+				selected = "selected";
+					} else {
+				selected = "";
+					}
+					if(y == 0){
+			%>
+
 			<tr>
-				<th>前菜</th>
-				<td><select name="typeId">
+				<th><%= typeName[x] %></th>
+				<td><select name="<%= type[x] %>">
 						<%
-							for (Object o : al) {
-								ArrayList<Menu> al2 = (ArrayList<Menu>)o;
-								for(Object o2 : al2){
-									Menu m = (Menu)o2;
-								String selected = "";
-								if (typeID == m.getTypeId()) {
-									selected = "selected";
-								} else {
-									selected = "";
-								}
+						}
 						%>
-						<option value="<%= m.getMenuId() %>" <%= selected %>>
-							<%= m.getTypeName() %></option>
+						<option value="<%=m.getMenuId()%>" <%=selected%>>
+							<%=m.getMenuName()%></option>
 						<%
-								}
-							}
-						%>
-				</select></td>
-				</tr>
-				<tr>
-				<th>スープ</th>
-				<td><select name="typeId">
-						<%
-							for (Object o : mType) {
-								MenuType mt = (MenuType) o;
-								String selected = "";
-								if (typeID == mt.getTypeId()) {
-									selected = "selected";
-								} else {
-									selected = "";
-								}
-						%>
-						<option value="<%=mt.getTypeId()%>" selected="<%=selected%>">
-							<%=mt.getTypeName()%></option>
-						<%
-							}
-						%>
-				</select></td>
-				<tr>
-				<th>パスタ</th>
-				<td><select name="typeId">
-						<%
-							for (Object o : mType) {
-								MenuType mt = (MenuType) o;
-								String selected = "";
-								if (typeID == mt.getTypeId()) {
-									selected = "selected";
-								} else {
-									selected = "";
-								}
-						%>
-						<option value="<%=mt.getTypeId()%>" selected="<%=selected%>">
-							<%=mt.getTypeName()%></option>
-						<%
-							}
-						%>
-				</select></td>
-				</tr>
-				<tr>
-				<th>肉料理</th>
-				<td><select name="typeId">
-						<%
-							for (Object o : mType) {
-								MenuType mt = (MenuType) o;
-								String selected = "";
-								if (typeID == mt.getTypeId()) {
-									selected = "selected";
-								} else {
-									selected = "";
-								}
-						%>
-						<option value="<%=mt.getTypeId()%>" selected="<%=selected%>">
-							<%=mt.getTypeName()%></option>
-						<%
-							}
-						%>
-				</select></td>
-				</tr>
-				<tr>
-				<th>魚料理</th>
-				<td><select name="typeId">
-						<%
-							for (Object o : mType) {
-								MenuType mt = (MenuType) o;
-								String selected = "";
-								if (typeID == mt.getTypeId()) {
-									selected = "selected";
-								} else {
-									selected = "";
-								}
-						%>
-						<option value="<%=mt.getTypeId()%>" selected="<%=selected%>">
-							<%=mt.getTypeName()%></option>
-						<%
-							}
-						%>
-				</select></td>
-				</tr>
-				<tr>
-				<th>デザート</th>
-				<td><select name="typeId">
-						<%
-							for (Object o : mType) {
-								MenuType mt = (MenuType) o;
-								String selected = "";
-								if (typeID == mt.getTypeId()) {
-									selected = "selected";
-								} else {
-									selected = "";
-								}
-						%>
-						<option value="<%=mt.getTypeId()%>" selected="<%=selected%>">
-							<%=mt.getTypeName()%></option>
-						<%
-							}
+						y++;
+						}
 						%>
 				</select></td>
 			</tr>
-			<input type="hidden" name="mode" value="MenuUpdateSvl.java" />
+			<%
+			x++;
+			}
+			%>
+
+			<input type="hidden" name="mode" value="12" />
+			<input type="hidden" name="courseID" value="<%= course.getCourseId() %>" />
+			<input type="hidden" name="typeID" value="<%= course.getTypeId() %>" />
 			<tr>
 				<td align="right" colspan="3"><font color="red">※は必修入力です。</font>
-					<input type="submit" value="変更" />
+					<input type="submit" value="   変更   " /></td>
 			</tr>
 		</form>
 		&emsp;
 	</table>
 	<p>
-		<a href="menuMaintenance?typeID=<%=typeID%>">メニューメンテナンスに戻る</a>
+		<a href="MenuMaintenanceSvl">メニューメンテナンスに戻る</a>
 	</p>
 </body>
 </html>
