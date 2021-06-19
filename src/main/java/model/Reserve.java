@@ -445,11 +445,27 @@ public class Reserve {
 			int day = Integer.parseInt(dateStr.substring(8,10));
 			int time = Integer.parseInt(dateStr.substring(11,13));
 			int minute = Integer.parseInt(dateStr.substring(14,16));
+			
 
 		//時刻部分に３時間足し引きしたものをString型で作成しspl文へ入れる
 
 			pst.setString(1, year + "-" + month + "-" + day + " " + (time - 3) + ":" + minute);
-			pst.setString(2, year + "-" + month + "-" + day + " " + (time + 3) + ":" + minute);
+			
+			System.out.println(year + "-" + month + "-" + day + " " + (time - 3) + ":" + minute);
+			
+		//入力時刻が21時以降の場合、SQL実行時に「24:00」のような存在しない時刻で検索するため、
+		//検索時に不具合が起こりテーブルに空きがあっても予約できないことがある。
+		//そのため、time < 21 とそうでない場合とでSQLにセットする時刻の生成法を変えている
+			
+			if( time < 21){
+				pst.setString(2, year + "-" + month + "-" + day + " " + (time + 3) + ":" + minute);
+				System.out.println(year + "-" + month + "-" + day + " " + (time + 3) + ":" + minute);
+			}else{
+				pst.setString(2, year + "-" + month + "-" + (day + 1) + " " + (time - 21) + ":" + minute);
+				System.out.println(year + "-" + month + "-" + (day + 1) + " " + (time - 21) + ":" + minute);
+			}
+	
+					
 			pst.setInt(3,personNum);
 
 			rs = pst.executeQuery();
@@ -535,9 +551,7 @@ public class Reserve {
 			System.out.println("受け取っているdatestr=" + dateStr);//バグチェック
 
 
-			pst.setInt(3,personNum);
-			pst.setInt(4,rsvId);
-
+			
 			//String型のdateStrから文字列を抜き出し、Int型にして各変数に設定
 			//dateStrが 「xxxx-xx-xx xx:xx」の形式だという前提で作成しています。動かなかったらチェック
 			int year =Integer.parseInt(dateStr.substring(0,4));
@@ -549,7 +563,23 @@ public class Reserve {
 			//時刻部分に３時間足し引きしたものをString型で作成しsql文へ入れる
 
 			pst.setString(1, year + "-" + month + "-" + day + " " + (time - 3) + ":" + minute);
-			pst.setString(2, year + "-" + month + "-" + day + " " + (time + 3) + ":" + minute);
+			
+			//入力時刻が21時以降の場合、SQL実行時に「24:00」のような存在しない時刻で検索するため、
+			//検索時に不具合が起こりテーブルに空きがあっても予約できないことがある。
+			//そのため、time < 21 とそうでない場合とでSQLにセットする時刻の生成法を変えている
+			
+			
+			if( time < 21){
+				pst.setString(2, year + "-" + month + "-" + day + " " + (time + 3) + ":" + minute);
+				System.out.println(year + "-" + month + "-" + day + " " + (time + 3) + ":" + minute);
+			}else{
+				pst.setString(2, year + "-" + month + "-" + (day + 1) + " " + (time - 21) + ":" + minute);
+				System.out.println(year + "-" + month + "-" + (day + 1) + " " + (time - 21) + ":" + minute);
+			}
+			
+			pst.setInt(3,personNum);
+			pst.setInt(4,rsvId);
+
 
 			rs = pst.executeQuery();
 			System.out.println("updateChkのrs取得");//バグチェック
