@@ -24,6 +24,7 @@
 			admin = (String)session.getAttribute("adminInfo");
 			System.out.println(admin);
 
+
 		}
 
 		Integer user;
