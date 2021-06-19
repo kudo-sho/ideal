@@ -24,7 +24,7 @@ msg = (String)request.getAttribute("msg");
 if(msg != null)
 	out.print(msg);
 
-
+System.out.println("homeセッションの判定");
 //セッションの有無を判定
 Object adminInfo = session.getAttribute("adminInfo");
 Object usrName = session.getAttribute("usrName");
@@ -91,6 +91,6 @@ Restaurante IDEALLE へようこそ！<br />
 		<a href="./adminLogin.jsp"><h5>管理者ログイン</h5></a>
 
 </div>
-
+<% System.out.println("home最後尾"); %>
 </body>
 </html>

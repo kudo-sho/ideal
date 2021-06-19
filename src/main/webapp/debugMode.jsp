@@ -9,6 +9,15 @@
 <title>Insert title here</title>
 </head>
 <body>
+<!--
+おおむね正常に動作しますが
+管理者にnullを設定したあと再度設定しようとするとヌルポインターエラーが発生
+ユーザーを一度ログインさせてしまうとその後設定してもすぐログインされて設定できなくなる
+等のエラーが発生しています
+要修正
+
+ -->
+
 	<%
 		//管理者セッションの判定
 		String admin=null;
@@ -51,19 +60,40 @@
 		}
 
 		//ユーザーセッションの判定
-		//ユーザーセッションはusrId(int)で判定する
-		String user=null;
-		String usrSes = (String)session.getAttribute("usrName");
-		String usrPar = request.getParameter("user");
-		System.out.println("セッションは"+usrSes);
-		System.out.println("パラメータは"+usrPar);
+		//ユーザーセッションはuser(int)で判定する
+		Integer user = null;
+		Integer usrSes;
+		Integer usrPar;
+		//リクエストやセッションに値がない場合はnullを渡されてヌルポになる
+		try{
+			usrSes = (Integer)session.getAttribute("usrId");
+			System.out.println("取得したセッションのidは"+usrSes);
+		}catch(Exception e){
+			usrSes = null;
+		}
+		try{
+			usrPar = Integer.parseInt(request.getParameter("user"));
+		}catch(Exception e){
+			usrPar = null;
+		}
+		System.out.println("usrSesセッションは"+usrSes);
+		System.out.println("usrParパラメータは"+usrPar);
 
 		if(usrSes == null){//セッションがnull
 			System.out.println("usrSesはnull");
 			if(usrPar != null){//パラメータはnullじゃない
 				System.out.println("usrParはnullじゃない");
-				session.setAttribute("usrName", request.getParameter("user") );
-				user = (String)session.getAttribute("usrName");
+				session.setAttribute("user", request.getParameter("user") );
+				User userInfo= User.getUser(usrPar);
+				session.setAttribute("usrName", userInfo.getUsrName());
+				session.setAttribute("usrId", userInfo.getUsrId());
+				session.setAttribute("usrName", userInfo.getUsrName());
+				session.setAttribute("password", userInfo.getPassword());
+				session.setAttribute("address", userInfo.getAddress());
+				session.setAttribute("phone", userInfo.getPhone());
+				session.setAttribute("mail", userInfo.getMail());
+				session.setAttribute("exp", userInfo.getExp());
+				user = Integer.parseInt(request.getParameter("user"));
 			}//parもnullなら何もしない
 
 		}else{//セッションはnullじゃない
@@ -72,10 +102,16 @@
 				System.out.println(user);
 			}else{//パラメータはnullじゃない
 				System.out.println("usrParはnullじゃない");
-				if(usrPar.equals("")){
-					System.out.println("usrParは空文字");
+				if(usrPar == 0){
+					System.out.println("usrParは0");
 					session.removeAttribute("usrName");
-					user = "null";
+					session.removeAttribute("usrId");
+					session.removeAttribute("password");
+					session.removeAttribute("address");
+					session.removeAttribute("phone");
+					session.removeAttribute("mail");
+					session.removeAttribute("exp");
+					user = 0;
 				}else{
 					if(usrSes.equals(usrPar)){
 						System.out.println("usrParとusrSesは一致");
@@ -83,8 +119,17 @@
 						System.out.println(user);
 					}else{
 						System.out.println("usrParとusrSesは一致しないから上書き");
-						session.setAttribute("usrName", request.getParameter("usrName") );
-						user = (String)session.getAttribute("usrName");
+						session.setAttribute("user", Integer.parseInt(request.getParameter("user")));
+						User userInfo= User.getUser(usrPar);
+						session.setAttribute("usrName", userInfo.getUsrName());
+						session.setAttribute("usrId", userInfo.getUsrId());
+						session.setAttribute("usrName", userInfo.getUsrName());
+						session.setAttribute("password", userInfo.getPassword());
+						session.setAttribute("address", userInfo.getAddress());
+						session.setAttribute("phone", userInfo.getPhone());
+						session.setAttribute("mail", userInfo.getMail());
+						session.setAttribute("exp", userInfo.getExp());
+						user = Integer.parseInt(request.getParameter("user"));
 					}
 				}
 			}
@@ -141,7 +186,7 @@
 <br />
 お客様：
 <select name="user">
-<option value="">null</option>
+<option value="0">null</option>
 <%
 							for (Debug deb : Debug.getUserList()) {
 								String selected = "";
@@ -170,11 +215,14 @@
 </form>
 
   設定された管理者は：<%= admin %>
-設定されたお客様は：<%= user %>
+設定されたお客様IDは：<%= user %>
 <br />
 セッションにある管理者は：<%= session.getAttribute("adminInfo") %>
 セッションにお客様は：<%= session.getAttribute("usrName") %>
 -->
 ※機能に一部不具合あり
+<%
+System.out.print("デバッグモード最後尾");
+%>
 </body>
 </html>
