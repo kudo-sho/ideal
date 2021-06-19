@@ -53,6 +53,9 @@ public class ReserveDeleteSvl extends HttpServlet {
 		}
 
 		try{
+			// セション情報が取得できるかチェック
+			int usrId = (int)usrInfo.getAttribute("usrId");
+			// リクエストパラメータから予約番号を取得
 			int	rsvId = Integer.parseInt(request.getParameter("rsvId"));
 
 			Reserve r = new Reserve();

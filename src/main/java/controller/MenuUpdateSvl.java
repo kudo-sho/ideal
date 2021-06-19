@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.Course;
 import model.IdealException;
 import model.Menu;
 import model.MenuType;
@@ -52,8 +54,9 @@ public class MenuUpdateSvl extends HttpServlet {
 		int menuID = 0;
 		int mType = 0;
 //		int msg;
-//		ArrayList<Menu> al = new ArrayList<Menu>();
-//		ArrayList<Course> alc = new ArrayList<Course>();
+		ArrayList<ArrayList<Menu>> al = new ArrayList<ArrayList<Menu>>();
+		ArrayList<Course> alc = null;
+		Course course = null;
 
 		try {
 		/* セッション情報(adminInfo)がnullの時、ホームページ(home.jsp)へ遷移する処理 */
@@ -79,12 +82,21 @@ public class MenuUpdateSvl extends HttpServlet {
 			 * typeMenuListにコース構成分類ごとのメニュー一覧(ArrayList<Menu>)を取得し、設定する。
 			 * その後の遷移先urlに新規コース登録画面(courseUpdate.jsp)をセットする。
 			 */
-//			if (typeID == 100) {
-//				request.setAttribute("typeMenuList", al);
-//				request.setAttribute("oneCourse", alc);
-//				rd = request.getRequestDispatcher("/courseUpdate.jsp");
-//				rd.forward(request, response);
-//				return;
+			if (typeID == 100) {
+				for(int x = 0; x < CourseOperationSvl.COURSE_MENU_TYPE_ID.length; x++) {
+				al.add(Menu.getMenu(CourseOperationSvl.COURSE_MENU_TYPE_ID[x]));
+				}
+				alc = Course.getOneCourse(menuID);
+
+				//仕様書通りだと、コースに何もメニューが登録されてない時コース名やらも持ってこれないので↓追加
+				course = Course.getCourse(menuID);
+
+				request.setAttribute("typeMenuList", al);
+				request.setAttribute("oneCourse", alc);
+				request.setAttribute("course",course);
+				rd = request.getRequestDispatcher("/courseUpdate.jsp");
+				rd.forward(request, response);
+				return;
 
 				/* typeIDが100以外の時の処理 */
 				/*
@@ -92,13 +104,14 @@ public class MenuUpdateSvl extends HttpServlet {
 				 * リクエストオブジェクト"typeID"にtypeIDをセット。
 				 * 遷移先urlに新規メニュー登録画面(menuUpdate.jsp)をセットする。
 				 */
-//			} else if (typeID != 100) {
+			} else if (typeID != 100) {
 				request.setAttribute("mType", MenuType.getAllType());
 //				typeID = Integer.parseInt(request.getParameter("typeID"));
 				request.setAttribute("oneMenu", Menu.getOneMenu(menuID, mType));
 				rd = request.getRequestDispatcher("/menuUpdate.jsp");
 				rd.forward(request, response);
 				return;
+			}
 
 				/* 例外処理(まだちゃんと出来てない)
 				 * リクエストオブジェクト"msg"に独自例外よりメッセージを取得し設定する。
@@ -108,7 +121,6 @@ public class MenuUpdateSvl extends HttpServlet {
 //				msg = Integer.parseInt(request.getParameter("msg"));
 //				rd = request.getRequestDispatcher("MenuMaintenanceSvl");
 //				rd.forward(request, response);
-//			}
 		}catch(Exception e) {
 			//			}catch(Exception e) {
 			IdealException ie = new IdealException(IdealException.ERR_NO_EXCEPTION);

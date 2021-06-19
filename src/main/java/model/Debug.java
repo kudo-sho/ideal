@@ -12,50 +12,94 @@ import javax.sql.DataSource;
 
 public class Debug {
 	//フィールド
-	private int adminId;
-	private String adminName;
-	private int userId;
-	private String userName;
+	private int admId;
+	private String admName;
+	private String admPassword;
+	private String admExp;
 
+	private int usrId;
+	private String usrName;
+	private String usrPassword;
+	private String address;
+	private String phone;
+	private String mail;
+	private String usrExp;
 
 	//getter
-	public int getAdminId() {
-		return adminId;
+	public int getAdmId() {
+		return admId;
+	}
+	public String getAdmName() {
+		return admName;
+	}
+	public String getAdmPassword() {
+		return admPassword;
+	}
+	public String getAdmExp() {
+		return admExp;
 	}
 
-	public String getAdminName() {
-		return adminName;
+	public int getUsrId() {
+		return usrId;
 	}
-
-	public int getUserId() {
-		return userId;
+	public String getUsrName() {
+		return usrName;
 	}
-
-	public String getUserName() {
-		return userName;
+	public String getUsrPassword() {
+		return usrPassword;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public String getMail() {
+		return mail;
+	}
+	public String getUsrExp() {
+		return usrExp;
 	}
 
 	//setter
-	public void setAdminId(int adminId) {
-		this.adminId = adminId;
+	public void setAdmId(int admId) {
+		this.admId = admId;
+	}
+	public void setAdmName(String admName) {
+		this.admName = admName;
+	}
+	public void setAdmPassword(String admPassword) {
+		this.admPassword = admPassword;
+	}
+	public void setAdmExp(String admExp) {
+		this.admExp = admExp;
 	}
 
-	public void setAdminName(String adminName) {
-		this.adminName = adminName;
+	public void setUsrId(int usrId) {
+		this.usrId = usrId;
 	}
-
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setUsrName(String usrName) {
+		this.usrName = usrName;
 	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUsrPassword(String usrPassword) {
+		this.usrPassword = usrPassword;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+	public void setUsrExp(String usrExp) {
+		this.usrExp = usrExp;
 	}
 
 
 	//管理者リスト取得
 	public static ArrayList<Debug> getAdminList() throws IdealException {
-		int cnt =0;
 		ArrayList<Debug> aldeb = new ArrayList<Debug>();
 		InitialContext ic = null;
 		DataSource ds = null;
@@ -75,33 +119,26 @@ public class Debug {
 			rs = pst.executeQuery();
 
 			while (rs.next()) {
-				cnt++;
 				deb = new Debug();
-				deb.setAdminId(cnt);
-				deb.setAdminName(rs.getString("adm_Name"));
+				deb.setAdmId(rs.getInt("adm_id"));
+				deb.setAdmName(rs.getString("adm_name"));
+				deb.setAdmPassword("password");
+				deb.setAdmExp("exp");
 				aldeb.add(deb);
 			}
 
-			//	}catch(Exception e) {
 		} catch (SQLException | NamingException e) {
 			throw new IdealException(IdealException.ERR_NO_DB_EXCEPTION);
-			//				System.out.println(msg);
-			//		int i = IdealException.ERR_NO_DB_EXCEPTION;
-			//		throw new IdealException(i);
-			//		//↑他から取ってきた記述
+
 		} finally {
 			try {
-				if (rs != null)
-					rs.close();
-				if (pst != null)
-					pst.close();
-				if (con != null)
-					con.close();
+				if (rs != null) rs.close();
+				if (pst != null) pst.close();
+				if (con != null) con.close();
 			} catch (Exception e) {
 			}
 		}
 		return aldeb;
-
 	}
 
 	//お客様リスト取得
@@ -126,32 +163,29 @@ public class Debug {
 
 			while (rs.next()) {
 				deb = new Debug();
-				deb.setUserId(rs.getInt("usr_id"));
-				deb.setUserName(rs.getString("usr_name"));
+				deb.setUsrId(rs.getInt("usr_id"));
+				deb.setUsrName(rs.getString("usr_name"));
+				deb.setUsrPassword("password");
+				deb.setAddress("address");
+				deb.setPhone("phone");
+				deb.setMail("mail");
+				deb.setUsrExp("exp");
 				aldeb.add(deb);
 			}
 
-			//	}catch(Exception e) {
 		} catch (SQLException | NamingException e) {
 			throw new IdealException(IdealException.ERR_NO_DB_EXCEPTION);
-			//				System.out.println(msg);
-			//		int i = IdealException.ERR_NO_DB_EXCEPTION;
-			//		throw new IdealException(i);
-			//		//↑他から取ってきた記述
+
 		} finally {
 			try {
-				if (rs != null)
-					rs.close();
-				if (pst != null)
-					pst.close();
-				if (con != null)
-					con.close();
+				if (rs != null) rs.close();
+				if (pst != null) pst.close();
+				if (con != null) con.close();
 			} catch (Exception e) {
 			}
 		}
 		return aldeb;
-
 	}
-	
-	
+
+
 }

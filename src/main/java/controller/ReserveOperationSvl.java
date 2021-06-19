@@ -57,9 +57,7 @@ public class ReserveOperationSvl extends HttpServlet {
 		if(usrInfo == null){
 			response.sendRedirect("home.jsp");
 		}
-
-		String mode =request.getParameter("mode");
-
+		
 		int rsvId = 0;
 		int rsvYy = 0;
 		int rsvMm = 0;
@@ -90,22 +88,36 @@ public class ReserveOperationSvl extends HttpServlet {
 
 		String url = "ReserveListSvl";
 		int msgNo = 0;
+		String mode = "";
 		Reserve r = null;
+
+		try{
+			// セション情報が取得できるかチェック
+			int sessionChk = (int)usrInfo.getAttribute("usrId");
+			// リクエストパラメータからmodeを取得
+			mode =request.getParameter("mode");
+			
+		}catch(Exception e){
+			IdealException ie = new IdealException(msgNo);
+			request.setAttribute("msg", ie.getMsg());
+			url = "/home.jsp";
+
+		}
 
 		switch(mode) {
 		case "登録処理":
 			r = new Reserve();
-			//r.setRsvId(rsvId);
-			r.setRsvYy(rsvYy);
-			r.setRsvMm(rsvMm);
-			r.setRsvDd(rsvDd);
-			r.setRsvHh(rsvHh);
-			r.setRsvMi(rsvMi);
-			r.setUsrId(usrId);
-			r.setPerson(person);
-			r.setCourseId(courseId);
-
 			try{
+				//r.setRsvId(rsvId);
+				r.setRsvYy(rsvYy);
+				r.setRsvMm(rsvMm);
+				r.setRsvDd(rsvDd);
+				r.setRsvHh(rsvHh);
+				r.setRsvMi(rsvMi);
+				r.setUsrId(usrId);
+				r.setPerson(person);
+				r.setCourseId(courseId);
+				
 				Calendar cal = Calendar.getInstance();
 				cal.set(rsvYy, rsvMm-1, rsvDd, rsvHh, rsvMi);
 				Date date = cal.getTime();
@@ -165,19 +177,19 @@ public class ReserveOperationSvl extends HttpServlet {
 				Date date = cal.getTime();
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
 				String dateStr = dateFormat.format(date);
-				System.out.println("updateChk前:"+rsvId+","+dateStr+","+person);
+				//System.out.println("updateChk前:"+rsvId+","+dateStr+","+person);
 				
 				TableLoc tl = Reserve.updateChk(rsvId, dateStr, person);
 				if(tl != null){
 					r.setTableId(tl.getTableId());
 					r.setTableName(tl.getTableName());
-					System.out.println("updateChk後:"+tl.getTableId()+","+tl.getTableName());
+					//System.out.println("updateChk後:"+tl.getTableId()+","+tl.getTableName());
 
 					Course cs = Course.getCourse(courseId);
 					r.setCourseName(cs.getCourseName());
 
 					r = Reserve.update(r);
-					request.setAttribute("msg", "予約を変更しました");
+					request.setAttribute("msg","予約番号＜"+rsvId+"＞の予約を変更しました");
 					url = "ReserveListSvl";
 
 				}else{
@@ -201,7 +213,7 @@ public class ReserveOperationSvl extends HttpServlet {
 				rsvId = Integer.parseInt(request.getParameter("rsvId"));
 				r.setRsvId(rsvId);
 				Reserve.delete(r);
-				request.setAttribute("msg", "予約を取り消ししました");
+				request.setAttribute("msg","予約番号＜"+rsvId+"＞の予約を取消しました");
 				url = "ReserveListSvl";
 
 			}catch(Exception e){

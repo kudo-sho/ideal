@@ -185,8 +185,8 @@ public class Menu {
 				menu.setTypeName(rs.getString("t_name"));
 				alm.add(menu);
 			}
-			Menu menu1 = alm.get(0);
-			System.out.println(menu1.getDetail());
+//			Menu menu1 = alm.get(0);
+//			System.out.println(menu1.getDetail());
 		}catch(SQLException | NamingException e) {
 			throw new IdealException(IdealException.ERR_NO_DB_EXCEPTION);
 			//				System.out.println(msg);
@@ -285,7 +285,9 @@ public class Menu {
 				ds = (DataSource)ic.lookup("java:comp/env/mysql");
 				con = ds.getConnection();
 
-				if(m.getTypeId() == 100){ //コースの場合、テーブル名とかを変える
+				//コースの場合、↓でテーブル名とかを変える
+				//・・・んだけど、仕様的にコースだったらこのメソッド使わないから不要のはず
+				if(m.getTypeId() == 100){
 					table = "course";
 					id = "c_id";
 					name = "c_name";
@@ -339,6 +341,7 @@ public class Menu {
 			}
 
 			//おそらくTypeIDを返す？
+
 			return m.getTypeId();
 		}
 

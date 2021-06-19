@@ -60,7 +60,7 @@ public class ReserveInsertSvl extends HttpServlet {
 		int rsvDd = 0;
 		int rsvHh = 0;
 		int rsvMi = 0;
-		int usrId = (int)userInfo.getAttribute("usrId");
+		int usrId = 0;
 		int person = 0;
 		int courseId = 0;
 
@@ -76,10 +76,14 @@ public class ReserveInsertSvl extends HttpServlet {
 		}catch(Exception e){
 
 		}
-    	System.out.println("iSv:"+rsvYy+" "+rsvMm+" "+rsvDd+" "+rsvHh+" "+rsvMi+
-    			" "+usrId+" "+person+" "+courseId);
 
 		try{
+			//usrIdが0の時、セション情報のusrIdをセット
+			if(usrId == 0) {
+				usrId = (int)userInfo.getAttribute("usrId");
+			}
+			System.out.println("iSv:"+rsvYy+" "+rsvMm+" "+rsvDd+" "+rsvHh+" "+rsvMi+
+	    			" "+usrId+" "+person+" "+courseId);
 			//「リクエストオブジェクト"courseList"にオーダー可能なコースの一覧情報を設定する」
 			ArrayList<Course> al = new ArrayList<Course>();
 			al = Course.getOneCourseList();
@@ -111,7 +115,7 @@ public class ReserveInsertSvl extends HttpServlet {
 		catch(Exception e){
 			IdealException ie = new IdealException(msgNo);
 			request.setAttribute("msg", ie.getMsg());
-			url = "RserveListSvl";
+			url = "ReserveListSvl";
 
 		}
 

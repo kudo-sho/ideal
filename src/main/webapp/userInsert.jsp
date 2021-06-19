@@ -70,7 +70,7 @@
     		
     		//苗字と名前の結合処理　半角スペースを挟むと上手くいかなかったので全角にしてあります
     		
-    		f1.usrName.value = document.f1.usrName1.value + "　" + document.f1.usrName2.value ;
+    		f1.usrName.value = document.f1.usrName1.value + " " + document.f1.usrName2.value ;
     		
     	}
      
