@@ -63,7 +63,7 @@
 			
 			//苗字と名前の結合処理、半角スペースを挟むと上手くいかなかったので全角にしてあります
 			
-			f1.usrName.value = document.f1.usrName1.value + "　" + document.f1.usrName2.value ;
+			f1.usrName.value = document.f1.usrName1.value + " " + document.f1.usrName2.value ;
 			
 			
     	}
@@ -92,15 +92,23 @@
 
 				  <tr>
 				     <th>お名前</th>
-				    <% String usrName = (String) session.getAttribute("usrName"); 
-				       String [] list = usrName.split("　");
+				    <% String usrName = (String) session.getAttribute("usrName");
+				       String [] list = new String[2];				    	
+					   if(usrName.contains(" ")){
+					       list = usrName.split(" ");
+					   }else if(usrName.contains("　")){
+						   list = usrName.split("　"); 
+					   }else{
+						   list[0] = usrName;
+						   list[1] = "";
+					   }
 				       String usrName1 = list[0];
 				       String usrName2 = list[1];
 				    %>
 				     <td align="left" colspan="2"><input type="text" name="usrName1" size="15"
-				     					value= <%= usrName1 %> />
+				     					value="<%= usrName1 %>" />
 				     					<input type="text" name="usrName2" size="15"
-				     					value= <%= usrName2 %> />
+				     					value="<%= usrName2 %>" />
 				     					</td>
 				  </tr>
 					<!-- お客様情報変更画面で値のない入力フィールドでは/になってしまう原因
@@ -111,25 +119,25 @@
 				  <tr>
 				    <th>住所</th>
 				    <td align="left" colspan="2"><input type="text" name="address" size="40"
-				    					value= "<%= session.getAttribute("address") %>" /></td>
+				    					value="<%= session.getAttribute("address") %>" /></td>
 				  </tr>
 
 				  <tr>
 				    <th>電話番号</th>
 				    <td align="left" colspan="2"><input type="text" name="phone"
-				    				value= "<%= session.getAttribute("phone") %>" /></td>
+				    				value="<%= session.getAttribute("phone") %>" /></td>
 				  </tr>
 
 				  <tr>
 				    <th>e-mail</th>
 				    <td align="left" colspan="2"><input type="text" name="mail" size="40"
-				    				value= "<%= session.getAttribute("mail") %>" /></td>
+				    				value="<%= session.getAttribute("mail") %>" /></td>
 				  </tr>
 
 				  <tr>
 				    <th>パスワード</th>
 				    <td align="left"><input type="password" name="password"
-				    				value=<%= session.getAttribute("password") %> />
+				    				value="<%= session.getAttribute("password") %>" />
 				    							<font size="2px">※変更時のみ入力してください。</font></td>
 				  </tr>
 
@@ -142,7 +150,7 @@
 			
 			<input type="hidden" name="usrName" />
 			<input type="hidden" name="mode" value="変更処理"/>
-			<input type="hidden" name="usrId" value=<%= session.getAttribute("id") %> />
+			<input type="hidden" name="usrId" value="<%= session.getAttribute("id") %>" />
 		</form>
 
 		&emsp;
