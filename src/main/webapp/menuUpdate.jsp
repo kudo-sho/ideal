@@ -110,16 +110,16 @@ p {
 		<form action="MenuOperationSvl" method="post"
 			onsubmit="return check(this);">
 			<tr>
-				<th>メニュー名</th>
+				<th>メニュー名<font color="red">※</font></th>
 				<td><input type="text" name="menuName" size="50" value="<jsp:getProperty name ="oneMenu" property="menuName" />"/></td>
 			</tr>
 			<tr>
-				<th>価格 ※</th>
+				<th>価格<font color="red">※</font></th>
 				<td><input type="text" name="price" size="20"
 					value='<jsp:getProperty name ="oneMenu" property="price" />' /></td>
 			</tr>
 			<tr>
-				<th>オーダー可 ※</th>
+				<th>オーダー<font color="red">※</font></th>
 				<%
 				String[] order = { "不可", "可" };
 				%>
