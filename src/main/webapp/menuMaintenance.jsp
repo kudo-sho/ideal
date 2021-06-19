@@ -285,7 +285,7 @@ if(msg != null)
 			</table>
 
 			<div>
-				<br /> <br /> <br /> <br /> <br /> <a href="adminIndex.jsp"><h4>処理メニューに戻る</h4></a>
+				<br /> <br /> <a href="adminIndex.jsp"><h4>処理メニューに戻る</h4></a>
 
 			</div>
 		</div>
