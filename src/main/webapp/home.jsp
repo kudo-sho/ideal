@@ -24,7 +24,7 @@ msg = (String)request.getAttribute("msg");
 if(msg != null)
 	out.print(msg);
 
-
+System.out.println("homeセッションの判定");
 //セッションの有無を判定
 Object adminInfo = session.getAttribute("adminInfo");
 Object usrName = session.getAttribute("usrName");
@@ -41,7 +41,7 @@ if(adminInfo != null && usrName != null){
 		rd.forward(request, response);
 		}else if(adminInfo == ""){
 			//管理者がログイン中はログインしている名前を表示
-			System.out.println("管理者空文字");
+			System.out.println("管理者空文字がログイン中");
 				}else if(adminInfo != null){
 					//管理者がログイン中はログインしている名前を表示
 					System.out.println("管理者ログイン中だよ");%>
@@ -91,6 +91,6 @@ Restaurante IDEALLE へようこそ！<br />
 		<a href="./adminLogin.jsp"><h5>管理者ログイン</h5></a>
 
 </div>
-
+<% System.out.println("home最後尾"); %>
 </body>
 </html>

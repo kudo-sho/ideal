@@ -9,26 +9,141 @@
 <title>Insert title here</title>
 </head>
 <body>
+<!--
+おおむね正常に動作しますが
+管理者にnullを設定したあと再度設定しようとするとヌルポインターエラーが発生
+ユーザーを一度ログインさせてしまうとその後設定してもすぐログインされて設定できなくなる
+等のエラーが発生しています
+要修正
+
+ -->
+
 	<%
 		//管理者セッションの判定
-		String admin;
+		String admin=null;
 		String ses = (String)session.getAttribute("adminInfo");
 		String par = request.getParameter("admin");
-		//セッションがnullまたはパラメータとセッションが一致していない場合は上書き
-		if(ses == null || !(ses.equals(par))){
-			System.out.println("フェーズ");
-			session.setAttribute("adminInfo", request.getParameter("admin") );
-			admin = (String)session.getAttribute("adminInfo");
-		}else{//パラメータとセッション一致しているときはselected判定に値を渡す
-			System.out.println("notフェーズ");
-			admin = (String)session.getAttribute("adminInfo");
-			System.out.println(admin);
+		System.out.println("セッションは"+ses);
+		System.out.println("パラメータは"+par);
+
+		if(ses == null){//セッションがnull
+			System.out.println("sesはnull");
+			if(par != null){//パラメータはnullじゃない
+				System.out.println("parはnullじゃない");
+				session.setAttribute("adminInfo", request.getParameter("admin") );
+				admin = (String)session.getAttribute("adminInfo");
+			}//parもnullなら何もしない
+
+		}else{//セッションはnullじゃない
+			if(par == null){//パラメータはnull
+				admin = ses;
+				System.out.println(admin);
+			}else{//パラメータはnullじゃない
+				System.out.println("parはnullじゃない");
+				if(par.equals("")){//parは空文字
+					System.out.println("parは空文字");
+					session.removeAttribute("adminInfo");
+					admin = "null";
+				}else{//parは空文字じゃない
+					if(ses.equals(par)){//parとsesは一致
+						System.out.println("parとsesは一致");
+						admin = ses;
+						System.out.println(admin);
+					}else{
+						System.out.println("parとsesは一致しないから上書き");
+						session.setAttribute("adminInfo", request.getParameter("admin") );
+						admin = (String)session.getAttribute("adminInfo");
+					}
+				}
+			}
 
 		}
 
+		//ユーザーセッションの判定
+		//ユーザーセッションはuser(int)で判定する
+		Integer user = null;
+		Integer usrSes;
+		Integer usrPar;
+		//リクエストやセッションに値がない場合はnullを渡されてヌルポになる
+		try{
+			usrSes = (Integer)session.getAttribute("usrId");
+			System.out.println("取得したセッションのidは"+usrSes);
+		}catch(Exception e){
+			usrSes = null;
+		}
+		try{
+			usrPar = Integer.parseInt(request.getParameter("user"));
+		}catch(Exception e){
+			usrPar = null;
+		}
+		System.out.println("usrSesセッションは"+usrSes);
+		System.out.println("usrParパラメータは"+usrPar);
+
+		if(usrSes == null){//セッションがnull
+			System.out.println("usrSesはnull");
+			if(usrPar != null){//パラメータはnullじゃない
+				System.out.println("usrParはnullじゃない");
+				session.setAttribute("user", request.getParameter("user") );
+				User userInfo= User.getUser(usrPar);
+				session.setAttribute("usrName", userInfo.getUsrName());
+				session.setAttribute("usrId", userInfo.getUsrId());
+				session.setAttribute("usrName", userInfo.getUsrName());
+				session.setAttribute("password", userInfo.getPassword());
+				session.setAttribute("address", userInfo.getAddress());
+				session.setAttribute("phone", userInfo.getPhone());
+				session.setAttribute("mail", userInfo.getMail());
+				session.setAttribute("exp", userInfo.getExp());
+				user = Integer.parseInt(request.getParameter("user"));
+			}//parもnullなら何もしない
+
+		}else{//セッションはnullじゃない
+			if(usrPar == null){//パラメータはnull
+				user = usrSes;
+				System.out.println(user);
+			}else{//パラメータはnullじゃない
+				System.out.println("usrParはnullじゃない");
+				if(usrPar == 0){
+					System.out.println("usrParは0");
+					session.removeAttribute("usrName");
+					session.removeAttribute("usrId");
+					session.removeAttribute("password");
+					session.removeAttribute("address");
+					session.removeAttribute("phone");
+					session.removeAttribute("mail");
+					session.removeAttribute("exp");
+					user = 0;
+				}else{
+					if(usrSes.equals(usrPar)){
+						System.out.println("usrParとusrSesは一致");
+						user = usrSes;
+						System.out.println(user);
+					}else{
+						System.out.println("usrParとusrSesは一致しないから上書き");
+						session.setAttribute("user", Integer.parseInt(request.getParameter("user")));
+						User userInfo= User.getUser(usrPar);
+						session.setAttribute("usrName", userInfo.getUsrName());
+						session.setAttribute("usrId", userInfo.getUsrId());
+						session.setAttribute("usrName", userInfo.getUsrName());
+						session.setAttribute("password", userInfo.getPassword());
+						session.setAttribute("address", userInfo.getAddress());
+						session.setAttribute("phone", userInfo.getPhone());
+						session.setAttribute("mail", userInfo.getMail());
+						session.setAttribute("exp", userInfo.getExp());
+						user = Integer.parseInt(request.getParameter("user"));
+					}
+				}
+			}
+
+		}
+
+
+
+
+/*
 		Integer user;
 		try {
-			user = Integer.parseInt(request.getParameter("user"));
+			user = Integer.parseInt(request.getParameter("user"));//パラメータにあるuserIdを取得
+			//パラメータにあるuserIdをもとにuser情報を取得
 			User userInfo= User.getUser(Integer.parseInt(request.getParameter("user")));
 			session.setAttribute("usrName", userInfo.getUsrName());
 			session.setAttribute("usrId", userInfo.getUsrId());
@@ -40,6 +155,7 @@
 			session.setAttribute("exp", userInfo.getExp());
 		}
 		catch (NumberFormatException e) {user  = null;}
+		*/
 	%>
 
 デバッグモード設定
@@ -49,11 +165,10 @@
 <option value="">null</option>
 
 <%
-							for (Object o : Debug.getAdminList()) {
-								Debug deb = (Debug) o;
+							for (Debug deb : Debug.getAdminList()) {
 								String selected = "";
 								if(admin != null){
-									if(admin.equals(deb.getAdminName())){
+									if(admin.equals(deb.getAdmName())){
 										selected ="selected= 'selected'";
 									}else{
 										selected = "";
@@ -62,8 +177,8 @@
 								System.out.println(selected);
 
 						%>
-						<option value="<%= deb.getAdminName() %>" <%= selected %>>
-							<%= deb.getAdminName() %></option>
+						<option value="<%= deb.getAdmName() %>" <%= selected %>>
+							<%= deb.getAdmName() %></option>
 						<%
 							}
 						%>
@@ -71,13 +186,12 @@
 <br />
 お客様：
 <select name="user">
-<option value="">null</option>
+<option value="0">null</option>
 <%
-							for (Object o : Debug.getUserList()) {
-								Debug deb = (Debug) o;
+							for (Debug deb : Debug.getUserList()) {
 								String selected = "";
 								if(user != null){ //nullの場合はヌルポになるためnull判定
-									if(user.equals((Integer)deb.getUserId())){
+									if(user.equals((Integer)deb.getUsrId())){
 										selected ="selected= 'selected'";
 									}else{
 										selected = "";
@@ -87,8 +201,8 @@
 							System.out.println(selected);
 
 						%>
-						<option value="<%= deb.getUserId()%>" <%= selected %>>
-							<%= deb.getUserName() %></option>
+						<option value="<%= deb.getUsrId()%>" <%= selected %>>
+							<%= deb.getUsrName() %></option>
 						<%
 							}
 						%>
@@ -100,12 +214,15 @@
 <input type="reset" value="リセット" />
 </form>
 
-<!--  設定された管理者は：<%= admin %>
-設定されたお客様は：<%= user %>
+  設定された管理者は：<%= admin %>
+設定されたお客様IDは：<%= user %>
 <br />
 セッションにある管理者は：<%= session.getAttribute("adminInfo") %>
 セッションにお客様は：<%= session.getAttribute("usrName") %>
 -->
 ※機能に一部不具合あり
+<%
+System.out.print("デバッグモード最後尾");
+%>
 </body>
 </html>
