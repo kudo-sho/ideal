@@ -44,29 +44,39 @@ public class UserOperationSvl extends HttpServlet {
 
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
-
-
-		//リクエストパラメータ"mode"を受け取る
-		String mode = request.getParameter("mode");
-
-
-		//セッション情報を取得する ※この時点ではセッションはNULL
-		//「セッション=NULL」かつ「登録処理以外」の場合はホームページへ戻る
+		
 		HttpSession userInfo = request.getSession(true);
-		if((userInfo.getId() == null) & (!mode.equals("登録処理")) ){
-			request.getRequestDispatcher("home.jsp").forward(request, response);
-		}
-
-
-		//リクエストパラメータを取得し、顧客情報(User)を生成する
+		String mode = "";
 		User user = new User();
-		user.setUsrName(request.getParameter("usrName"));
-		user.setAddress(request.getParameter("address"));
-		user.setPhone(request.getParameter("phone"));
-		user.setMail(request.getParameter("mail"));
-		user.setPassword(request.getParameter("password"));
+		int msgNo = 0;
 
+		try {
+			//リクエストパラメータ"mode"を受け取る
+			mode = request.getParameter("mode");
 
+			//セッション情報を取得する ※この時点ではセッションはNULL
+			//「セッション=NULL」かつ「登録処理以外」の場合はホームページへ戻る
+			if((userInfo.getId() == null) & (!mode.equals("登録処理")) ){
+				request.setAttribute("msg", "障害が発生しました");
+				request.getRequestDispatcher("home.jsp").forward(request, response);
+			}
+	
+			//リクエストパラメータを取得し、顧客情報(User)を生成する
+			//User user = new User();
+			user.setUsrName(request.getParameter("usrName"));
+			user.setAddress(request.getParameter("address"));
+			user.setPhone(request.getParameter("phone"));
+			user.setMail(request.getParameter("mail"));
+			user.setPassword(request.getParameter("password"));
+	
+		} catch(Exception e) {
+			IdealException ie = new IdealException(msgNo);
+			request.setAttribute("msg", ie.getMsg());
+
+			//ホーム画面に戻る
+			request.getRequestDispatcher("home.jsp").forward(request, response);
+
+		}
 		//modeにより処理を行う*************************************************
 		switch(mode){
 
@@ -90,8 +100,11 @@ public class UserOperationSvl extends HttpServlet {
 				} catch (Exception e) {
 
 					//リクエストオブジェクト"msg"にメッセージを取得して設定する
-					String msg = ((IdealException) e).getMsg();
-					request.setAttribute("msg", msg);
+					//String msg = ((IdealException) e).getMsg();
+					//request.setAttribute("msg", msg);
+					IdealException ie = new IdealException(msgNo);
+					request.setAttribute("msg", ie.getMsg());
+
 
 					//リクエストオブジェクト"user"に顧客情報(User)を設定する
 					request.setAttribute("User", user);
@@ -122,11 +135,13 @@ public class UserOperationSvl extends HttpServlet {
 					request.getRequestDispatcher("userIndex.jsp").forward(request, response);
 
 				}catch(Exception e){
-					String msg = ((IdealException) e).getMsg();
-					request.setAttribute("msg", msg);
+					//String msg = ((IdealException) e).getMsg();
+					//request.setAttribute("msg", msg);
+					IdealException ie = new IdealException(msgNo);
+					request.setAttribute("msg", ie.getMsg());
 
 					//顧客情報変更画面表示処理(Servlet)に戻る
-					request.getRequestDispatcher("userInsert.jsp").forward(request, response);
+					request.getRequestDispatcher("UserUpdateSvl").forward(request, response);
 				}
 				break;
 
@@ -155,11 +170,15 @@ public class UserOperationSvl extends HttpServlet {
 					request.getRequestDispatcher("home.jsp").forward(request, response);
 
 				} catch (Exception e) {
-					String msg = ((IdealException) e).getMsg();
-					request.setAttribute("msg", msg);
+					//String msg = ((IdealException) e).getMsg();
+					//request.setAttribute("msg", msg);
+					IdealException ie = new IdealException(msgNo);
+					request.setAttribute("msg", ie.getMsg());
 
 					//顧客情報削除画面表示処理に戻る
-					request.getRequestDispatcher("userDelete.jsp").forward(request, response);
+					//request.getRequestDispatcher("userDelete.jsp").forward(request, response);
+					request.getRequestDispatcher("UserDeleteSvl").forward(request, response);
+
 				}
 				break;
 
