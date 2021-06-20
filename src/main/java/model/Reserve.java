@@ -537,11 +537,12 @@ public class Reserve {
 			//という条件で外部結合すると、予約がある席のrsv_dateには予約時刻が、無い席のrsv_dateにはnullが入ります。
 			//この中からmax_capacityがrsv_dateにnullが入っているものだけを取り出せば空席を取得できますので、
 			//その中で一番table_idが最小なものから必要な情報を取得します。
+			//6/20 ダブルブッキングしてしまう不具合発生のため、一部修正しました。
 
 			sql =  " SELECT table_loc.table_id,table_name,max_capacity,rsv_date FROM table_loc"
 				   +" LEFT OUTER JOIN reserve ON table_loc.table_id = reserve.table_id"
-				   +" AND (reserve.rsv_date > ? AND reserve.rsv_date < ?)"
-				   +" WHERE max_capacity >= ?  AND ( rsv_date IS null or rsv_id = ? ) ORDER BY max_capacity ";
+				   +" AND (reserve.rsv_date > ? AND reserve.rsv_date < ?) AND rsv_id != ? "
+				   +" WHERE max_capacity >= ?  AND  rsv_date IS null ORDER BY max_capacity ";
 ;
 
 			pst = con.prepareStatement(sql);
@@ -577,8 +578,8 @@ public class Reserve {
 				System.out.println(year + "-" + month + "-" + (day + 1) + " " + (time - 21) + ":" + minute);
 			}
 			
-			pst.setInt(3,personNum);
-			pst.setInt(4,rsvId);
+			pst.setInt(4,personNum);
+			pst.setInt(3,rsvId);
 
 
 			rs = pst.executeQuery();
