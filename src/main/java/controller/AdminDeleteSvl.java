@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,16 +14,16 @@ import model.Admin;
 import model.IdealException;
 
 /**
- * Servlet implementation class AdminMaintenanceSvl
+ * Servlet implementation class AdminDeleteSvl
  */
-@WebServlet("/AdminMaintenanceSvl")
-public class AdminMaintenanceSvl extends HttpServlet {
+@WebServlet("/AdminDeleteSvl")
+public class AdminDeleteSvl extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AdminMaintenanceSvl() {
+    public AdminDeleteSvl() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -43,37 +42,29 @@ public class AdminMaintenanceSvl extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		request.setCharacterEncoding("utf-8");
-		response.setContentType("text/html; charset=utf-8");
-		RequestDispatcher rd = null;
+		response.setContentType("text/html; utf-8");
 
-		try{
-			//セッション情報がnullならホームページへ
-			HttpSession session = request.getSession(true);
-			if(session.getAttribute("adminInfo") == null){
-				rd = request.getRequestDispatcher("/home.jsp");
-				rd.forward(request, response);
-			}
+		//選択されたamdIdのパラメータを受け取りint型にしてセット
+		int admId = Integer.parseInt(request.getParameter("admId"));
 
+		HttpSession adminInfo = request.getSession(true);
+		try {
+			//getAdminメソッドからの戻り値をリクエストに載せてフォアード
+			Admin adm = Admin.getAdmin(admId);
+			adminInfo.setAttribute("admId", adm.getAdmId());
+			adminInfo.setAttribute("admName", adm.getAdmName());
+			adminInfo.setAttribute("password", adm.getPassword());
+			adminInfo.setAttribute("admExp", adm.getExp());
+			RequestDispatcher rd = request.getRequestDispatcher("/adminDelete.jsp");
+			rd.forward(request, response);
 
-			//adminリストを取得してリクエストにセットする
-			ArrayList<Admin> alam = Admin.getAdminList();
-			request.setAttribute("admList",alam);
-
-			//ここまで問題なければadminMaintenance画面に戻って表示
-			rd = request.getRequestDispatcher("/adminMaintenance.jsp");
-
-
-			//独自例外が発生したらメッセージ取得＆管理者処理画面に遷移
 		}catch(IdealException e) {
-//			}catch(Exception e) {
-			IdealException ie = new IdealException(IdealException.ERR_NO_DB_EXCEPTION);
-			request.setAttribute("msg", ie.getMsg());
+			String msg = ((IdealException) e).getMsg();
 //			System.out.println(msg);
-			rd = request.getRequestDispatcher("/adminIndex.jsp");
-
-
+			request.setAttribute("msg", msg);
+			RequestDispatcher rd = request.getRequestDispatcher("/adminMaintenance.jsp");
+			rd.forward(request, response);
 		}
-		rd.forward(request, response);
 	}
 
 }

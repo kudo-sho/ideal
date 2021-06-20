@@ -47,14 +47,16 @@ public class UserUpdateSvl extends HttpServlet {
 		System.out.println("userUpdateサーブレット開始");
 
 		//リクエストパラメータ"mode"を受け取る
-		String mode = request.getParameter("mode");
+		//String mode = request.getParameter("mode");
 
 		//セッション情報(userInfo)を取得する
 		HttpSession userInfo = request.getSession(false);
 
+		int msgNo = 0;
 
 		//セッション情報(userInfo)がnullの時、ホーム画面に遷移する
-		if(userInfo == null){
+		if(userInfo.getId() == null){
+			request.setAttribute("msg", "障害が発生しました");
 			request.getRequestDispatcher("home.jsp").forward(request, response);
 		}
 
@@ -77,8 +79,10 @@ public class UserUpdateSvl extends HttpServlet {
 			request.getRequestDispatcher("userUpdate.jsp").forward(request, response);
 
 		}catch(Exception e){
-			String msg = ((IdealException) e).getMsg();
-			request.setAttribute("msg", msg);
+			//String msg = ((IdealException) e).getMsg();
+			//request.setAttribute("msg", msg);
+			IdealException ie = new IdealException(msgNo);
+			request.setAttribute("msg", ie.getMsg());
 
 			//新規登録画面に戻る
 			request.getRequestDispatcher("userIndex.jsp").forward(request, response);

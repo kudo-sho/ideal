@@ -1,4 +1,4 @@
-<%@page import="model.AdminMaintenance"%>
+<%@page import="model.Admin"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -40,24 +40,26 @@ if(msg != null)
 
 <table border="1">
 <tr>
-<td>管理者名</td><td>詳細</td><td colspan="2">処理選択</td>
+<td>ID</td><td>管理者名</td><td>詳細</td><td colspan="2">処理選択</td>
 </tr>
 	<%
-	for(AdminMaintenance am : AdminMaintenance.getAdminList()){%>
+	for(Admin am : Admin.getAdminList()){%>
 	<tr>
-	<td><%= am.getAdminName() %></td><td><%= am.getAdminExp() %></td>
-	<td><form id="admUpdate" name="admUpdate" action="" method="post">
+	<td><%= am.getAdmId() %></td><td><%= am.getAdmName() %></td><td><%= am.getExp() %></td>
+	<td><form id="admUpdate" name="admUpdate" action="AdminUpdateSvl" method="post">
 	<input type="submit" value="変更" />
+	<input type="hidden" name="admId" value="<%= am.getAdmId() %>" />
 	</form></td>
-	<td><form id="admDelete" name="admDelete" action="" method="post">
+	<td><form id="admDelete" name="admDelete" action="AdminDeleteSvl" method="post">
 	<input type="submit" value="削除" />
+	<input type="hidden" name="admId" value="<%= am.getAdmId() %>" />
 	</form>
 	</td>
 	</tr>
 	<% }  %>
 </table>
 
-<form id="admInsert" name="admInsert" action="./admInsert.jsp" method="post">
+<form id="admInsert" name="admInsert" action="./adminInsert.jsp" method="post">
 <input type="submit" value="新規登録" />
 </form>
 
