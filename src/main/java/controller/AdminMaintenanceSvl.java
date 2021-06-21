@@ -65,7 +65,6 @@ public class AdminMaintenanceSvl extends HttpServlet {
 
 			//独自例外が発生したらメッセージ取得＆管理者処理画面に遷移
 		}catch(IdealException e) {
-//			}catch(Exception e) {
 			IdealException ie = new IdealException(IdealException.ERR_NO_DB_EXCEPTION);
 			request.setAttribute("msg", ie.getMsg());
 //			System.out.println(msg);
