@@ -11,7 +11,7 @@ public class IdealException extends Exception {
 			"ご指定された日時に、空席がございませんでした。",
 			"予約されているコースなので削除できません。",
 			"コースに登録されているメニューなので削除できません。",
-			"セッションが切れました。再度ログインしてください。"
+			"セッションが有効ではありません。再度ログインしてください。"
 	};
 
 	public static int ERR_NO_EXCEPTION = 0;

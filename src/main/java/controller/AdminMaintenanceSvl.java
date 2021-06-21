@@ -47,10 +47,13 @@ public class AdminMaintenanceSvl extends HttpServlet {
 		RequestDispatcher rd = null;
 
 		try{
-			//セッション情報がnullならホームページへ
+			//セッション情報がnullなら管理者ログイン画面へ
 			HttpSession session = request.getSession(true);
 			if(session.getAttribute("adminInfo") == null){
-				rd = request.getRequestDispatcher("/home.jsp");
+				IdealException e = new IdealException(IdealException.ERR_NO_NOT_SESSION);
+				String msg = e.getMsg();
+				request.setAttribute("msg", msg);
+				rd = request.getRequestDispatcher("/adminLogin.jsp");
 				rd.forward(request, response);
 			}
 
