@@ -4,10 +4,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>お客様情報登録</title>
-
-	<script type="text/javascript">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>お客様情報登録</title>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<script type="text/javascript">
      <!--
 		function check(){
 
@@ -83,7 +83,10 @@
 </head>
 
 <body>
-	<h1 align="center">お客様情報登録</h1></br>
+<a href="home.jsp">
+<div class="toplink">IDEALLE</div>
+</a>
+	<h1 align="center">お客様情報登録</h1>
 
 	<%
 		//引き渡されたメッセージを表示
@@ -104,7 +107,7 @@
 	%>
 
 		<form id="f1" name="f1" action="UserOperationSvl" method="post" onsubmit="return check();">
-			<table align="center" border="1">
+			<table align="center" border="1" style="width:50%;">
 				  <tr>
 				     <th>お名前※</th>
 				     <td align="left" colspan="1">姓<input type="text" name="usrName1" size="15"/></td>
@@ -133,7 +136,7 @@
 				  </tr>
 
 				  <tr>
-				    <td align="right" colspan="3"> <font color="red">※は必須入力です。</font>
+				    <td colspan="3" class="cent"> <font color="red">※は必須入力です。</font>
 					　　<input type="submit" value="登録" />
 				    </td>
 				  </tr>
@@ -150,5 +153,8 @@
 				<u>ホームページに戻る</u>
 			</a>
 		</div>
+<div class="site-footer">
+<div class="copyright">Restaurante IDEALLE</div>
+</div>
 </body>
 </html>

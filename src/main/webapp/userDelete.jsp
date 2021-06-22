@@ -6,6 +6,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>顧客脱会画面</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
 	<script type="text/javascript">
 <!--
 	//脱会ボタンを押したときの確認フォーム
@@ -17,6 +18,9 @@
 </script>
 </head>
 <body>
+<a href="home.jsp">
+<div class="toplink">IDEALLE</div>
+</a>
 	<h1 align="center">お客様脱会手続き</h1></br>
 
 	<%
@@ -30,7 +34,7 @@
 
 			<form id="f1" name="f1" action="UserOperationSvl" method="post"
 			onsubmit="return confirm_delete();">
-			<table align="center" border="1">
+			<table align="center" border="1" style="width:50%;">
 				　<tr>
 				  	<th>お客様ID</th>
 				  	<td colspan="2"> <%= session.getAttribute("usrId") %> </td>
@@ -52,7 +56,7 @@
 				    <td colspan="2"> <%= session.getAttribute("mail") %> </td>
 				  </tr>
 				  <tr>
-				    <td align="right" colspan="3"> <font color="red">確認し、脱会ボタンをクリックして下さい。</font>
+				    <td colspan="3" class="cent"> <font color="red">確認し、脱会ボタンをクリックして下さい。</font>
 					　　<input type="submit" value="脱会" />
 				    </td>
 				  </tr>
@@ -68,5 +72,8 @@
 				<u>処理メニューに戻る</u>
 			</a>
 		</div>
+<div class="site-footer">
+<div class="copyright">Restaurante IDEALLE</div>
+</div>
 </body>
 </html>

@@ -6,18 +6,19 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>会員処理選択画面</title>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
 </head>
 <body>
+<a href="home.jsp">
+<div class="toplink">IDEALLE</div>
+</a>
 <center>
 <h1>■Restaurante IDEALLE■</h1>
 
 <% request.setCharacterEncoding("utf-8");
 	String name = request.getParameter("usrId");%>
-<p><font size="8">
-
-<%= session.getAttribute("usrName") %>
-
-</font><font size="4">様、いらっしゃいませ。</font></p>
+<h1><%= session.getAttribute("usrName") %>
+<span style="font-size:50%;">様、いらっしゃいませ。</span></h1>
 
 
 <%
@@ -40,13 +41,15 @@ if(msg != null)
 
 %>
 
-<br />
-<a href="ShowMenuSvl">●メニュー紹介</a><br/><br/>
-<a href="ReserveListSvl">●ご予約</a><br/><br/>
-<a href="UserUpdateSvl">●お客様情報変更</a><br/><br/>
-<a href="UserDeleteSvl">●お客様脱会手続き</a><br/><br/>
-<a href="./contact.jsp">●お問い合わせ</a><br /><br/>
-<a href="UserLogoffSvl">●ログオフ</a>
+<a href="ShowMenuSvl"><div class="button">メニュー紹介</div></a><br/>
+<a href="ReserveListSvl"><div class="button">ご予約</div></a><br/>
+<a href="UserUpdateSvl"><div class="button">お客様情報変更</div></a><br/>
+<a href="UserDeleteSvl"><div class="button">お客様脱会手続き</div></a><br/>
+<a href="./contact.jsp"><div class="button">お問い合わせ</div></a><br />
+<a href="UserLogoffSvl"><div class="button">ログオフ</div></a>
 </center>
+<div class="site-footer">
+<div class="copyright">Restaurante IDEALLE</div>
+</div>
 </body>
 </html>

@@ -13,6 +13,9 @@
 <link rel="stylesheet" type="text/css" href="css/style.css" />
 </head>
 <body>
+<a href="home.jsp">
+<div class="toplink">IDEALLE</div>
+</a>
 
 <%
 	int rsvId = (int)request.getAttribute("rsvId");
@@ -30,6 +33,8 @@
 
 <a href="ReserveListSvl">予約一覧に戻る</a>
 
-
+<div class="site-footer">
+<div class="copyright">Restaurante IDEALLE</div>
+</div>
 </body>
 </html>
