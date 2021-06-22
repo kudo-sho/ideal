@@ -6,6 +6,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>顧客情報変更画面</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
 	<script type="text/javascript">
      <!--
 		function check(){
@@ -71,6 +72,9 @@
   </script>
 </head>
 <body>
+<a href="home.jsp">
+<div class="toplink">IDEALLE</div>
+</a>
 	<h1 align="center">お客様情報変更</h1></br>
 
 	<%
@@ -84,7 +88,7 @@
 
 		<form id="f1" name="f1" action="UserOperationSvl" method="post" onsubmit="return check();">
 
-			<table align="center" border="1">
+			<table align="center" border="1" style="width:50%;">
 				  <tr>
 				  	<th>お客様ID</th>
 				  	<td colspan="2"> <%= session.getAttribute("usrId") %> </td>
@@ -142,7 +146,7 @@
 				  </tr>
 
 				  <tr>
-				    <td align="right" colspan="3"> <font color="red">※は必修入力です。</font>
+				    <td align="right" colspan="3" class="cent"> <font color="red">※は必修入力です。</font>
 					　　<input type="submit" value="変更" />
 				    </td>
 				  </tr>
@@ -160,5 +164,8 @@
 				<u>処理メニューに戻る</u>
 			</a>
 		</div>
+<div class="site-footer">
+<div class="copyright">Restaurante IDEALLE</div>
+</div>
 </body>
 </html>

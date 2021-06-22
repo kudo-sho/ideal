@@ -80,6 +80,9 @@
 </script>
 </head>
 <body>
+<a href="home.jsp">
+<div class="toplink">IDEALLE</div>
+</a>
 <%
 HttpSession usrInfo = request.getSession(false);
 String name = (String)usrInfo.getAttribute("usrName");
@@ -204,5 +207,8 @@ ArrayList<Course> al = (ArrayList<Course>)request.getAttribute("courseList");
 	</table>
 </form>
 <a href="ReserveListSvl">予約一覧に戻る</a>
+<div class="site-footer">
+<div class="copyright">Restaurante IDEALLE</div>
+</div>
 </body>
 </html>

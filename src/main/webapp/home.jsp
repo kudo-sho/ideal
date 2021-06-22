@@ -6,13 +6,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Restaurante IDEALLE</title>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
 <style type="text/css">
 h1{font-size:60px;}
 div{text-align:center;}
 </style>
 </head>
 <body>
-
+<a href="home.jsp">
+<div class="toplink">IDEALLE</div>
+</a>
 <iframe src="./debugMode.jsp"></iframe>
 
 <%
@@ -30,11 +33,11 @@ Object adminInfo = session.getAttribute("adminInfo");
 Object usrName = session.getAttribute("usrName");
 if(adminInfo != null && usrName != null){
 	//管理者モード
-	System.out.println("管理者モードだよ");%>
+	System.out.println("管理者モードだよ"); %>
 	<h3 align="right">管理者モードです</h3>
 	<h4 align="right">ログイン管理者：<%= session.getAttribute("adminInfo") %></h4>
 	<h4 align="right">ログインユーザー:<%= session.getAttribute("usrName") %></h4>
-	<%}else if(usrName != null){
+	<% }else if(usrName != null){
 		//お客様がログイン中はお客様管理画面にフォアード
 		System.out.println("お客様ログイン中だよ");
 		RequestDispatcher rd = request.getRequestDispatcher("/userIndex.jsp");
@@ -44,11 +47,10 @@ if(adminInfo != null && usrName != null){
 			System.out.println("管理者空文字がログイン中");
 				}else if(adminInfo != null){
 					//管理者がログイン中はログインしている名前を表示
-					System.out.println("管理者ログイン中だよ");%>
+					System.out.println("管理者ログイン中だよ"); %>
 
 				<h4 align="right">お疲れ様です。 <%= session.getAttribute("adminInfo") %> 様</h4>
-						<%}
-				%>
+			<% } %>
 
 
 
@@ -62,8 +64,10 @@ if(adminInfo != null && usrName != null){
 
 
  <div>
-<h1>■ Restaurante IDEALLE ■</h1>
-
+<h1 class="title">■ Restaurante IDEALLE ■</h1>
+<div class="site-logo">
+<img src="img/02.jpg" />
+</div>
 Restaurante IDEALLE へようこそ！<br />
 シェフが腕によりをかけてお送りする料理メニューについては、『メニュー紹介』よりご確認ください。
 <br /><br/>
@@ -76,20 +80,20 @@ Restaurante IDEALLE へようこそ！<br />
 ログインを行い予約システムをご利用ください。
 <br /><br />
 お問い合わせにつきましては『お問い合わせ』よりご連絡ください。
-<br /><br />
+<br />
 <h5>※サイト管理者はページ下部の『管理者ログイン』よりログインしてください。</h5>
-
-<hr />
 <br/>
-		<a href="ShowMenuSvl"><li>メニュー紹介</li></a><br />
-		<a href="./userLogin.jsp"><li>すでに会員のかたはこちら</li></a><br />
-		<a href="./userInsert.jsp"><li>会員ではない方はこちら</li></a><br />
-		<a href="./contact.jsp"><li>お問い合わせ</li></a><br />
-
-		<br/><br/><br/>
+		<a href="ShowMenuSvl"><div class="button">メニュー紹介</div></a><br/>
+		<a href="./userLogin.jsp"><div class="button">すでに会員のかたはこちら</div></a><br/>
+		<a href="./userInsert.jsp"><div class="button">会員ではない方はこちら</div></a><br />
+		<a href="./contact.jsp"><div class="button">お問い合わせ</div></a><br />
+		<br/><br/>
 		<hr />
 		<a href="./adminLogin.jsp"><h5>管理者ログイン</h5></a>
 
+</div>
+<div class="site-footer">
+<div class="copyright">Restaurante IDEALLE</div>
 </div>
 <% System.out.println("home最後尾"); %>
 </body>
