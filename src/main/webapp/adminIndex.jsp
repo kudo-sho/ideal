@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<%@page import="java.awt.dnd.DropTargetAdapter"%>
+<%@page import="model.*"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -13,6 +13,7 @@ div{text-align:center;}
 </style>
 </head>
 <body>
+<iframe src="./debugMode.jsp"></iframe>
 		<div>
 		<h1>処理選択</h1>
 		<h4 align="right">お疲れ様です。<%= session.getAttribute("adminInfo") %>　様</h4>
@@ -28,10 +29,13 @@ if(msg != null)
 	out.print(msg);
 
 //管理者セッションを確認
-		Object usrName = session.getAttribute("adminInfo");
-		if(usrName == null){
+		Object adminInfo = session.getAttribute("adminInfo");
+		if(adminInfo == null){
 			//管理者がログインしていない時は管理者ログインにフォアード
 			System.out.println("管理者ログインしてないのでログインしてね");
+			IdealException e = new IdealException(IdealException.ERR_NO_NOT_SESSION);
+			msg = e.getMsg();
+			request.setAttribute("msg", msg);
 			RequestDispatcher rd = request.getRequestDispatcher("/adminLogin.jsp");
 			rd.forward(request, response);
 		}
@@ -49,6 +53,7 @@ if(msg != null)
 			<a href = "AdminReserveListSvl"><li>予約状況確認</li></a><br/>
 			<a href = "MenuMaintenanceSvl"><li>メニューメンテナンス</li></a><br />
 			<a href = "AdminMaintenanceSvl"><li>管理者情報メンテナンス</li></a><br />
+			<a href = "./home.jsp"><li>管理者ログインしたままhomeに戻る</li></a><br />
 			<a href = "AdminLogoffSvl"><li>ログアウト</li></a><br />
 
 		</l>

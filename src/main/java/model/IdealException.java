@@ -11,6 +11,7 @@ public class IdealException extends Exception {
 			"ご指定された日時に、空席がございませんでした。",
 			"予約されているコースなので削除できません。",
 			"コースに登録されているメニューなので削除できません。",
+			"セッションが有効ではありません。再度ログインしてください。"
 	};
 
 	public static int ERR_NO_EXCEPTION = 0;
@@ -20,6 +21,8 @@ public class IdealException extends Exception {
 	public static int ERR_NO_NOT_VACANCY = 4;
 	public static int ERR_NO_NOT_RESERV_DELETE = 5;
 	public static int ERR_NO_NOT_MENU_DELETE = 6;
+	public static int ERR_NO_NOT_SESSION = 7;
+
 
 	//コンストラクター
 	public IdealException(int errCd){

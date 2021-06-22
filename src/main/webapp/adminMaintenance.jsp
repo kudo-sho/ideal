@@ -13,6 +13,7 @@ table{margin-left:auto; margin-right:auto;}
 </style>
 </head>
 <body>
+
 		<div>
 		<h1>処理選択</h1>
 		<h4 align="right">現在ログインしている管理者は　<%= session.getAttribute("adminInfo") %>　様です</h4>
