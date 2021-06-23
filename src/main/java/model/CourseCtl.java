@@ -9,28 +9,28 @@ import java.sql.Statement;
 public class CourseCtl {
 
 	//フィールド
-	private int c_id;
-	private int m_id;
+	private int c_Id;
+	private int m_Id;
 
 	//getter
-	public int getC_id() {
-		return c_id;
+	public int getC_Id() {
+		return c_Id;
 	}
-	public int getM_id() {
-		return m_id;
+	public int getM_Id() {
+		return m_Id;
 	}
 
 	//setter
-	public void setC_id(int c_id) {
-		this.c_id = c_id;
+	public void setC_Id(int c_Id) {
+		this.c_Id = c_Id;
 	}
-	public void setM_id(int m_id) {
-		this.m_id = m_id;
+	public void setM_Id(int m_Id) {
+		this.m_Id = m_Id;
 	}
 
 	//メソッド
 
-	public static void courseMenuChk(int m_id) throws IdealException{
+	public static void courseMenuChk(int m_Id) throws IdealException{
 		Connection con = null;
 		Statement st = null;
 		ResultSet rs = null;
@@ -40,7 +40,7 @@ public class CourseCtl {
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "root");
 			st = con.createStatement();
 			String sql = "SELECT * FROM coursectl"
-					+ " WHERE m_id = "+m_id;
+					+ " WHERE m_id = " + m_Id;
 			//System.out.println(sql);
 			rs = st.executeQuery(sql);
 

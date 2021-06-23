@@ -43,7 +43,6 @@ public class UserLogoffSvl extends HttpServlet {
 
 		HttpSession userInfo = request.getSession(false);
 		System.out.println("セッション情報をすべて破棄します。");
-
 		userInfo.removeAttribute("usrId");
 		userInfo.removeAttribute("usrName");
 		userInfo.removeAttribute("password");
@@ -60,6 +59,7 @@ public class UserLogoffSvl extends HttpServlet {
 		System.out.println(userInfo.getAttribute("mail"));
 		System.out.println(userInfo.getAttribute("exp"));
 		response.sendRedirect("./home.jsp");
+
 	}
 
 }

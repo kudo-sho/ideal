@@ -2,10 +2,17 @@ package model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+
+import controller.CourseOperationSvl;
 
 public class Course {
 	//フィールド
@@ -120,7 +127,7 @@ public class Course {
 			st = con.createStatement();
 			String sql = "SELECT * FROM course"
 					+ " WHERE c_id = "+c_id;
-			System.out.println(sql);
+//			System.out.println(sql);
 			rs = st.executeQuery(sql);
 
 			while(rs.next()){
@@ -168,7 +175,7 @@ public class Course {
 				+ " inner join coursectl using(c_id)"
 				+ " inner join menu using(m_id)"
 				+ " where c_id = "+c_id;
-		System.out.println(sql);
+//		System.out.println(sql);
 		rs = st.executeQuery(sql)  ;
 
 		while(rs.next()){
@@ -178,7 +185,7 @@ public class Course {
 			cou.setDetail(rs.getString("detail"));
 			cou.setOrderFlg(rs.getInt("orderFlg"));
 			cou.setPrice(rs.getInt("price"));
-			cou.setTypeId(rs.getInt("t_id"));
+			cou.setTypeId(rs.getInt("menu.t_id"));
 			cou.setMenuId(rs.getInt("m_id"));
 			cou.setMenuName(rs.getString("m_name"));
 
@@ -224,7 +231,7 @@ public class Course {
 					+ " inner join coursectl using(c_id)"
 					+ " inner join menu using(m_id)";
 
-			System.out.println(sql);
+//			System.out.println(sql);
 			rs = st.executeQuery(sql)  ;
 
 			while(rs.next()){
@@ -279,7 +286,7 @@ public class Course {
 			st = con.createStatement();
 			String sql = "SELECT * FROM course"
 					+ " WHERE orderFlg = 1";
-			System.out.println(sql);
+//			System.out.println(sql);
 			rs = st.executeQuery(sql)  ;
 
 			while(rs.next()){
@@ -363,80 +370,118 @@ public class Course {
 //		}
 //		return al;
 //	}
-//	public static int updateCourse(Course c,int mode,ArrayList<CourseCtl> courseCtl){
-//
-//
-//				InitialContext ic = null;
-//				DataSource ds = null;
-//				Connection con = null;
-//				PreparedStatement pst = null;
-//				String sql = null;
-//				String table = "menu";
-//				String id = "m_id";
-//				String name = "m_name";
-//
-//				try{
-//					ic = new InitialContext();
-//					ds = (DataSource)ic.lookup("java:comp/env/mysql");
-//					con = ds.getConnection();
-//
-//					if(c.getTypeId() == 100){ //コースの場合、テーブル名とかを変える
-//						table = "course";
-//						id = "c_id";
-//						name = "c_name";
-//					}
-//
-//					switch(mode) {
-//
-//					//登録処理
-//					case MenuOpereationSvl.INSERT:
-//						sql = "INSERT INTO " + table + " VALUES(DEFAULT,?,?,?,?,?)";
-//						pst = con.prepareStatement(sql);
-//						pst.setString(1, c.getMenuName());
-//						pst.setString(2, c.getDetail());
-//						pst.setInt(3, c.getOrderFlg());
-//						pst.setInt(4, c.getPrice());
-//						pst.setInt(5, c.getTypeId());
-//						break;
-//
-//						//変更処理
-//					case MenuOpereationSvl.UPDATE:
-//						sql ="UPDATE " + table + " SET " + name + " = ?, detail = ?, orderFlg = ?, price = ?, t_id = ? "
-//								+ "WHERE " + id + " = ?";
-//						pst = con.prepareStatement(sql);
-//						pst.setString(1, c.getMenuName());
-//						pst.setString(2, c.getDetail());
-//						pst.setInt(3, c.getOrderFlg());
-//						pst.setInt(4, c.getPrice());
-//						pst.setInt(5, c.getTypeId());
-//						pst.setInt(6, c.getMenuId());
-//						break;
-//
-//						//抹消処理
-//					case MenuOpereationSvl.DELETE:
-//						sql = "DELETE FROM " + table + " WHERE " + id + " = ?";
-//						pst = con.prepareStatement(sql);
-//						pst.setInt(1, c.getMenuId());
-//						break;
-//					}
-//					pst.executeUpdate();
-//
-//	}catch(SQLException | NamingException e) {
-//		throw new IdealException(IdealException.ERR_NO_DB_EXCEPTION);
-//		//				System.out.println(msg);
-//	}finally{
-//					try{
-//						if(pst != null) pst.close();
-//						if(con != null) con.close();
-//					}
-//					catch(Exception e){
-//					}
-//				}
-//
-//				//おそらくTypeIDを返す？
-//				return c.getTypeId();
-//			}
+
+
+	public static int updateCourse(Course c,int mode,ArrayList<CourseCtl> coursectl) throws IdealException{
+
+				InitialContext ic = null;
+				DataSource ds = null;
+				Connection con = null;
+				PreparedStatement pst1 = null;
+				PreparedStatement pst2 = null;
+				PreparedStatement pst3 = null;
+				String sql = null;
+				ResultSet rs = null;
+
+				try{
+					ic = new InitialContext();
+					ds = (DataSource)ic.lookup("java:comp/env/mysql");
+					con = ds.getConnection();
+
+					switch(mode) {
+
+					//登録処理
+					case CourseOperationSvl.INSERT:
+						//courseテーブルから更新する
+						sql ="INSERT INTO course VALUES(DEFAULT,?,?,?,?,?)";
+						pst1 = con.prepareStatement(sql);
+						pst1.setString(1, c.getCourseName());
+						pst1.setString(2, c.getDetail());
+						pst1.setInt(3, c.getOrderFlg());
+						pst1.setInt(4, c.getPrice());
+						pst1.setInt(5, c.getTypeId());
+						pst1.executeUpdate();
+
+						//↑で追加したコースのc_idを取得
+						//しかしUNIQUEキーがc_id以外になく、指定できないので仕方なく↓で
+						sql = "SELECT LAST_INSERT_ID()";
+						pst2 = con.prepareStatement(sql);
+						rs = pst2.executeQuery();
+
+						//次にcoursectlテーブルを更新する
+						for(CourseCtl cc : coursectl) {
+						sql ="INSERT INTO coursectl VALUES(?,?)";
+						pst3 = con.prepareStatement(sql);
+						pst3.setInt(1, rs.getInt("LAST_INSERT_ID()"));
+						pst3.setInt(2, cc.getM_Id());
+						pst3.executeUpdate();
+						}
+						break;
+
+					//変更処理
+					case CourseOperationSvl.UPDATE:
+						//一旦coursectlテーブルから該当するcourseIDのを全て消す
+						sql = "DELETE FROM coursectl WHERE c_id = " + c.getCourseId();
+						pst1 = con.prepareStatement(sql);
+						pst1.executeUpdate();
+
+						//削除後、改めてcoursectlテーブルから更新する
+						for(CourseCtl cc : coursectl) {
+						sql ="INSERT INTO coursectl VALUES(?,?)";
+						pst2 = con.prepareStatement(sql);
+						pst2.setInt(1, cc.getC_Id());
+						pst2.setInt(2, cc.getM_Id());
+						pst2.executeUpdate();
+						}
+
+						//次にcourseテーブルを更新する
+						sql ="UPDATE course SET c_name = ?, detail = ?, orderFlg = ?, price = ? "
+								+ "WHERE c_id = ?";
+						pst3 = con.prepareStatement(sql);
+						pst3.setString(1, c.getCourseName());
+						pst3.setString(2, c.getDetail());
+						pst3.setInt(3, c.getOrderFlg());
+						pst3.setInt(4, c.getPrice());
+						pst3.setInt(5, c.getCourseId());
+						pst3.executeUpdate();
+						break;
+
+					//抹消処理
+					case CourseOperationSvl.DELETE:
+//						con.setAutoCommit(false);
+
+						//先にcoursectlテーブルから削除
+						sql = "DELETE FROM coursectl WHERE c_id = " + c.getCourseId();
+						pst1 = con.prepareStatement(sql);
+						pst1.executeUpdate();
+
+						//次にcourseテーブルから削除
+						sql = "DELETE FROM course WHERE c_id = " + c.getCourseId();
+						pst2 = con.prepareStatement(sql);
+						pst2.executeUpdate();
+
+//						con.rollback();
+//						con.commit();
+						break;
+					}
+
+				}catch(SQLException | NamingException e) {
+					throw new IdealException(IdealException.ERR_NO_DB_EXCEPTION);
+					//				System.out.println(msg);
+				}finally{
+					try{
+//						con.setAutoCommit(true);
+						if(pst1 != null) pst1.close();
+						if(pst2 != null) pst2.close();
+						if(pst3 != null) pst3.close();
+						if(con != null) con.close();
+					}
+					catch(Exception e){
+					}
+				}
+
+				//おそらくTypeIDを返す？ でもどのパターンも100のはず・・・
+				return c.getTypeId();
+			}
 
 }
-
-

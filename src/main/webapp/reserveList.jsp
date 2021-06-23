@@ -16,6 +16,9 @@ td{text-align:center;}
 </style>
 </head>
 <body>
+<a href="home.jsp">
+<div class="toplink">IDEALLE</div>
+</a>
 <%
 HttpSession usrInfo = request.getSession(false);
 String name = (String)usrInfo.getAttribute("usrName");
@@ -59,5 +62,8 @@ for(int i=0;i<al.size();i++){
 </form>
 <br/><br/>
 <a href="userIndex.jsp">処理メニューに戻る</a>
+<div class="site-footer">
+<div class="copyright">Restaurante IDEALLE</div>
+</div>
 </body>
 </html>

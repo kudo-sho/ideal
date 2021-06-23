@@ -175,12 +175,12 @@ if(msg != null)
 
 				<%
 				//ArrayList<MenuType> almt = (ArrayList<MenuType>)request.getAttribute("mType");
+				//直接このjspを開かれることはないはずだけど、開かれるとエラーになるので、↑はやめた
 
 				ArrayList<MenuType> almt = MenuType.getAllType();
 				for (int x = 0; x < almt.size(); x++) {
-					mt = almt.get(x);
-					//if (mt.getTypeId() == Integer.parseInt(request.getAttribute("typeID"))) { //ここの条件式変えて、一致する時のみ緑色にする
-					if (mt.getTypeId() == typeID) { //ここの条件式変えて、一致する時のみ緑色にする
+					mt = (MenuType)almt.get(x);
+					if (mt.getTypeId() == typeID) { //選択した分類と一致する時のみ緑色にする
 						//if (x == 1) {
 						thstyle = "0";
 						typeName = mt.getTypeName();
@@ -285,7 +285,7 @@ if(msg != null)
 			</table>
 
 			<div>
-				<br /> <br /> <br /> <br /> <br /> <a href="adminIndex.jsp"><h4>処理メニューに戻る</h4></a>
+				<br /> <br /> <a href="adminIndex.jsp"><h4>処理メニューに戻る</h4></a>
 
 			</div>
 		</div>
