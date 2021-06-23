@@ -189,10 +189,9 @@
 </form>
 
 <br />
-  設定された管理者は：<%= admin %>
-設定されたお客様IDは：<%= user %>
-<br />
-セッションにある管理者は：<%= session.getAttribute("adminInfo") %>
+  設定された管理者は：<%= admin %><br />
+設定されたお客様IDは：<%= user %><br />
+セッションにある管理者は：<%= session.getAttribute("adminInfo") %><br />
 セッションにお客様は：<%= session.getAttribute("usrName") %>
 </body>
 </html>
