@@ -27,14 +27,14 @@ div{text-align:center;}
 </tr>
 
 <tr>
-<th>選択</th><td>
-<input type="radio" name="statas" value="会員">会員
-<input type="radio" name="statas" value="未登録" checked>未登録
+<td>選択</td><td>
+<input type="radio" name="statas" value="会員" />会員
+<input type="radio" name="statas" value="未登録" />未登録
 </td>
 </tr>
 
 <tr>
-<th>件名</th><td><input type="text" name="object" size="50%" /></td>
+<td>件名</td><td><input type="text" name="subject" size="50%" /></td>
 </tr>
 
 <tr>
