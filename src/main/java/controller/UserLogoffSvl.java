@@ -2,7 +2,6 @@ package controller;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -60,10 +59,7 @@ public class UserLogoffSvl extends HttpServlet {
 		System.out.println(userInfo.getAttribute("phone"));
 		System.out.println(userInfo.getAttribute("mail"));
 		System.out.println(userInfo.getAttribute("exp"));
-		RequestDispatcher rd = request.getRequestDispatcher("/home.jsp");
-		rd.forward(request, response);
-//		String userInfo = session.getId();
-//		System.out.println(userInfo);
+		response.sendRedirect("./home.jsp");
 	}
 
 }
