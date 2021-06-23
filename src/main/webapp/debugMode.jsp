@@ -195,6 +195,5 @@
 セッションにある管理者は：<%= session.getAttribute("adminInfo") %>
 セッションにお客様は：<%= session.getAttribute("usrName") %>
 -->
-※機能に一部不具合あり
 </body>
 </html>
