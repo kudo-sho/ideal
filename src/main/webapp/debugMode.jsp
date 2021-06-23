@@ -136,26 +136,6 @@
 
 		}
 
-
-
-
-/*
-		Integer user;
-		try {
-			user = Integer.parseInt(request.getParameter("user"));//パラメータにあるuserIdを取得
-			//パラメータにあるuserIdをもとにuser情報を取得
-			User userInfo= User.getUser(Integer.parseInt(request.getParameter("user")));
-			session.setAttribute("usrName", userInfo.getUsrName());
-			session.setAttribute("usrId", userInfo.getUsrId());
-			session.setAttribute("usrName", userInfo.getUsrName());
-			session.setAttribute("password", userInfo.getPassword());
-			session.setAttribute("address", userInfo.getAddress());
-			session.setAttribute("phone", userInfo.getPhone());
-			session.setAttribute("mail", userInfo.getMail());
-			session.setAttribute("exp", userInfo.getExp());
-		}
-		catch (NumberFormatException e) {user  = null;}
-		*/
 	%>
 
 デバッグモード設定
@@ -183,7 +163,10 @@
 							}
 						%>
 </select>
-<br />
+<input type="submit" value="セット" />
+</form>
+
+<form id="debugUser" name="debugUser" action="./debugMode.jsp" method="get" >
 お客様：
 <select name="user">
 <option value="0">null</option>
@@ -209,11 +192,11 @@
 
 
 </select>
-<br />
+
 <input type="submit" value="セット" />
-<input type="reset" value="リセット" />
 </form>
 
+<br />
   設定された管理者は：<%= admin %>
 設定されたお客様IDは：<%= user %>
 <br />
@@ -221,8 +204,5 @@
 セッションにお客様は：<%= session.getAttribute("usrName") %>
 -->
 ※機能に一部不具合あり
-<%
-System.out.print("デバッグモード最後尾");
-%>
 </body>
 </html>
