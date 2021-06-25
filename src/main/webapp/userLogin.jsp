@@ -6,6 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>お客様ログイン</title>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
 <style type="text/css">
 h1{font-size:60px;}
 div{text-align:center;}
@@ -31,9 +32,11 @@ div{text-align:center;}
 </script>
 </head>
 <body>
+<a href="home.jsp">
+<div class="toplink">IDEALLE</div>
+</a>
 <div>
 		<h1>お客様ログイン</h1>
-		<hr />
 <%
 //引き渡されたメッセージを表示
 //引き渡されたメッセージがnullの場合は非表示
@@ -53,37 +56,29 @@ if(userInfo != null){
 }
 
 %>
-		<hr />
-		<table width="100%">
-		<td width="33%"></td>
-		<td width= "33%">
-
 		<form id="frm1" name="frm1" action="UserLoginSvl" method="post"
 			onsubmit="return checkFrm();">
-			<table border="1" width="500" cellspacing="4" cellpadding="4">
+			<table border="1" cellspacing="4" cellpadding="4" style="width:50%;">
 				<tr>
-					<td >顧客様ID</td>
-					<td colspan="3"><input type="text" name="usrId" size="40" /></td>
+					<th>お客様ID</td>
+					<td><input type="text" name="usrId" size="40" /></td>
 				</tr>
 
 				<tr>
-					<td>パスワード</td>
-					<td colspan="3"><input type="password" name="password"
-						size="40" /></td>
+					<th>パスワード</th>
+					<td><input type="password" name="password" size="40" /></td>
 				</tr>
 
 				<tr>
-					<td colspan="4" align="center"><input type="submit"
-						value="送信" /></td>
+					<td colspan="2" class="cent"><input type="submit" value="送信" /></td>
 				</tr>
 			</table>
 		</form>
 	</div>
-	</td>
-		<td width= "33%"></td>
-
-		</table>
 			<br />
 			<a href="./home.jsp">ホームに戻る</a>
+<div class="site-footer">
+<div class="copyright">Restaurante IDEALLE</div>
+</div>
 </body>
 </html>

@@ -2,7 +2,6 @@ package controller;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -45,10 +44,8 @@ public class AdminLogoffSvl extends HttpServlet {
 		session.removeAttribute("adminInfo");
 //		session.removeAttribute("pass");
 //		session.removeAttribute("exp");
-		RequestDispatcher rd = request.getRequestDispatcher("/home.jsp");
-				rd.forward(request, response);
-//				String adminInfo = session.getId();
-//				System.out.println(adminInfo);
+		response.sendRedirect("./home.jsp");
+
 
 	}
 

@@ -79,6 +79,9 @@
 </script>
 </head>
 <body>
+<a href="home.jsp">
+<div class="toplink">IDEALLE</div>
+</a>
 <%
 String name = (String)session.getAttribute("usrName");
 String message = (String)request.getAttribute("msg");
@@ -199,5 +202,8 @@ if(message == null) {message = "&nbsp;";}
 	</table>
 </form>
 <a href="ReserveListSvl">予約一覧に戻る</a>
+<div class="site-footer">
+<div class="copyright">Restaurante IDEALLE</div>
+</div>
 </body>
 </html>

@@ -6,9 +6,14 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>顧客登録完了画面</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
 </head>
 
 <body align="center">
+<a href="home.jsp">
+<div class="toplink">IDEALLE</div>
+</a>
+
 	<h1> 会員登録が完了いたしました。</h1>
 
 	<h3>
@@ -40,6 +45,8 @@
 				<u>戻る</u>
 			</a>
 		</div>
-
+<div class="site-footer">
+<div class="copyright">Restaurante IDEALLE</div>
+</div>
 </body>
 </html>

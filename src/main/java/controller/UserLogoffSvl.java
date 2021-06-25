@@ -2,7 +2,6 @@ package controller;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -44,29 +43,23 @@ public class UserLogoffSvl extends HttpServlet {
 
 		HttpSession userInfo = request.getSession(false);
 		System.out.println("セッション情報をすべて破棄します。");
-		try {
-			userInfo.removeAttribute("usrId");
-			userInfo.removeAttribute("usrName");
-			userInfo.removeAttribute("password");
-			userInfo.removeAttribute("address");
-			userInfo.removeAttribute("phone");
-			userInfo.removeAttribute("mail");
-			userInfo.removeAttribute("exp");
-			System.out.println("セッション情報を表示します。");
-			System.out.println(userInfo.getAttribute("usrId"));
-			System.out.println(userInfo.getAttribute("usrName"));
-			System.out.println(userInfo.getAttribute("password"));
-			System.out.println(userInfo.getAttribute("address"));
-			System.out.println(userInfo.getAttribute("phone"));
-			System.out.println(userInfo.getAttribute("mail"));
-			System.out.println(userInfo.getAttribute("exp"));
-		}catch(Exception e) {
-			
-		}
-		RequestDispatcher rd = request.getRequestDispatcher("/home.jsp");
-		rd.forward(request, response);
-//		String userInfo = session.getId();
-//		System.out.println(userInfo);
+		userInfo.removeAttribute("usrId");
+		userInfo.removeAttribute("usrName");
+		userInfo.removeAttribute("password");
+		userInfo.removeAttribute("address");
+		userInfo.removeAttribute("phone");
+		userInfo.removeAttribute("mail");
+		userInfo.removeAttribute("exp");
+		System.out.println("セッション情報を表示します。");
+		System.out.println(userInfo.getAttribute("usrId"));
+		System.out.println(userInfo.getAttribute("usrName"));
+		System.out.println(userInfo.getAttribute("password"));
+		System.out.println(userInfo.getAttribute("address"));
+		System.out.println(userInfo.getAttribute("phone"));
+		System.out.println(userInfo.getAttribute("mail"));
+		System.out.println(userInfo.getAttribute("exp"));
+		response.sendRedirect("./home.jsp");
+
 	}
 
 }
