@@ -56,24 +56,18 @@ public class MenuMaintenanceSvl extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
 		RequestDispatcher rd = null;
-		int typeId = 100;
-		if(request.getAttribute("typeID") != null) {
-		typeId = Integer.parseInt(request.getAttribute("typeID").toString());
-		request.setAttribute("typeID",typeId);
+		int typeID = 100;
+
+		if(request.getParameter("typeID") != null){
+			typeID = Integer.parseInt(request.getParameter("typeID"));
+			request.setAttribute("typeID", typeID);
 		}
-
-
-//		request.setAttribute("msg", request.getAttribute("msg"));
-//		System.out.println(request.getAttribute("msg"));
 
 
 		try{
 			//セッション情報がnullならホームページへ
 			HttpSession session = request.getSession(true);
 			if(session.getAttribute("adminInfo") == null){
-//				rd = request.getRequestDispatcher("/home.jsp");
-//				rd.forward(request, response);
-//				↓こっちの方が良さそう？
 				response.sendRedirect("/ideal/home.jsp");
 				return;
 				}
@@ -95,7 +89,7 @@ public class MenuMaintenanceSvl extends HttpServlet {
 			ArrayList<MenuType> almt = MenuType.getAllType();
 			request.setAttribute("mType",almt);
 
-			ArrayList<Menu> alm = Menu.getMenu(typeId);
+			ArrayList<Menu> alm = Menu.getMenu(typeID);
 			request.setAttribute("menu",alm);
 
 			//ここまで問題なければメニューメンテ画面に戻って再表示
