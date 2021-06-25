@@ -322,54 +322,45 @@ public class Course {
 	}
 
 
-	/*    完成できず　　　　*/
-//	public static ArrayList<Course> getTypeCourseList(int t_id) throws IdealException{
-//		//分類別コース情報一覧取得処理
-//
-//		Connection con = null;
-//		Statement st = null;
-//		ResultSet rs = null;
-//		ArrayList<Course> al = new ArrayList<Course>();
-//		try{
-//			Class.forName("com.mysql.jdbc.Driver");
-//			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "root");
-//			st = con.createStatement();
-//			String sql = "SELECT * FROM course"
-//					+ " WHERE orderFlg = 1";
-//			System.out.println(sql);
-//			rs = st.executeQuery(sql)  ;
-//
-//			while(rs.next()){
-//				Course cou = new Course();
-//				cou.setCourseId(rs.getInt("c_id"));
-//				cou.setCourseName(rs.getString("c_name"));
-//				cou.setDetail(rs.getString("detail"));
-//				cou.setOrderFlg(rs.getInt("orderFlg"));
-//				cou.setPrice(rs.getInt("price"));
-//				cou.setTypeId(rs.getInt("t_id"));
-//				al.add(cou);
-//			}
-////			System.out.println(cou.getCourseId());
-////			System.out.println(cou.getCourseName());
-////			System.out.println(cou.getDetail());
-////			System.out.println(cou.getOrderFlg());
-////			System.out.println(cou.getPrice());
-////			System.out.println(cou.getTypeId());
-//		}catch(SQLException | ClassNotFoundException e) {
-//			int i = IdealException.ERR_NO_DB_EXCEPTION;
-//			throw new IdealException(i);
-//
-//		}finally {
-//			try {
-//				if(con != null) con.close();
-//				if(st != null) st.close();
-//				if(rs != null) rs.close();
-//			}catch(Exception e) {
-//
-//			}
-//		}
-//		return al;
-//	}
+	//↓このメソッド不要なのでは・・・？
+	//分類別コース情報一覧取得処理
+	public static ArrayList<Course> getTypeCourseList(int t_id) throws IdealException{
+
+		Connection con = null;
+		Statement st = null;
+		ResultSet rs = null;
+		ArrayList<Course> al = new ArrayList<Course>();
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "root");
+			st = con.createStatement();
+			String sql = "SELECT * FROM course WHERE t_id = " + t_id + " ORDER BY c_id";
+			System.out.println(sql);
+			rs = st.executeQuery(sql)  ;
+
+			while(rs.next()){
+				Course cou = new Course();
+				cou.setCourseId(rs.getInt("c_id"));
+				cou.setCourseName(rs.getString("c_name"));
+				cou.setDetail(rs.getString("detail"));
+				cou.setOrderFlg(rs.getInt("orderFlg"));
+				cou.setPrice(rs.getInt("price"));
+				cou.setTypeId(rs.getInt("t_id"));
+				al.add(cou);
+			}
+		}catch(SQLException | ClassNotFoundException e) {
+			throw new IdealException(IdealException.ERR_NO_DB_EXCEPTION);
+		}finally {
+			try {
+				if(con != null) con.close();
+				if(st != null) st.close();
+				if(rs != null) rs.close();
+			}catch(Exception e) {
+
+			}
+		}
+		return al;
+	}
 
 
 	public static int updateCourse(Course c,int mode,ArrayList<CourseCtl> coursectl) throws IdealException{
@@ -382,6 +373,7 @@ public class Course {
 				PreparedStatement pst3 = null;
 				String sql = null;
 				ResultSet rs = null;
+				int last_id = 0 ;
 
 				try{
 					ic = new InitialContext();
@@ -407,12 +399,16 @@ public class Course {
 						sql = "SELECT LAST_INSERT_ID()";
 						pst2 = con.prepareStatement(sql);
 						rs = pst2.executeQuery();
+						if(rs.next()) {
+						last_id = rs.getInt(1);
+						}
 
 						//次にcoursectlテーブルを更新する
 						for(CourseCtl cc : coursectl) {
 						sql ="INSERT INTO coursectl VALUES(?,?)";
 						pst3 = con.prepareStatement(sql);
-						pst3.setInt(1, rs.getInt("LAST_INSERT_ID()"));
+
+						pst3.setInt(1, last_id);
 						pst3.setInt(2, cc.getM_Id());
 						pst3.executeUpdate();
 						}
