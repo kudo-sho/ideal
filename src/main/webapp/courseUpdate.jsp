@@ -90,7 +90,7 @@ function check(obj) {
 
 
 		try {
-			typeID = Integer.parseInt(request.getParameter("CtypeID"));
+			typeID = Integer.parseInt(request.getParameter("typeID"));
 		} catch (NumberFormatException e) {
 			typeID = 100;
 		}
@@ -202,6 +202,7 @@ function check(obj) {
 			<tr>
 				<th><%= typeName[x] %></th>
 				<td><select name="<%= type[x] %>">
+						<option value="0" selected></option>
 						<%
 						}
 						%>
@@ -229,7 +230,7 @@ function check(obj) {
 		&emsp;
 	</table>
 	<p>
-		<a href="MenuMaintenanceSvl">メニューメンテナンスに戻る</a>
+		<a href="MenuMaintenanceSvl?typeID=<%= course.getTypeId() %>">メニューメンテナンスに戻る</a>
 	</p>
 </body>
 </html>
