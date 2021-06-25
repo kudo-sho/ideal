@@ -64,31 +64,33 @@ public class MenuOperationSvl extends HttpServlet {
 		menuName = request.getParameter("menuName");
 		detail = request.getParameter("detail");
 //		typeName = request.getParameter("typeName");
+		try {
+		typeID = Integer.parseInt(request.getParameter("typeID"));
+		}catch(NumberFormatException e) {
+			typeID = 0;
+		}
+		try {
+		menuID = Integer.parseInt(request.getParameter("menuID"));
+		}catch(NumberFormatException e) {
+		}
 		try{
-			menuID = Integer.parseInt(request.getParameter("menuId"));
 			orderFlg = Integer.parseInt(request.getParameter("orderFlg"));
 			price = Integer.parseInt(request.getParameter("price"));
-			typeID = Integer.parseInt(request.getParameter("typeId"));
 		}catch(NumberFormatException e){
 			orderFlg = 0;
 			price = 0;
-			typeID = 0;
 		}
 
 		try{
 			//セッション情報がnullならホームページへ
 						HttpSession session = request.getSession(true);
 						if(session.getAttribute("adminInfo") == null){
-//							rd = request.getRequestDispatcher("/home.jsp");
-//							rd.forward(request, response);
-//							↓こっちの方が良さそう？
 							response.sendRedirect("/ideal/home.jsp");
 							return;
 						}
 
 			mode = Integer.parseInt(request.getParameter("mode"));
 
-			//おそらく↓だけど、もしかしたら処理によってm_idとかでDBから情報引っ張ってくる・・・？
 			//削除時
 			if(mode == MenuOperationSvl.DELETE){
 				menu = Menu.getOneMenu(menuID, typeID);
@@ -119,17 +121,15 @@ public class MenuOperationSvl extends HttpServlet {
 			//メニュー情報更新
 			typeID = Menu.updateMenu(menu,mode);
 
-//			request.setAttribute("typeID", typeID);
+			request.setAttribute("typeID", typeID);
 
 			//ここまで問題なければメニューメンテ画面（Svl）に戻って再表示
 			rd = request.getRequestDispatcher("MenuMaintenanceSvl");
 
 
 			//独自例外が発生したらメッセージ取得＆管理者処理画面に遷移
-			//			}catch(IdealException |ServletException | IOException e) {
 		}catch(Exception e) {
 
-			//			}catch(Exception e) {
 			IdealException ie = new IdealException(IdealException.ERR_NO_DB_EXCEPTION);
 			request.setAttribute("msg", ie.getMsg());
 			request.setAttribute("onemenu", menu);
