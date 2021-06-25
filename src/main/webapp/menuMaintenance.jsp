@@ -269,8 +269,12 @@ if(msg != null)
 				%>
 				<tr class="tr3">
 					<form id="fdelete" action="MenuInsertSvl" method="post">
+					<%
+					String add = "新しいメニューの追加";
+					if(typeID == 100) add = "新しいコースの追加";
+					%>
 						<td align="center" colspan="7"><input type="submit"
-							value="新しいメニューの追加" /></td>
+							value="<%= add %>" /></td>
 						<input type="hidden" name="typeID" value="<%= typeID %>" />
 					</form>
 				</tr>
