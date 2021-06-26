@@ -81,7 +81,7 @@ p {
 	<%
 	int typeID;
 	try {
-		typeID = Integer.parseInt(request.getParameter("CtypeID"));
+		typeID = Integer.parseInt(request.getParameter("typeID"));
 	} catch (NumberFormatException e) {
 		typeID = 100;
 	}
@@ -140,7 +140,7 @@ p {
 			</tr>
 			<tr>
 				<th>分類</th>
-				<td><select name="typeId">
+				<td><select name="typeID">
 						<%
 						for (Object o : mType) {
 							MenuType mt = ((MenuType) o);
@@ -165,14 +165,12 @@ p {
 			</tr>
 			<tr>
 				<th>コメント</th>
-				<td><textarea name="detail" cols="55" rows="5">
-<%=(oneMenu.getDetail())%></textarea></td>
+				<td><textarea name="detail" cols="55" rows="5"><%=(oneMenu.getDetail())%></textarea></td>
 			</tr>
 			<input type="hidden" name="mode"
 				value="12" /> <input
-				type="hidden" name="menuId"
+				type="hidden" name="menuID"
 				value='<jsp:getProperty name ="oneMenu" property="menuId" />' />
-				<input type="hidden" name="CtypeID" value="<%= typeID %>" />
 			<tr>
 				<td align="right" colspan="3"><font color="red">※は必修入力です。</font>
 					<input type="submit" value="   変更   " /></td>
@@ -181,7 +179,7 @@ p {
 		&emsp;
 	</table>
 	<p>
-		<a href="MenuMaintenanceSvl">メニューメンテナンスに戻る</a>
+		<a href="MenuMaintenanceSvl?typeID=<%= typeID %>">メニューメンテナンスに戻る</a>
 	</p>
 </body>
 </html>

@@ -61,18 +61,13 @@ public class MenuDeleteSvl extends HttpServlet {
 			//セッション情報がnullならホームページへ
 			HttpSession session = request.getSession(true);
 			if(session.getAttribute("adminInfo") == null){
-//				rd = request.getRequestDispatcher("/home.jsp");
-//				rd.forward(request, response);
-//				↓こっちの方が良さそう？
 				response.sendRedirect("/ideal/home.jsp");
 				return;
 			}
 
-			typeID = Integer.parseInt(request.getParameter("DtypeID"));
-//			request.setAttribute("typeID", typeID);
-			menuID = Integer.parseInt(request.getParameter("DmenuID"));
-//			request.setAttribute("menuID", menuID);
-			//↑これとか使わないかも
+			typeID = Integer.parseInt(request.getParameter("typeID"));
+			request.setAttribute("typeID", typeID);
+			menuID = Integer.parseInt(request.getParameter("menuID"));
 
 
 			if(typeID == 100) { //コースの時
@@ -89,9 +84,9 @@ public class MenuDeleteSvl extends HttpServlet {
 					rd.forward(request, response);
 					return;
 				}
-				menuList = Menu.getMenuList();
-				request.setAttribute("typeMenuList",menuList);
-				//↑恐らく仕様書の誤記載？使わないはず
+//				menuList = Menu.getMenuList();
+//				request.setAttribute("typeMenuList",menuList);
+//				↑恐らく仕様書の誤記載？使わないはず
 				course = Course.getCourse(menuID);
 				request.setAttribute("course",course);
 				//↑コースに何もメニューが追加されてない時用
@@ -124,14 +119,10 @@ public class MenuDeleteSvl extends HttpServlet {
 				rd = request.getRequestDispatcher("/menuDelete.jsp");
 				rd.forward(request, response);
 				return;
-//				rd = request.getRequestDispatcher("MenuMaintenanceSvl");
-
 			}
 
 			//独自例外が発生したらメッセージ取得＆メニューメンテ画面に遷移
-			//			}catch(IdealException |ServletException | IOException e) {
 		}catch(Exception e) {
-			//			}catch(Exception e) {
 			IdealException ie = new IdealException(IdealException.ERR_NO_EXCEPTION);
 			request.setAttribute("msg", ie.getMsg());
 			//			System.out.println(msg);

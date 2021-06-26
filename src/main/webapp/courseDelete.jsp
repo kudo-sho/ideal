@@ -39,53 +39,38 @@ request.setCharacterEncoding("UTF-8");
 
 <%
 int menuID;
-//各メニューネームを入れる
-String t200 = "";
-String t210 = "";
-String t220 = "";
-String t300 = "";
-String t310 = "";
-String t400 = "";
 
 Course c;
 try {
-	menuID = Integer.parseInt(request.getParameter("DmenuID"));
+	menuID = Integer.parseInt(request.getParameter("menuID"));
 	} catch (Exception e) {
 		menuID = 0;
 	}
 
-Course course = Course.getCourse(menuID);
+Course course = (Course)request.getAttribute("course");
 String cName = course.getCourseName();
 int cPrice = course.getPrice();
 int cOrderFlg = course.getOrderFlg();
 String cDetail = course.getDetail();
 
-NumberFormat nfc = NumberFormat.getCurrencyInstance();
+Locale jp = new Locale("ja","JP");
+NumberFormat nfc = NumberFormat.getCurrencyInstance(jp);
 
-ArrayList<Course> oneCourse = Course.getOneCourse(menuID);
+ArrayList<Course> oneCourse = (ArrayList<Course>)request.getAttribute("oneCourse");
 
 //コースにメニューが一つでもあれば各分類ごとにmenuNameを入れる
+	String[] tmn = {"","","","","",""};
+	int[] tid = {200,210,220,300,310,400};
+
+
 if(oneCourse.size() != 0){
 for(int x = 0 ;x < oneCourse.size(); x++){
 	c = oneCourse.get(x);
-	if(c.getTypeId() == 200){
-		t200 = c.getMenuName();
+	for(int y = 0; y < tmn.length; y++){
+	if(c.getTypeId() == tid[y]){
+		tmn[y] = c.getMenuName();
 	}
-	if(c.getTypeId() == 210){
-		t210 = c.getMenuName();
-	}
-	if(c.getTypeId() == 220){
-		t220 = c.getMenuName();
-	}
-	if(c.getTypeId() == 300){
-		t300 = c.getMenuName();
-	}
-	if(c.getTypeId() == 310){
-		t310 = c.getMenuName();
-	}
-	if(c.getTypeId() == 400){
-		t400 = c.getMenuName();
-	}
+}
 }
 }
 %>
@@ -112,36 +97,25 @@ for(int x = 0 ;x < oneCourse.size(); x++){
 		<td><%= cDetail %>
 		</td>
 	</tr>
+
+	<%
+	String[] typeName = { "前菜", "スープ", "パスタ",
+			"肉料理", "魚料理", "デザート" };
+
+	for(int x = 0; x < typeName.length; x++){
+
+	%>
+
 	<tr>
-		<th>前菜</th>
-		<td><%= t200 %>
+		<th><%= typeName[x]%></th>
+		<td><%= tmn[x] %>
 		</td>
 	</tr>
-	<tr>
-		<th>スープ</th>
-		<td><%= t210 %>
-		</td>
-	</tr>
-	<tr>
-		<th>パスタ</th>
-		<td><%= t220 %>
-		</td>
-	</tr>
-	<tr>
-		<th>肉料理</th>
-		<td><%= t300 %>
-		</td>
-	</tr>
-	<tr>
-		<th>魚料理</th>
-		<td><%= t310 %>
-		</td>
-	</tr>
-	<tr>
-		<th>デザート</th>
-		<td><%= t400 %>
-		</td>
-	</tr>
+
+	<%
+	}
+	%>
+
 	<tr>
 
 		<td align="right" colspan="3">
@@ -153,6 +127,6 @@ for(int x = 0 ;x < oneCourse.size(); x++){
 		</form></td>
 	</tr>
 </table>
-<p><a href="MenuMaintenanceSvl">メニューメンテナンスに戻る</a> </p>
+<p><a href="MenuMaintenanceSvl?typeID=<%= course.getTypeId() %>">メニューメンテナンスに戻る</a> </p>
 </body>
 </html>

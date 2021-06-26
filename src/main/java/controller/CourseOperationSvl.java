@@ -74,7 +74,13 @@ public class CourseOperationSvl extends HttpServlet {
 
 		try {
 		typeID = Integer.parseInt(request.getParameter("typeID"));
+		}catch(NumberFormatException e) {
+		}
+		try {
 		courseID = Integer.parseInt(request.getParameter("courseID"));
+		}catch(NumberFormatException e) {
+		}
+		try {
 		courseName = request.getParameter("courseName");
 		price = Integer.parseInt(request.getParameter("price"));
 		orderFlg = Integer.parseInt(request.getParameter("orderFlg"));
@@ -94,9 +100,6 @@ public class CourseOperationSvl extends HttpServlet {
 			//セッション情報がnullならホームページへ
 						HttpSession session = request.getSession(true);
 						if(session.getAttribute("adminInfo") == null){
-//							rd = request.getRequestDispatcher("/home.jsp");
-//							rd.forward(request, response);
-//							↓こっちの方が良さそう？
 							response.sendRedirect("/ideal/home.jsp");
 							return;
 						}
@@ -106,7 +109,6 @@ public class CourseOperationSvl extends HttpServlet {
 						}catch(NumberFormatException e) {
 							mode = 100;
 						}
-			//おそらく↓だけど、もしかしたら処理によってm_idとかでDBから情報引っ張ってくる・・・？
 			//削除時
 			if(mode == CourseOperationSvl.DELETE){
 				c = Course.getCourse(courseID);
@@ -160,13 +162,10 @@ public class CourseOperationSvl extends HttpServlet {
 
 
 			//独自例外が発生したらメッセージ取得＆管理者処理画面に遷移
-			//			}catch(IdealException |ServletException | IOException e) {
 		}catch(Exception e) {
-
-			//			}catch(Exception e) {
+//			e.printStackTrace();
 			IdealException ie = new IdealException(IdealException.ERR_NO_DB_EXCEPTION);
 			request.setAttribute("msg", ie.getMsg());
-//			request.setAttribute("onemenu", menu);
 			//			System.out.println(msg);
 
 		}finally{

@@ -62,17 +62,15 @@ public class MenuUpdateSvl extends HttpServlet {
 		/* セッション情報(adminInfo)がnullの時、ホームページ(home.jsp)へ遷移する処理 */
 		HttpSession session = request.getSession(true);
 		if(session.getAttribute("adminInfo") == null){
-//			rd = request.getRequestDispatcher("/home.jsp");
-//			rd.forward(request, response);
-//			↓こっちの方が良さそう？
 			response.sendRedirect("/ideal/home.jsp");
 			return;
 		}
 
 		try {
 		/*リクエストパラメーター"typeID"と"menuID"を受け取る。*/
-			typeID = Integer.parseInt(request.getParameter("CtypeID"));
-			menuID = Integer.parseInt(request.getParameter("CmenuID"));
+			typeID = Integer.parseInt(request.getParameter("typeID"));
+			request.setAttribute("typeID", typeID);
+			menuID = Integer.parseInt(request.getParameter("menuID"));
 		} catch (NumberFormatException e) {
 //			e.printStackTrace();
 		}
@@ -106,29 +104,18 @@ public class MenuUpdateSvl extends HttpServlet {
 				 */
 			} else if (typeID != 100) {
 				request.setAttribute("mType", MenuType.getAllType());
-//				typeID = Integer.parseInt(request.getParameter("typeID"));
 				request.setAttribute("oneMenu", Menu.getOneMenu(menuID, mType));
 				rd = request.getRequestDispatcher("/menuUpdate.jsp");
 				rd.forward(request, response);
 				return;
 			}
 
-				/* 例外処理(まだちゃんと出来てない)
-				 * リクエストオブジェクト"msg"に独自例外よりメッセージを取得し設定する。
-				 */
-//			}
-//			else {
-//				msg = Integer.parseInt(request.getParameter("msg"));
-//				rd = request.getRequestDispatcher("MenuMaintenanceSvl");
-//				rd.forward(request, response);
 		}catch(Exception e) {
-			//			}catch(Exception e) {
 			IdealException ie = new IdealException(IdealException.ERR_NO_EXCEPTION);
 			request.setAttribute("msg", ie.getMsg());
 			//			System.out.println(msg);
 			rd = request.getRequestDispatcher("MenuMaintenanceSvl");
 			rd.forward(request, response);
-//			return;
 //			e.printStackTrace();
 
 		}

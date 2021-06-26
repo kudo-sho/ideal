@@ -24,8 +24,13 @@ import model.MenuType;
 public class MenuInsertSvl extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	// ファイナル変数宣言
-	public static final int MenuInsertSvl = 4;
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public MenuInsertSvl() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -41,52 +46,47 @@ public class MenuInsertSvl extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
 		RequestDispatcher rd = null;
-		String url = "";
 
 		int typeID = 0;
-		int menuID = 0;
 		int mType = 0;
-		int msg = 0;
-		AdminLoginSvl als = new AdminLoginSvl();
-		ArrayList<Menu> al = new ArrayList<Menu>();
+//		int msg;
+
+		ArrayList<ArrayList<Menu>> al = new ArrayList<ArrayList<Menu>>();
 
 		try {
-			request.setAttribute("mType", MenuType.getAllType());
-		} catch (IdealException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		}
 		/* セッション情報(adminInfo)がnullの時、ホームページ(home.jsp)へ遷移する処理 */
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(true);
+		if(session.getAttribute("adminInfo") == null){
+			response.sendRedirect("/ideal/home.jsp");
+			return;
+		}
+
 		try {
-			if (als == null) {
-				RequestDispatcher dispatcher = request
-						.getRequestDispatcher("/home.jsp");
-				dispatcher.forward(request, response);
-			}
+		/*リクエストパラメーター"typeID"を受け取る。*/
 			typeID = Integer.parseInt(request.getParameter("typeID"));
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 
-		try {
 			/* typeIDが100の時の処理 */
 			/*
 			 * typeMenuListにコース構成分類ごとのメニュー一覧(ArrayList<Menu>)を取得し、設定する。
 			 * その後の遷移先urlに新規コース登録画面(courseInsert.jsp)をセットする。
 			 */
 			if (typeID == 100) {
-				request.setAttribute("typeMenuList",
-						al);
-				RequestDispatcher dispatcher = request
-						.getRequestDispatcher("/courseInsert.jsp");
-				dispatcher.forward(request, response);
+				for(int x = 0; x < CourseOperationSvl.COURSE_MENU_TYPE_ID.length; x++) {
+				al.add(Menu.getMenu(CourseOperationSvl.COURSE_MENU_TYPE_ID[x]));
+				}
+
+				request.setAttribute("typeMenuList", al);
+				rd = request.getRequestDispatcher("/courseInsert.jsp");
+				rd.forward(request, response);
+				return;
 
 				/* typeIDが100以外の時の処理 */
 				/*
@@ -95,29 +95,24 @@ public class MenuInsertSvl extends HttpServlet {
 				 * 遷移先urlに新規メニュー登録画面(menuInsert.jsp)をセットする。
 				 */
 			} else if (typeID != 100) {
-				ArrayList<MenuType> almt = new ArrayList<MenuType>();
-				request.setAttribute("mType", almt);
-				typeID = Integer.parseInt(request.getParameter("typeID"));
-				RequestDispatcher dispatcher = request
-						.getRequestDispatcher("/menuInsert.jsp");
-				dispatcher.forward(request, response);
-				request.setAttribute("mt", MenuType.getAllType());
-
-			} else {
-				msg = Integer.parseInt(request.getParameter("msg"));
-				RequestDispatcher dispatcher = request
-						.getRequestDispatcher("MenuMaintenanceSvl");
-				dispatcher.forward(request, response);
-			}
-		} catch (Exception e) {
-			int msgNo =0;
-			IdealException ie= new IdealException(msgNo);
-			request.setAttribute("msg", ie.getMsg());
-			url = "MenuMaintenanceSvl";
+				request.setAttribute("mType", MenuType.getAllType());
+				rd = request.getRequestDispatcher("/menuInsert.jsp");
+				rd.forward(request, response);
+				return;
 		}
-		url = "/WebContent/menuMaintenance.jsp";
+
+		}catch(Exception e) {
+			IdealException ie = new IdealException(IdealException.ERR_NO_EXCEPTION);
+			request.setAttribute("msg", ie.getMsg());
+			//			System.out.println(msg);
+			rd = request.getRequestDispatcher("MenuMaintenanceSvl");
+			rd.forward(request, response);
+//			return;
+//			e.printStackTrace();
+
+		}
 		//ページのフォワーディング
-		rd = request.getRequestDispatcher("/menuInsert.jsp");
-		rd.forward(request, response);
+//		rd = request.getRequestDispatcher("/menuInsert.jsp");
+//		rd.forward(request, response);
 	}
 }

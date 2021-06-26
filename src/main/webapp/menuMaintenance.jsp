@@ -152,19 +152,13 @@ if(msg != null)
 
 		<%
 		String thstyle = "1";
-				int typeID;
+
 				MenuType mt;
 				String typeName = "一覧";
-				try {
+				int typeID = 100;
+
+				if(request.getParameter("typeID") != null){
 					typeID = Integer.parseInt(request.getParameter("typeID"));
-				} catch (Exception e) {
-						typeID = 100;
-					if (request.getParameter("CtypeID") == null && request.getParameter("DtypeID") == null) {
-					} else if (request.getParameter("CtypeID") != null) {
-						typeID = Integer.parseInt(request.getParameter("CtypeID"));
-					} else if (request.getParameter("DtypeID") != null) {
-						typeID = Integer.parseInt(request.getParameter("DtypeID"));
-					}
 				}
 		%>
 
@@ -174,10 +168,8 @@ if(msg != null)
 			<table id="menu" cellspacing="5">
 
 				<%
-				//ArrayList<MenuType> almt = (ArrayList<MenuType>)request.getAttribute("mType");
-				//直接このjspを開かれることはないはずだけど、開かれるとエラーになるので、↑はやめた
+				ArrayList<MenuType> almt = (ArrayList<MenuType>)request.getAttribute("mType");
 
-				ArrayList<MenuType> almt = MenuType.getAllType();
 				for (int x = 0; x < almt.size(); x++) {
 					mt = (MenuType)almt.get(x);
 					if (mt.getTypeId() == typeID) { //選択した分類と一致する時のみ緑色にする
@@ -211,10 +203,11 @@ if(msg != null)
 
 
 		<%
-		NumberFormat nfc = NumberFormat.getCurrencyInstance();
+		Locale jp = new Locale("ja","JP");
+		NumberFormat nfc = NumberFormat.getCurrencyInstance(jp);
 		String trstyle = "";
 		String[] orderFlg = { "不可", "可" }; //getしてくるorderFlgで表示を変える
-		ArrayList<Menu> alm = Menu.getMenu(typeID);
+		ArrayList<Menu> alm = (ArrayList<Menu>)request.getAttribute("menu");
 		%>
 		<!-- メイン -->
 		<div style="width: 85%; height: 600px;">
@@ -261,13 +254,13 @@ if(msg != null)
 					<td class="orderflg"><%= orderFlg[menu.getOrderFlg()] %></td>
 					<form id="fchange" action="MenuUpdateSvl" method="post">
 						<td class="botan"><input type="submit" value="変更" /></td>
-						<input type="hidden" name="CtypeID" value="<%= menu.getTypeId() %>" />
-						<input type="hidden" name="CmenuID" value="<%= menu.getMenuId() %>" />
+						<input type="hidden" name="typeID" value="<%= menu.getTypeId() %>" />
+						<input type="hidden" name="menuID" value="<%= menu.getMenuId() %>" />
 					</form>
 					<form id="fdelete" action="MenuDeleteSvl" method="post">
 						<td class="botan"><input type="submit" value="削除" /></td>
-						<input type="hidden" name="DtypeID" value="<%= menu.getTypeId() %>" />
-						<input type="hidden" name="DmenuID" value="<%= menu.getMenuId() %>" />
+						<input type="hidden" name="typeID" value="<%= menu.getTypeId() %>" />
+						<input type="hidden" name="menuID" value="<%= menu.getMenuId() %>" />
 					</form>
 				</tr>
 
@@ -276,8 +269,12 @@ if(msg != null)
 				%>
 				<tr class="tr3">
 					<form id="fdelete" action="MenuInsertSvl" method="post">
+					<%
+					String add = "新しいメニューの追加";
+					if(typeID == 100) add = "新しいコースの追加";
+					%>
 						<td align="center" colspan="7"><input type="submit"
-							value="新しいメニューの追加" /></td>
+							value="<%= add %>" /></td>
 						<input type="hidden" name="typeID" value="<%= typeID %>" />
 					</form>
 				</tr>
