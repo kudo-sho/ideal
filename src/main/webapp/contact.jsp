@@ -13,6 +13,8 @@ div{text-align:center;}
 </style>
 </head>
 <body>
+
+
 <a href="home.jsp">
 <div class="toplink">IDEALLE</div>
 </a>
@@ -23,18 +25,34 @@ div{text-align:center;}
 
 <form id="contact" name="contact" action="contactCompletion.jsp" method="post">
 <tr>
-<th>氏名</th><td><input type="text" name="name" size="50%" /></td>
-</tr>
-
-<tr>
-<td>選択</td><td>
-<input type="radio" name="statas" value="会員" />会員
-<input type="radio" name="statas" value="未登録" />未登録
+<th>氏名</th>
+<td>
+<%//userセッションを確認して表示方法を分岐させる
+Object usrName = session.getAttribute("usrName");
+if(usrName != null){ %>
+	<%= usrName %>
+<% }else{ %>
+<input type="text" name="name" size="50%" />
+<% } %>
 </td>
 </tr>
 
 <tr>
-<td>件名</td><td><input type="text" name="subject" size="50%" /></td>
+<th>ステータス</th>
+<td>
+<%//セッションを判定してstatasを表示させる
+String statas;
+if(usrName != null)
+	statas = "会員";
+else
+	statas = "非会員";
+%>
+<%= statas %>
+</td>
+</tr>
+
+<tr>
+<th>件名</th><td><input type="text" name="subject" size="50%" /></td>
 </tr>
 
 <tr>
