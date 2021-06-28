@@ -85,9 +85,11 @@ public class User {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "root");
 			st = con.createStatement();
+			//del_flgが１以外を選択
 			String sql = "SELECT * FROM user"
 					+ " WHERE usr_id = '"+ id +"'"
-							+ " AND password = '"+ pass +"'";
+							+ " AND password = '"+ pass +"'"
+							+ " AND del_flg != 1";
 //			System.out.println(sql);
 			rs = st.executeQuery(sql);
 //			System.out.println(rs);
@@ -147,8 +149,10 @@ public class User {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "root");
 			st = con.createStatement();
+			//del_flgが1以外をセレクト
 			String sql = "SELECT * FROM user"
-					+ " WHERE usr_id = '"+ id +"'";
+					+ " WHERE usr_id = '"+ id +"'"
+					+ "AND del_flg != 1";
 //			System.out.println(sql);
 			rs = st.executeQuery(sql);
 			System.out.println(rs);
@@ -169,12 +173,6 @@ public class User {
 
 
 			}
-//			else{
-//				System.out.println("認証しました。");
-//			}
-
-
-
 
 		}catch(SQLException | ClassNotFoundException e) {
 			int i = IdealException.ERR_NO_DB_EXCEPTION;
@@ -289,7 +287,17 @@ public class User {
 
 
 	/***************登録削除************************************************************/
-	public static void delete(int usrId) throws NamingException, IdealException{
+	public static boolean delete(int usrId) throws NamingException, IdealException{
+		/*
+		 * 仕様変更
+		 * ①戻り値の型をvoidからbooleanに変更
+		 * ②true:削除フラグを立てる false:未来に予約が残っているので削除フラグを設定しない
+		 * ③処理手順
+		 * 　・usrIdで本日以後の予約があるかをチェック
+		 * 　・予約があればfalseを返す
+		 * 　・予約がなければdel_flgに１とdel_dateにCURRENT_TIMESTAMP()をアップデート
+		 * 　　trueを返す
+		 */
 
 		InitialContext ic = null;
 		DataSource ds =null;
@@ -297,7 +305,7 @@ public class User {
 		ResultSet rs = null;
 		String sql = null;
 		PreparedStatement pst = null;
-
+		boolean bool;
 
 		try{
 			//DBに接続する
@@ -307,35 +315,28 @@ public class User {
 
 			con.setAutoCommit(false);
 
-			System.out.println("SQL②実行前:" + usrId);
-			//顧客テーブルを削除する
-			sql = "DELETE FROM user WHERE usr_id = " + usrId;
+			//引数のusrIdで本日以後の予約を参照する
+			sql = "select * from reserve where usr_id = "+usrId
+					+" and rsv_date >= current_date()";
 			pst = con.prepareStatement(sql);
-			pst.executeUpdate();
-			System.out.println("顧客テーブル削除しました");
-
-			/*予約情報がない場合がある
-			 * 予約情報がない状態でsql発行するとヌルポになるため
-			 * select文で存在を確認
-			 * 存在があったときにdeleteする*/
-			sql = "select * from reserve where usr_id = " + usrId;
-			System.out.println(sql);
-			pst = con.prepareStatement(sql);
-			System.out.println(pst);
 			rs = pst.executeQuery();
-			System.out.println(rs);
+
+			//参照したテーブルに本日以後に予約があればfalseを返す
 			if(rs.next()) {
-				//予約テーブルを削除する
-				System.out.println("予約もあるから削除するよ");
-				sql = "DELETE FROM reserve WHERE usr_id = " + usrId;
+				System.out.println("本日以後に予約があるよ");
+				System.out.println("false");
+				bool = false;
+			}else {
+				System.out.println("本日以後に予約がないよ");
+				System.out.println("true");
+				System.out.println("SQL②実行前:" + usrId);
+				//顧客テーブルにフラグ１（削除）をセットするする
+				sql = "UPDATE user SET del_flg = 1 , del_date = CURRENT_TIMESTAMP() WHERE usr_id = " + usrId;
 				pst = con.prepareStatement(sql);
 				pst.executeUpdate();
-				System.out.println("予約テーブル削除しました");
-			}else
-				System.out.println("予約ないよ");
-
-
-
+				System.out.println("削除フラグをセットしました。");
+				bool =  true;
+			}
 
 
 			con.commit();
@@ -360,6 +361,7 @@ public class User {
 				e1.printStackTrace();
 			}
 		}
+		return bool;
 
 	}
 
