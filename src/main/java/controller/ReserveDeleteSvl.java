@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -57,11 +58,28 @@ public class ReserveDeleteSvl extends HttpServlet {
 			int usrId = (int)usrInfo.getAttribute("usrId");
 			// リクエストパラメータから予約番号を取得
 			int	rsvId = Integer.parseInt(request.getParameter("rsvId"));
-
 			Reserve r = new Reserve();
 			r = Reserve.getReserve(rsvId);
-			request.setAttribute("reserve",r);
-			url = "/reserveDelete.jsp";
+			// 予約日時が現在時刻の3時間後内であればメッセージをセットして予約一覧に戻る
+			Calendar rsvCal = Calendar.getInstance(); // 予約日時
+			rsvCal.set(r.getRsvYy(), r.getRsvMm()-1, r.getRsvDd(), r.getRsvHh(), r.getRsvMi());
+			Calendar add0Cal = Calendar.getInstance(); // 現在日時
+			Calendar add3Cal = Calendar.getInstance();
+			add3Cal.add(Calendar.HOUR_OF_DAY,3); // 3時間後
+			int diff0 = rsvCal.compareTo(add0Cal);
+			int diff3 = rsvCal.compareTo(add3Cal);
+			if(diff0>0 && diff3<= 0) {
+				String errMsg = "予約時刻まで３時間以内です。予約の取消は直接店舗にお電話ください。";
+				request.setAttribute("msg", errMsg);
+				url = "ReserveListSvl";
+			}else if(diff0<=0) {
+				String errMsg = "予約時刻を過ぎていますので取消できません";
+				request.setAttribute("msg", errMsg);
+				url = "ReserveListSvl";
+			} else {
+				request.setAttribute("reserve",r);
+				url = "/reserveDelete.jsp";
+			}
 
 		}
 		catch(Exception e){
