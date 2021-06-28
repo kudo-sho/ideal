@@ -151,24 +151,31 @@ public class UserOperationSvl extends HttpServlet {
 					System.out.println("削除メソッド開始前");
 
 					//deleteメソッドを実行する
-					User.delete((int)userInfo.getAttribute("usrId"));
-
-					System.out.println("削除メソッド終了");
-
-					//セッション情報を破棄する
-					userInfo.removeAttribute("usrId");
-					userInfo.removeAttribute("usrName");
-					userInfo.removeAttribute("password");
-					userInfo.removeAttribute("address");
-					userInfo.removeAttribute("phone");
-					userInfo.removeAttribute("mail");
-					userInfo.removeAttribute("exp");
-
-					System.out.println("セッション情報を破棄");
-
-					//ホーム画面に戻る
-					request.getRequestDispatcher("home.jsp").forward(request, response);
-
+					if(User.delete((int)userInfo.getAttribute("usrId"))){
+						
+						System.out.println("削除メソッドtrue");
+	
+						//セッション情報を破棄する
+						userInfo.removeAttribute("usrId");
+						userInfo.removeAttribute("usrName");
+						userInfo.removeAttribute("password");
+						userInfo.removeAttribute("address");
+						userInfo.removeAttribute("phone");
+						userInfo.removeAttribute("mail");
+						userInfo.removeAttribute("exp");
+	
+						System.out.println("セッション情報を破棄");
+					
+						//ホーム画面に戻る
+						request.getRequestDispatcher("home.jsp").forward(request, response);
+					
+					}else{
+						System.out.println("削除メソッドfalse");
+						request.setAttribute("msg", "脱会するときは先に予約を削除してください。予約が残っていると脱会できません。");
+						request.getRequestDispatcher("UserDeleteSvl").forward(request, response);
+					}
+					
+					
 				} catch (Exception e) {
 					//String msg = ((IdealException) e).getMsg();
 					//request.setAttribute("msg", msg);
