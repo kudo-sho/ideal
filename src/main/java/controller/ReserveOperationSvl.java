@@ -86,6 +86,19 @@ public class ReserveOperationSvl extends HttpServlet {
 	   	System.out.println("oSv:"+rsvYy+" "+rsvMm+" "+rsvDd+" "+rsvHh+" "+rsvMi+
 	   			" "+usrId+" "+person+" "+courseId);
 
+		// 予約日時が現在時刻の3時間後内であればメッセージをセットして予約一覧に戻る
+		Calendar rsvCal = Calendar.getInstance(); // 予約日時
+		rsvCal.set(rsvYy, rsvMm-1, rsvDd, rsvHh, rsvMi);
+		Calendar add0Cal = Calendar.getInstance(); // 現在日時
+		Calendar add3Cal = Calendar.getInstance();
+		add3Cal.add(Calendar.HOUR_OF_DAY,3); // 3時間後
+		int diff0 = rsvCal.compareTo(add0Cal);
+		int diff3 = rsvCal.compareTo(add3Cal);
+		String errMsg = "";
+		if(diff0>0 && diff3<= 0) {
+			errMsg = "予約時刻まで３時間以内ですので直接店舗にお電話ください";
+		}
+	   	
 		String url = "ReserveListSvl";
 		int msgNo = 0;
 		String mode = "";
@@ -118,6 +131,13 @@ public class ReserveOperationSvl extends HttpServlet {
 				r.setPerson(person);
 				r.setCourseId(courseId);
 				
+				if(errMsg != "") {
+					request.setAttribute("reserve",r);
+					request.setAttribute("msg", errMsg);
+					url = "ReserveInsertSvl";
+					break;
+				}
+
 				Calendar cal = Calendar.getInstance();
 				cal.set(rsvYy, rsvMm-1, rsvDd, rsvHh, rsvMi);
 				Date date = cal.getTime();
@@ -171,6 +191,13 @@ public class ReserveOperationSvl extends HttpServlet {
 				r.setUsrId(usrId);
 				r.setPerson(person);
 				r.setCourseId(courseId);
+
+				if(errMsg != "") {
+					request.setAttribute("reserve",r);
+					request.setAttribute("msg", errMsg);
+					url = "ReserveUpdateSvl";
+					break;
+				}
 
 				Calendar cal = Calendar.getInstance();
 				cal.set(rsvYy, rsvMm-1, rsvDd, rsvHh, rsvMi);
